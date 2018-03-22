@@ -76,7 +76,7 @@
             app:fabSize="mini"
             android:backgroundTint="#ffc655"
             android:src="@mipmap/add"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
             app:borderWidth="0dp"/>
 
     </FrameLayout>
