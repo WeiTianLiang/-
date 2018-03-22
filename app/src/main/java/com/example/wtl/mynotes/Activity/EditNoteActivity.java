@@ -7,7 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,11 +41,40 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private NotesDB notesDB;//初始化数据库
     private SQLiteDatabase writebase;//写数据库
 
+    private Animation animation_show;
+    private Animation animation_hide;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
         Montior();
+        animation_show = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.edit_show);
+        animation_hide = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.edit_hide);
+        //EditText动态监听
+        edit_content.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!edit_content.getText().toString().equals("")) {
+                    edit_over.setVisibility(View.VISIBLE);
+                    edit_over.setAnimation(animation_show);
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (edit_content.getText().toString().equals("")) {
+                    edit_over.setVisibility(View.GONE);
+                    edit_over.setAnimation(animation_hide);
+                }
+            }
+        });
         edit_time.setText(getTime());
         notesDB = new NotesDB(this);
         writebase = notesDB.getWritableDatabase();
@@ -75,21 +109,14 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
             case R.id.edit_back:
                 finish();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(),0);
-                break;
-            case R.id.edit_content:
-                if(!edit_content.getText().toString().equals("")) {
-                    edit_over.setVisibility(View.VISIBLE);
-                } else {
-                    edit_over.setVisibility(View.GONE);
-                }
+                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
                 break;
             case R.id.edit_over:
-                if(!edit_content.getText().toString().equals("")) {
+                if (!edit_content.getText().toString().equals("")) {
                     ContentValues cv = new ContentValues();
-                    cv.put(NotesDB.CONTENT,edit_content.getText().toString());
-                    cv.put(NotesDB.TIME,getTime());
-                    writebase.insert(NotesDB.TABLE_NAME,null,cv);
+                    cv.put(NotesDB.CONTENT, edit_content.getText().toString());
+                    cv.put(NotesDB.TIME, getTime());
+                    writebase.insert(NotesDB.TABLE_NAME, null, cv);
                     finish();
                 } else {
                     finish();
