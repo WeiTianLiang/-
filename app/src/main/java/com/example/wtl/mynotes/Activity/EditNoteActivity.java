@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,7 +22,6 @@ import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
 
 import java.util.Date;
-import java.util.List;
 
 public class EditNoteActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -41,8 +39,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private NotesDB notesDB;//初始化数据库
     private SQLiteDatabase writebase;//写数据库
 
-    private Animation animation_show;
-    private Animation animation_hide;
+    private Animation animation_show;//淡出动画
+    private Animation animation_hide;//淡入动画
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,11 +103,13 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
+        Intent intent = new Intent(EditNoteActivity.this,MainActivity.class);
         switch (view.getId()) {
             case R.id.edit_back:
-                finish();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+                startActivity(intent);
+                overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);//设置activity的平移动画
                 break;
             case R.id.edit_over:
                 if (!edit_content.getText().toString().equals("")) {
@@ -117,14 +117,21 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     cv.put(NotesDB.CONTENT, edit_content.getText().toString());
                     cv.put(NotesDB.TIME, getTime());
                     writebase.insert(NotesDB.TABLE_NAME, null, cv);
+                    Notes notes = new Notes(edit_content.getText().toString(),getTime());
+                    intent.putExtra("note",notes);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                     finish();
                 } else {
                     finish();
+                    overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                 }
                 break;
         }
     }
-
+    /*
+    * 获取当前时间
+    * */
     private String getTime() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
         Date date = new Date();
