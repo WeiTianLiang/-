@@ -24,6 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/note"
+            android:textSize="16sp"
             android:textColor="#4b4b4b"
             android:layout_gravity="center"/>
 
@@ -44,7 +45,7 @@
         android:layout_marginBottom="5dp"
         android:background="@drawable/searchback"
         android:drawableLeft="@mipmap/search"
-        android:padding="5dp"/>
+        android:padding="3dp"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -52,19 +53,21 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <View
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:background="#fff"/>
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#e9e9e9"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/notes_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#fff"
-                android:scrollbars="none"/>
+                android:scrollbars="none"
+                android:overScrollMode="never"/>
 
         </LinearLayout>
 

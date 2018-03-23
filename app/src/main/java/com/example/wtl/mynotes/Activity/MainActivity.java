@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.RadioButton;
 
 import com.example.wtl.mynotes.Adapter.NotesAdapter;
 import com.example.wtl.mynotes.Class.Notes;
@@ -52,38 +53,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(MainActivity.this,EditNoteActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
-                finish();
                 break;
-        }
-    }
-
-    private void intentnotes() {
-        Notes notes = getIntent().getParcelableExtra("flag");
-        if(notes != null) {
-            notesList.add(notes);
-            notes_list = (RecyclerView) findViewById(R.id.notes_list);
-            LinearLayoutManager manager = new LinearLayoutManager(this);
-            notes_list.setLayoutManager(manager);
-            NotesAdapter adapter = new NotesAdapter(notesList,this);
-            notes_list.setAdapter(adapter);
         }
     }
     /*
     * 数据库读值
     * */
     private void readDbase() {
-        Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);
-        if(cursor.moveToFirst()) {
+        Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
+        if(cursor.moveToLast()) {
             do {
                 String content = cursor.getString(cursor.getColumnIndex("content"));
                 String time = cursor.getString(cursor.getColumnIndex("time"));
                 Notes notes = new Notes(content,time);
                 notesList.add(notes);
-            } while (cursor.moveToNext());
+            } while (cursor.moveToPrevious());
             notes_list = (RecyclerView) findViewById(R.id.notes_list);
             LinearLayoutManager manager = new LinearLayoutManager(this);
             notes_list.setLayoutManager(manager);
             NotesAdapter adapter = new NotesAdapter(notesList,this);
+            adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
+                @Override
+                public void OnItemClick(View view, int postion) {
+                    Intent intent = new Intent(MainActivity.this,EditNoteActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
+                }
+            });
+            adapter.setOnItemLongClickListener(new NotesAdapter.OnItemLongClickListener() {
+                @Override
+                public void OnItemLongClick(View view, int poetion) {
+
+                }
+            });
             notes_list.setAdapter(adapter);
         }
     }

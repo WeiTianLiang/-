@@ -55,8 +55,8 @@
         android:layout_above="@+id/edit2"
         android:background="@drawable/edit_back"
         android:gravity="top"
-        android:padding="5dp"
-        android:paddingLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
 
     <LinearLayout
         android:id="@+id/edit2"

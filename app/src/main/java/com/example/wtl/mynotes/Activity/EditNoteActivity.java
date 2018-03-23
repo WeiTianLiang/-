@@ -5,12 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -23,9 +21,7 @@ import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class EditNoteActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -107,12 +103,11 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(EditNoteActivity.this,MainActivity.class);
         switch (view.getId()) {
             case R.id.edit_back:
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-                startActivity(intent);
+                finish();
                 overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);//设置activity的平移动画
                 break;
             case R.id.edit_over:
@@ -121,9 +116,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     cv.put(NotesDB.CONTENT, edit_content.getText().toString());
                     cv.put(NotesDB.TIME, getTime());
                     writebase.insert(NotesDB.TABLE_NAME, null, cv);
-                    Notes notes = new Notes(edit_content.getText().toString(),getTime());
-                    intent.putExtra("flag",notes);
-                    startActivity(intent);
+                    finish();
                     overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                     finish();
                 } else {
