@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -21,7 +23,9 @@ import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class EditNoteActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -118,7 +122,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     cv.put(NotesDB.TIME, getTime());
                     writebase.insert(NotesDB.TABLE_NAME, null, cv);
                     Notes notes = new Notes(edit_content.getText().toString(),getTime());
-                    intent.putExtra("note",notes);
+                    intent.putExtra("flag",notes);
                     startActivity(intent);
                     overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                     finish();

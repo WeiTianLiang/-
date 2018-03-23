@@ -30,7 +30,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
 
     @Override
     public NotesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.notes_card,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.notes_card,null,false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -54,8 +54,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
 
         public ViewHolder(View itemView) {
             super(itemView);
-            notes_content_part = (TextView) itemView.findViewById(R.id.notes_content_part);
-            notes_time = (TextView) itemView.findViewById(R.id.notes_time);
+            notes_content_part = itemView.findViewById(R.id.notes_content_part);
+            notes_time = itemView.findViewById(R.id.notes_time);
         }
     }
 }

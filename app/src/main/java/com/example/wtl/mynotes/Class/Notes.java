@@ -3,6 +3,8 @@ package com.example.wtl.mynotes.Class;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 
 /**
  * notes类
@@ -51,6 +53,7 @@ public class Notes implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+
         parcel.writeString(notes_content_part);
         parcel.writeString(notes_time);
     }
