@@ -62,7 +62,6 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 if (!edit_content.getText().toString().equals("")) {
                     edit_over.setVisibility(View.VISIBLE);
                     edit_over.setAnimation(animation_show);
-
                 }
             }
 

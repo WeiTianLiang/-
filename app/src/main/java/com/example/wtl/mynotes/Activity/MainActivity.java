@@ -9,11 +9,12 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 
+import com.example.wtl.mynotes.Adapter.Notes2Adapter;
 import com.example.wtl.mynotes.Adapter.NotesAdapter;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
@@ -33,6 +34,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SQLiteDatabase readbase;
 
     private ImageView change_list;
+    private Animation change_img;
+
+    private Animation change_list_in;
+    private Animation change_list_out;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         notesDB = new NotesDB(this);
         readbase = notesDB.getWritableDatabase();
         Montior();
-        readDbase();
+        readDbase(0);
     }
 
     private void Montior() {
@@ -62,11 +67,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.change_list:
+                change_img = AnimationUtils.loadAnimation(this,R.anim.change_list_image_anim);
                 if(change_list.getDrawable().getCurrent().getConstantState().
                         equals(this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
                     change_list.setImageResource(R.mipmap.cardview);
+                    change_list.startAnimation(change_img);
+                    readDbase(1);
                 } else {
                     change_list.setImageResource(R.mipmap.listview);
+                    change_list.startAnimation(change_img);
+                    readDbase(0);
                 }
                 break;
         }
@@ -74,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*
     * 数据库读值
     * */
-    private void readDbase() {
+    private void readDbase(int x) {
         Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
         if(cursor.moveToLast()) {
             do {
@@ -83,18 +93,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Notes notes = new Notes(content,time);
                 notesList.add(notes);
             } while (cursor.moveToPrevious());
-            cardlist();
         }
+        if(x == 0) loadlist();
+        else cardlist();
     }
     /*
     * 加载list布局
     * */
     private void loadlist() {
+        change_list_in = AnimationUtils.loadAnimation(this,R.anim.change_list_anim_in);
         notes_list = (RecyclerView) findViewById(R.id.notes_list);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         notes_list.setLayoutManager(manager);
         NotesAdapter adapter = new NotesAdapter(notesList,this);
         notes_list.setAdapter(adapter);
+        notes_list.startAnimation(change_list_in);
         adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(View view, int postion) {
@@ -109,11 +122,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     * 加载card布局
     * */
     private void cardlist() {
+        change_list_in = AnimationUtils.loadAnimation(this,R.anim.change_list_anim_in);
         notes_list = (RecyclerView) findViewById(R.id.notes_list);
         GridLayoutManager manager = new GridLayoutManager(this,2);
         notes_list.setLayoutManager(manager);
-        NotesAdapter adapter = new NotesAdapter(notesList,this);
+        Notes2Adapter adapter = new Notes2Adapter(notesList,this);
         notes_list.setAdapter(adapter);
+        notes_list.startAnimation(change_list_in);
         adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
             @Override
             public void OnItemClick(View view, int postion) {

@@ -32,7 +32,7 @@ public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder
 
     @Override
     public Notes2Adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.notes_card_2,null,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.notes_card_2,parent,false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -40,11 +40,8 @@ public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder
     @Override
     public void onBindViewHolder(final Notes2Adapter.ViewHolder holder, int position) {
         Notes notes = list.get(position);
-        holder.notes_content_part.setText(notes.getNotes_content_part());
-        holder.notes_time.setText(notes.getNotes_time());
-        if(position == list.size()-1) {
-            holder.updownline.setVisibility(View.GONE);
-        }
+        holder.notes_content_part_2.setText(notes.getNotes_content_part());
+        holder.notes_time_2.setText(notes.getNotes_time());
         //点击事件
         if(onItemClick != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -75,15 +72,13 @@ public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView notes_content_part;
-        TextView notes_time;
-        View updownline;
+        TextView notes_content_part_2;
+        TextView notes_time_2;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            notes_content_part = itemView.findViewById(R.id.notes_content_part);
-            notes_time = itemView.findViewById(R.id.notes_time);
-            updownline = itemView.findViewById(R.id.updownline);
+            notes_content_part_2 = itemView.findViewById(R.id.notes_content_part_2);
+            notes_time_2 = itemView.findViewById(R.id.notes_time_2);
         }
 
     }

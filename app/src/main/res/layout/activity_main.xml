@@ -69,7 +69,6 @@
                 android:id="@+id/notes_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#fff"
                 android:overScrollMode="never"
                 android:scrollbars="none" />
 

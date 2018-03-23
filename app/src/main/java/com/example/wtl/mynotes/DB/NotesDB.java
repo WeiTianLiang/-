@@ -31,7 +31,7 @@ public class NotesDB extends SQLiteOpenHelper{
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + CONTENT + " TEXT NOT NULL,"
                 + TIME + " TEXT NOT NULL)"
-                + FORMAT + " INTEGER");
+                + FORMAT + " INTEGER DEFAULT" + 0);
     }
 
     @Override

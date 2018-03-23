@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">MyNotes</string>
+    <string name="app_name">记事本</string>
     <string name="note">记事本</string>
 </resources>
