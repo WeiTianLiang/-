@@ -12,34 +12,33 @@ import com.example.wtl.mynotes.R;
 
 import java.util.List;
 
-
 /**
- * list布局适配器
- * Created by WTL on 2018/3/22.
+ * card布局适配器
+ * Created by WTL on 2018/3/23.
  */
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
+public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder>{
 
     private List<Notes> list;
     private Context context;
 
-    private OnItemClickListener onItemClick = null;
-    private OnItemLongClickListener onItemLongClick = null;
+    private NotesAdapter.OnItemClickListener onItemClick = null;
+    private NotesAdapter.OnItemLongClickListener onItemLongClick = null;
 
-    public NotesAdapter(List<Notes> list,Context context) {
+    public Notes2Adapter(List<Notes> list,Context context) {
         this.list = list;
         this.context = context;
     }
 
     @Override
-    public NotesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.notes_card,null,false);
+    public Notes2Adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.notes_card_2,null,false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(final NotesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final Notes2Adapter.ViewHolder holder, int position) {
         Notes notes = list.get(position);
         holder.notes_content_part.setText(notes.getNotes_content_part());
         holder.notes_time.setText(notes.getNotes_time());
@@ -74,7 +73,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         return list.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView notes_content_part;
         TextView notes_time;
@@ -98,11 +97,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         void OnItemLongClick(View view,int poetion);
     }
     //点击事件
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    public void setOnItemClickListener(NotesAdapter.OnItemClickListener listener) {
         this.onItemClick = listener;
     }
     //长按事件
-    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+    public void setOnItemLongClickListener(NotesAdapter.OnItemLongClickListener listener) {
         this.onItemLongClick = listener;
     }
 }

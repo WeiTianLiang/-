@@ -19,6 +19,8 @@ public class NotesDB extends SQLiteOpenHelper{
 
     public static final String TIME = "time";//创建时间
 
+    public static final String FORMAT = "form";//创建排版格式
+
     public NotesDB(Context context) {
         super(context, "notes", null, 1);
     }
@@ -28,7 +30,8 @@ public class NotesDB extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + "("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + CONTENT + " TEXT NOT NULL,"
-                + TIME + " TEXT NOT NULL)");
+                + TIME + " TEXT NOT NULL)"
+                + FORMAT + " INTEGER");
     }
 
     @Override

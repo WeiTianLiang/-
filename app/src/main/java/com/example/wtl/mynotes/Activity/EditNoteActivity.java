@@ -113,6 +113,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.edit_over:
                 if (!edit_content.getText().toString().equals("")) {
+                    //写数据库
                     ContentValues cv = new ContentValues();
                     cv.put(NotesDB.CONTENT, edit_content.getText().toString());
                     cv.put(NotesDB.TIME, getTime());
