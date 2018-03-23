@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,6 +8,7 @@
     tools:context="com.example.wtl.mynotes.Activity.MainActivity">
 
     <FrameLayout
+        android:id="@+id/m1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp">
@@ -16,40 +17,43 @@
             android:id="@+id/library"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/library"
-            android:layout_gravity="center|left"/>
+            android:layout_gravity="center|left"
+            android:src="@mipmap/library" />
 
         <TextView
             android:id="@+id/notes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="@string/note"
-            android:textSize="16sp"
             android:textColor="#4b4b4b"
-            android:layout_gravity="center"/>
+            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/change_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/listview"
-            android:layout_gravity="center|right"/>
+            android:layout_gravity="center|right"
+            android:src="@mipmap/listview" />
 
     </FrameLayout>
 
     <EditText
+        android:id="@+id/m2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/m1"
         android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:background="@drawable/searchback"
         android:drawableLeft="@mipmap/search"
-        android:padding="3dp"/>
+        android:padding="3dp" />
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/m2">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,29 +63,30 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="#e9e9e9"/>
+                android:background="#e9e9e9" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/notes_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#fff"
-                android:scrollbars="none"
-                android:overScrollMode="never"/>
+                android:overScrollMode="never"
+                android:scrollbars="none" />
 
         </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/add_my_notes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            app:fabSize="mini"
-            android:backgroundTint="#ffc655"
-            android:src="@mipmap/add"
-            android:layout_margin="15dp"
-            app:borderWidth="0dp"/>
-
     </FrameLayout>
 
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/add_my_notes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="15dp"
+        android:backgroundTint="#ffc655"
+        android:src="@mipmap/add"
+        app:borderWidth="0dp"
+        app:fabSize="mini" />
+
+</RelativeLayout>

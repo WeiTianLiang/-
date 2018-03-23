@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(MainActivity.this,EditNoteActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
+                finish();
                 break;
         }
     }
@@ -72,20 +73,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             LinearLayoutManager manager = new LinearLayoutManager(this);
             notes_list.setLayoutManager(manager);
             NotesAdapter adapter = new NotesAdapter(notesList,this);
-            adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
-                @Override
-                public void OnItemClick(View view, int postion) {
-                    Intent intent = new Intent(MainActivity.this,EditNoteActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
-                }
-            });
-            adapter.setOnItemLongClickListener(new NotesAdapter.OnItemLongClickListener() {
-                @Override
-                public void OnItemLongClick(View view, int poetion) {
-
-                }
-            });
             notes_list.setAdapter(adapter);
         }
     }

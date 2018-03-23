@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -103,12 +104,12 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
+        Intent intent = new Intent(EditNoteActivity.this,MainActivity.class);
         switch (view.getId()) {
             case R.id.edit_back:
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-                finish();
+                startActivity(intent);
                 overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);//设置activity的平移动画
+                finish();
                 break;
             case R.id.edit_over:
                 if (!edit_content.getText().toString().equals("")) {
@@ -116,12 +117,13 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     cv.put(NotesDB.CONTENT, edit_content.getText().toString());
                     cv.put(NotesDB.TIME, getTime());
                     writebase.insert(NotesDB.TABLE_NAME, null, cv);
-                    finish();
+                    startActivity(intent);
                     overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                     finish();
                 } else {
                     finish();
                     overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
+                    finish();
                 }
                 break;
         }
@@ -134,5 +136,18 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         Date date = new Date();
         String time = format.format(date);
         return time;
+    }
+    /*
+    * 监听返回键
+    * */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Intent intent = new Intent(EditNoteActivity.this,MainActivity.class);
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            startActivity(intent);
+            overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
+            finish();
+        }
+        return false;
     }
 }
