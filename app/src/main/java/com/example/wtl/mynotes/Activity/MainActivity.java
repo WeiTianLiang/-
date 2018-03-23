@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Animation change_img;
 
     private Animation change_list_in;
-    private Animation change_list_out;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
