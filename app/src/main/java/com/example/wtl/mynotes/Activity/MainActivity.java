@@ -1,6 +1,8 @@
 package com.example.wtl.mynotes.Activity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
@@ -34,10 +36,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private NotesDB notesDB;
     private SQLiteDatabase readbase;
 
-    private ImageView change_list;
+    private ImageView change_list;//布局图片
     private Animation change_img;
 
     private Animation change_list_in;
+
+    private SharedPreferences preferences;//判断程序是否第一次启动
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,13 +50,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         notesDB = new NotesDB(this);
         readbase = notesDB.getWritableDatabase();
         Montior();
-        Cursor cursor = readbase.query(NotesDB.FORMAT_NAME,null,null,null,null,null,null);
-        int x = 0;
-        if(cursor.moveToFirst()) {
-            x = cursor.getInt(cursor.getColumnIndex("form"));
+        preferences = getSharedPreferences("first_act",0);
+        Boolean user_first = preferences.getBoolean("FIRST",true);
+        if(user_first){//第一次
+            preferences.edit().putBoolean("FIRST", false).commit();
+            readDbase(0);
+            ContentValues cv = new ContentValues();
+            cv.put(NotesDB.FORMAT,0);
+            readbase.insert(NotesDB.FORMAT_NAME,null,cv);
+        }else {
+            int x = 0;
+            Cursor cursor = readbase.query(NotesDB.FORMAT_NAME,null,null,null,null,null,null);
+            if(cursor.moveToLast()) {
+                x = cursor.getInt(cursor.getColumnIndex("form"));
+            }
+            if(x == 1) {
+                change_list.setImageResource(R.mipmap.cardview);
+            } else {
+                change_list.setImageResource(R.mipmap.listview);
+            }
+            readDbase(x);
         }
-        Log.d("asd", String.valueOf(x));
-        readDbase(x);
     }
 
     private void Montior() {
@@ -73,16 +91,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
                 break;
             case R.id.change_list:
+                ContentValues cv = new ContentValues();
                 change_img = AnimationUtils.loadAnimation(this,R.anim.change_list_image_anim);
                 if(change_list.getDrawable().getCurrent().getConstantState().
                         equals(this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
                     change_list.setImageResource(R.mipmap.cardview);
                     change_list.startAnimation(change_img);
-                    readDbase(1);
+                    cardlist();
+                    cv.put(NotesDB.FORMAT,1);
+                    readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 } else {
                     change_list.setImageResource(R.mipmap.listview);
                     change_list.startAnimation(change_img);
-                    readDbase(0);
+                    loadlist();
+                    cv.put(NotesDB.FORMAT,0);
+                    readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }
                 break;
         }

@@ -43,9 +43,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         Notes notes = list.get(position);
         holder.notes_content_part.setText(notes.getNotes_content_part());
         holder.notes_time.setText(notes.getNotes_time());
-        if(position == list.size()-1) {
+        //隐藏最后一个下划线
+        /*if(position == list.size()-1) {
             holder.updownline.setVisibility(View.GONE);
-        }
+        }*/
         //点击事件
         if(onItemClick != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {

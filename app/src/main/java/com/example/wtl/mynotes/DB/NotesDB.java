@@ -32,7 +32,7 @@ public class NotesDB extends SQLiteOpenHelper{
                 + TIME + " TEXT NOT NULL)");
         sqLiteDatabase.execSQL("CREATE TABLE " + FORMAT_NAME + "("
                 + FORMAT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + FORMAT +" INTEGER NOT NULL DEFAULT " + 0 + ")");
+                + FORMAT +" INTEGER NOT NULL)");
     }
 
     @Override

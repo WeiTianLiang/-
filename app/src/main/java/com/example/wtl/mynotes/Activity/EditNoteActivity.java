@@ -30,7 +30,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private TextView edit_time;//时间
     private TextView edit_over;//完成
     private EditText edit_content;//内容
-    private ImageView editcolor;//颜色
+
+    private ImageView editcolor;//背景颜色
     private ImageView editbold;//加粗
     private ImageView editoblique;//斜体
     private ImageView editcenter;//居中
