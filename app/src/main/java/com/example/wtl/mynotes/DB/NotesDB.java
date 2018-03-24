@@ -10,16 +10,15 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class NotesDB extends SQLiteOpenHelper{
-
+    //表1
     public static final String TABLE_NAME = "notes";//表名
-
     public static final String CONTENT = "content";//文字内容
-
     public static final String ID = "_id";//id
-
     public static final String TIME = "time";//创建时间
-
+    //表2
+    public static final String FORMAT_NAME = "format";
     public static final String FORMAT = "form";//创建排版格式
+    public static final String FORMAT_ID = "_id";
 
     public NotesDB(Context context) {
         super(context, "notes", null, 1);
@@ -30,8 +29,10 @@ public class NotesDB extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + "("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + CONTENT + " TEXT NOT NULL,"
-                + TIME + " TEXT NOT NULL)"
-                + FORMAT + " INTEGER DEFAULT" + 0);
+                + TIME + " TEXT NOT NULL)");
+        sqLiteDatabase.execSQL("CREATE TABLE " + FORMAT_NAME + "("
+                + FORMAT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + FORMAT +" INTEGER NOT NULL DEFAULT " + 0 + ")");
     }
 
     @Override

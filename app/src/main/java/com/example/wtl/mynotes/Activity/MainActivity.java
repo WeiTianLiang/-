@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -45,7 +46,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         notesDB = new NotesDB(this);
         readbase = notesDB.getWritableDatabase();
         Montior();
-        readDbase(0);
+        Cursor cursor = readbase.query(NotesDB.FORMAT_NAME,null,null,null,null,null,null);
+        int x = 0;
+        if(cursor.moveToFirst()) {
+            x = cursor.getInt(cursor.getColumnIndex("form"));
+        }
+        Log.d("asd", String.valueOf(x));
+        readDbase(x);
     }
 
     private void Montior() {
