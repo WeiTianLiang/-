@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else cardlist();
     }
     /*
+
     * 加载list布局
     * */
     private void loadlist() {
