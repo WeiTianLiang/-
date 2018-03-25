@@ -7,18 +7,24 @@
     android:orientation="vertical"
     tools:context="com.example.wtl.mynotes.Activity.MainActivity">
 
+    <View
+        android:id="@+id/top_1"
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
+
     <FrameLayout
         android:id="@+id/m1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:layout_below="@+id/top_1">
 
         <ImageView
             android:id="@+id/library"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
-            android:src="@mipmap/library" />
+            android:src="@mipmap/library"/>
 
         <TextView
             android:id="@+id/notes"
@@ -63,7 +69,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="#e9e9e9" />
+                android:background="#c1c1c1" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/notes_list"
@@ -86,6 +92,6 @@
         android:backgroundTint="#ffc655"
         android:src="@mipmap/add"
         app:borderWidth="0dp"
-        app:fabSize="mini" />
+        app:fabSize="mini"/>
 
 </RelativeLayout>

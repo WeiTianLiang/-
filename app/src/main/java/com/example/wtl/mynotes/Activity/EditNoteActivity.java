@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
@@ -47,6 +50,11 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            this.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
+        }
         Montior();
         animation_show = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.edit_show);
         animation_hide = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.edit_hide);
@@ -125,6 +133,36 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                     finish();
                 }
+                break;
+            case R.id.editbold:
+                if(editbold.getDrawable().getCurrent().getConstantState().
+                        equals(this.getResources().getDrawable(R.mipmap.editbold).getConstantState())) {
+                    editbold.setImageResource(R.mipmap.touchblod);
+
+                } else {
+                    editbold.setImageResource(R.mipmap.editbold);
+                }
+                break;
+            case R.id.editoblique:
+                if(editoblique.getDrawable().getCurrent().getConstantState().
+                        equals(this.getResources().getDrawable(R.mipmap.editoblique).getConstantState())) {
+                    editoblique.setImageResource(R.mipmap.touchoblique);
+
+                } else {
+                    editoblique.setImageResource(R.mipmap.editoblique);
+                }
+                break;
+            case R.id.editcenter:
+                if(editcenter.getDrawable().getCurrent().getConstantState().
+                        equals(this.getResources().getDrawable(R.mipmap.editcenter).getConstantState())) {
+                    editcenter.setImageResource(R.mipmap.touchcenter);
+
+                } else {
+                    editcenter.setImageResource(R.mipmap.editcenter);
+                }
+                break;
+            case R.id.editcolor:
+
                 break;
         }
     }
