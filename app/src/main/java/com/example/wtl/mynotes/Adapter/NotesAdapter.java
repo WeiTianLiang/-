@@ -5,6 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.wtl.mynotes.Class.Notes;
@@ -23,8 +26,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     private List<Notes> list;
     private Context context;
 
-    private OnItemClickListener onItemClick = null;
-    private OnItemLongClickListener onItemLongClick = null;
+    private List<String> numlist;
+    private Boolean ishow = false;
+
+    private OnItemClickListener onItemClick;
 
     public NotesAdapter(List<Notes> list,Context context) {
         this.list = list;
@@ -47,26 +52,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         /*if(position == list.size()-1) {
             holder.updownline.setVisibility(View.GONE);
         }*/
-        //点击事件
-        if(onItemClick != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int postion = holder.getLayoutPosition();
-                    onItemClick.OnItemClick(holder.itemView,postion);
-                }
-            });
-        }
-        //长按事件
-        if(onItemLongClick != null) {
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    int postion = holder.getLayoutPosition();
-                    onItemLongClick.OnItemLongClick(holder.itemView,postion);
-                    return true;
-                }
-            });
+        if(ishow) {
+            holder.check_box.setVisibility(View.VISIBLE);
+        } else {
+            holder.check_box.setVisibility(View.GONE);
         }
     }
 
@@ -75,35 +64,32 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         return list.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        LinearLayout root_view;
         TextView notes_content_part;
         TextView notes_time;
         View updownline;
+        RadioButton check_box;
 
         public ViewHolder(View itemView) {
             super(itemView);
             notes_content_part = itemView.findViewById(R.id.notes_content_part);
             notes_time = itemView.findViewById(R.id.notes_time);
             updownline = itemView.findViewById(R.id.updownline);
+            check_box = itemView.findViewById(R.id.check_box);
+            root_view = itemView.findViewById(R.id.root_view);
         }
-
     }
 
     //点击接口
     public interface OnItemClickListener {
-        void OnItemClick(View view,int postion);
+        void OnItemClick(boolean isCheck,int postion);
+        void OnRadioButtonClick(boolean isCheck,int postion);
+        boolean OnItemLongClick(int poetion);
     }
-    //长按接口
-    public interface OnItemLongClickListener {
-        void OnItemLongClick(View view,int poetion);
-    }
+
     //点击事件
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClick = listener;
-    }
-    //长按事件
-    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
-        this.onItemLongClick = listener;
     }
 }

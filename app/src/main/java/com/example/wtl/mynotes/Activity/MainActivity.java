@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private SharedPreferences preferences;//判断程序是否第一次启动
 
+    private long count = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         preferences = getSharedPreferences("first_act",0);
         Boolean user_first = preferences.getBoolean("FIRST",true);
         if(user_first){//第一次
-            preferences.edit().putBoolean("FIRST", false).commit();
+            preferences.edit().putBoolean("FIRST", false).apply();
             readDbase(0);
             ContentValues cv = new ContentValues();
             cv.put(NotesDB.FORMAT,0);
@@ -134,13 +136,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String time = cursor.getString(cursor.getColumnIndex("time"));
                 Notes notes = new Notes(content,time);
                 notesList.add(notes);
+                count++;
             } while (cursor.moveToPrevious());
         }
+        Log.d("asd", String.valueOf(count));
         if(x == 0) loadlist();
         else cardlist();
     }
     /*
-
     * 加载list布局
     * */
     private void loadlist() {
@@ -148,18 +151,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         notes_list = (RecyclerView) findViewById(R.id.notes_list);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         notes_list.setLayoutManager(manager);
-        NotesAdapter adapter = new NotesAdapter(notesList,this);
+        final NotesAdapter adapter = new NotesAdapter(notesList,this);
         notes_list.setAdapter(adapter);
         notes_list.startAnimation(change_list_in);
-        adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
-            @Override
-            public void OnItemClick(View view, int postion) {
-                Intent intent = new Intent(MainActivity.this,EditNoteActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
-                finish();
-            }
-        });
     }
     /*
     * 加载card布局
@@ -172,14 +166,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Notes2Adapter adapter = new Notes2Adapter(notesList,this);
         notes_list.setAdapter(adapter);
         notes_list.startAnimation(change_list_in);
-        adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
-            @Override
-            public void OnItemClick(View view, int postion) {
-                Intent intent = new Intent(MainActivity.this,EditNoteActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
-                finish();
-            }
-        });
+
     }
 }

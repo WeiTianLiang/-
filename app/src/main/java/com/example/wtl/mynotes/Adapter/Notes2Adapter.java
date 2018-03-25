@@ -23,7 +23,6 @@ public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder
     private Context context;
 
     private NotesAdapter.OnItemClickListener onItemClick = null;
-    private NotesAdapter.OnItemLongClickListener onItemLongClick = null;
 
     public Notes2Adapter(List<Notes> list,Context context) {
         this.list = list;
@@ -42,27 +41,6 @@ public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder
         Notes notes = list.get(position);
         holder.notes_content_part_2.setText(notes.getNotes_content_part());
         holder.notes_time_2.setText(notes.getNotes_time());
-        //点击事件
-        if(onItemClick != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int postion = holder.getLayoutPosition();
-                    onItemClick.OnItemClick(holder.itemView,postion);
-                }
-            });
-        }
-        //长按事件
-        if(onItemLongClick != null) {
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    int postion = holder.getLayoutPosition();
-                    onItemLongClick.OnItemLongClick(holder.itemView,postion);
-                    return true;
-                }
-            });
-        }
     }
 
     @Override
@@ -83,20 +61,4 @@ public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder
 
     }
 
-    //点击接口
-    public interface OnItemClickListener {
-        void OnItemClick(View view,int postion);
-    }
-    //长按接口
-    public interface OnItemLongClickListener {
-        void OnItemLongClick(View view,int poetion);
-    }
-    //点击事件
-    public void setOnItemClickListener(NotesAdapter.OnItemClickListener listener) {
-        this.onItemClick = listener;
-    }
-    //长按事件
-    public void setOnItemLongClickListener(NotesAdapter.OnItemLongClickListener listener) {
-        this.onItemLongClick = listener;
-    }
 }
