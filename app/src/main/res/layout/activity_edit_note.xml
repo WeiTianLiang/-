@@ -47,16 +47,23 @@
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/edit_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/edit1"
         android:layout_above="@+id/edit2"
-        android:background="@drawable/edit_back"
-        android:gravity="top"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:background="#fff">
+
+        <EditText
+            android:id="@+id/edit_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/edit_back"
+            android:gravity="top" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/edit2"
@@ -100,13 +107,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@mipmap/editcenter"/>
-
-        <ImageView
-            android:id="@+id/editdelet"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@mipmap/editdelet"/>
 
     </LinearLayout>
 

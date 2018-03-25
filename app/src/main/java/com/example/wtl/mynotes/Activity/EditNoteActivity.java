@@ -35,7 +35,6 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private ImageView editbold;//加粗
     private ImageView editoblique;//斜体
     private ImageView editcenter;//居中
-    private ImageView editdelet;//删除
     private ImageView editpicture;//相册
 
     private NotesDB notesDB;//初始化数据库
@@ -84,21 +83,21 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         edit_time = (TextView) findViewById(R.id.edit_time);
         edit_over = (TextView) findViewById(R.id.edit_over);
         edit_content = (EditText) findViewById(R.id.edit_content);
+
         editcolor = (ImageView) findViewById(R.id.editcolor);
         editbold = (ImageView) findViewById(R.id.editbold);
         editoblique = (ImageView) findViewById(R.id.editoblique);
         editcenter = (ImageView) findViewById(R.id.editcenter);
-        editdelet = (ImageView) findViewById(R.id.editdelet);
         editpicture = (ImageView) findViewById(R.id.editpicture);
 
         edit_back.setOnClickListener(this);
         edit_over.setOnClickListener(this);
         edit_content.setOnClickListener(this);
+
         editcolor.setOnClickListener(this);
         editbold.setOnClickListener(this);
         editoblique.setOnClickListener(this);
         editcenter.setOnClickListener(this);
-        editdelet.setOnClickListener(this);
         editpicture.setOnClickListener(this);
     }
 
