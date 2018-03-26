@@ -7,50 +7,65 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#f4f4f4">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="新建便签夹"
-            android:textColor="#000"
-            android:layout_marginTop="20dp"/>
+            android:textColor="#414141"
+            android:textSize="17sp"
+            android:layout_marginTop="40dp"/>
 
         <EditText
             android:id="@+id/dialog_edittext"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:background="@drawable/searchback"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="30dp"/>
+        
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#b4b4b4"
+            android:layout_marginTop="35dp"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
+            android:background="#f2f2f2">
 
             <TextView
                 android:id="@+id/dialog_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="取消"
-                android:textSize="16sp"
-                android:textColor="#000"
-                android:layout_marginLeft="30dp"/>
+                android:gravity="center"
+                android:textColor="#414141"
+                android:textSize="17sp"
+                android:padding="15dp"/>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="#b4b4b4"/>
 
             <TextView
                 android:id="@+id/dialog_sure"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="确定"
-                android:textSize="16sp"
-                android:textColor="#000"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="30dp"/>
+                android:gravity="center"
+                android:textColor="#414141"
+                android:textSize="17sp"
+                android:padding="15dp"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -43,7 +43,7 @@ public class NotesDB extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL("CREATE TABLE " + NOTECLIP_NAME + "("
                 + NOTECLIP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + NOTECLIP_MEMO + " TEXT NOT NULL,"
-                + NOTECLIP_NUMBER + " TEXT NOT NULL)");
+                + NOTECLIP_NUMBER + " TEXT)");
     }
 
     @Override

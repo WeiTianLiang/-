@@ -23,14 +23,14 @@ public class SumggleAdapter extends RecyclerView.Adapter<SumggleAdapter.ViewHold
     private List<Sumggle> sumggleList;
     private Context context;
 
-    private SumggleAdapter(List<Sumggle> sumggleList,Context context) {
+    public SumggleAdapter(List<Sumggle> sumggleList, Context context) {
         this.sumggleList = sumggleList;
         this.context = context;
     }
 
     @Override
     public SumggleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.smuggle_card,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.smuggle_card,null,false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -58,12 +58,14 @@ public class SumggleAdapter extends RecyclerView.Adapter<SumggleAdapter.ViewHold
         TextView sumggle_create;
         TextView delete_number;
         LinearLayout sumggle_delete;
+        View sumggle_line;
 
         public ViewHolder(View itemView) {
             super(itemView);
             sumggle_create = itemView.findViewById(R.id.sumggle_create);
             delete_number = itemView.findViewById(R.id.delete_number);
             sumggle_delete = itemView.findViewById(R.id.sumggle_delete);
+            sumggle_line = itemView.findViewById(R.id.sumggle_line);
         }
     }
 }

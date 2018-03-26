@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 count++;
             } while (cursor.moveToPrevious());
         }
-        Log.d("asd", String.valueOf(count));
         if(x == 0) loadlist();
         else cardlist();
     }
