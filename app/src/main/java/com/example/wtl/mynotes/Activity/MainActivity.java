@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private NotesDB notesDB;
     private SQLiteDatabase readbase;
+    private ImageView library;
 
     private ImageView change_list;//布局图片
     private Animation change_img;
@@ -91,9 +92,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void Montior() {
         add_my_notes = (FloatingActionButton) findViewById(R.id.add_my_notes);
         change_list = (ImageView) findViewById(R.id.change_list);
+        library = (ImageView) findViewById(R.id.library);
 
         add_my_notes.setOnClickListener(this);
         change_list.setOnClickListener(this);
+        library.setOnClickListener(this);
     }
 
     @Override
@@ -122,6 +125,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     cv.put(NotesDB.FORMAT,0);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }
+                break;
+            case R.id.library:
+                Intent intent1 = new Intent(MainActivity.this,SmuggleActivity.class);
+                startActivity(intent1);
+                overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                 break;
         }
     }
