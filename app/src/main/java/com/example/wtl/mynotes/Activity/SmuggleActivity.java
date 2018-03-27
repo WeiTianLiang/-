@@ -1,5 +1,6 @@
 package com.example.wtl.mynotes.Activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.example.wtl.mynotes.Adapter.SumggleAdapter;
@@ -25,6 +27,8 @@ import com.example.wtl.mynotes.Tool.Create_Dialog;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SmuggleActivity extends AppCompatActivity implements View.OnClickListener{
 
