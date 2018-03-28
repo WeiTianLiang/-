@@ -7,4 +7,5 @@
     <color name="dropbackground">#fafafa</color>
     <color name="touch1">#f2f2f2</color>
     <color name="touch2">#bebebe</color>
+    <color name="white">#ffffff</color>
 </resources>

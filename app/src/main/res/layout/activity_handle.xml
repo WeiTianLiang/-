@@ -1,75 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.example.wtl.mynotes.Activity.MainActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.wtl.mynotes.Activity.HandleActivity"
     android:fitsSystemWindows="true">
 
-    <FrameLayout
-        android:id="@+id/m1"
+    <LinearLayout
+        android:id="@+id/handle2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="10dp">
 
         <ImageView
-            android:id="@+id/library"
+            android:id="@+id/handle_img_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|left"
-            android:src="@mipmap/library"/>
+            android:src="@mipmap/back"
+            android:layout_gravity="center"/>
 
         <TextView
-            android:id="@+id/notes"
+            android:id="@+id/handle_text_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/note"
-            android:textColor="#4b4b4b"
-            android:textSize="16sp" />
+            android:textSize="18sp"
+            android:textColor="#000"
+            android:layout_marginLeft="10dp"
+            android:text="便签夹"/>
 
-        <ImageView
-            android:id="@+id/change_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|right"
-            android:src="@mipmap/listview" />
-
-    </FrameLayout>
-
-    <LinearLayout
-
-        android:id="@+id/m2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/m1"
-        android:orientation="vertical"
-        android:background="#f9f9f9">
-
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#c1c1c1" />
+            android:layout_height="match_parent"
+            android:gravity="right">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/searchback"
-            android:drawableLeft="@mipmap/search"
-            android:padding="3dp"/>
+            <ImageView
+                android:id="@+id/handle_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/listview"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/m2">
+        android:layout_below="@+id/handle2">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -82,7 +62,7 @@
                 android:background="#c1c1c1" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/notes_list"
+                android:id="@+id/handle_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:overScrollMode="never"
@@ -93,7 +73,7 @@
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_my_notes"
+        android:id="@+id/add_handle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

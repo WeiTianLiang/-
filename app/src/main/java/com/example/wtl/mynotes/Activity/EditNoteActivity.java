@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
+import com.example.wtl.mynotes.Tool.HideScreenTop;
 
 import java.util.Date;
 
@@ -50,11 +51,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            this.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
-        }
+        HideScreenTop.HideScreenTop(getWindow());
         Montior();
         animation_show = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.edit_show);
         animation_hide = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.edit_hide);

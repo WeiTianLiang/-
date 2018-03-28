@@ -22,8 +22,6 @@ public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder
     private List<Notes> list;
     private Context context;
 
-    private NotesAdapter.OnItemClickListener onItemClick = null;
-
     public Notes2Adapter(List<Notes> list,Context context) {
         this.list = list;
         this.context = context;

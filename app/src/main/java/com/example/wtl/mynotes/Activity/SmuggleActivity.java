@@ -1,6 +1,5 @@
 package com.example.wtl.mynotes.Activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,30 +9,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.wtl.mynotes.Adapter.SumggleAdapter;
 import com.example.wtl.mynotes.Class.Sumggle;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
 import com.example.wtl.mynotes.Tool.Create_Dialog;
+import com.example.wtl.mynotes.Tool.HideScreenTop;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class SmuggleActivity extends AppCompatActivity implements View.OnClickListener{
 
     private FloatingActionButton add_sumggle;
     private ImageView sumggle_back;
+    private TextView sumggle_text_back;
     private RecyclerView smuggle_list;
     private List<Sumggle> sumggleList = new ArrayList<>();
 
@@ -42,6 +41,8 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
 
     private Create_Dialog createDialog;
 
+    private LinearLayout sumggle_handle;//随手记
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +50,7 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
         Montior();
         notesDB = new NotesDB(this);
         writebase = notesDB.getWritableDatabase();
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        }
+        HideScreenTop.HideScreenTop(getWindow());
         addAllSumggle();
     }
 
@@ -60,13 +58,18 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
         add_sumggle = (FloatingActionButton) findViewById(R.id.add_sumggle);
         smuggle_list = (RecyclerView) findViewById(R.id.smuggle_list);
         sumggle_back = (ImageView) findViewById(R.id.sumggle_back);
+        sumggle_text_back = (TextView) findViewById(R.id.sumggle_text_back);
+        sumggle_handle = (LinearLayout) findViewById(R.id.sumggle_handle);
 
         add_sumggle.setOnClickListener(this);
         sumggle_back.setOnClickListener(this);
+        sumggle_handle.setOnClickListener(this);
+        sumggle_text_back.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
+        Intent intent1 = new Intent(SmuggleActivity.this,MainActivity.class);
         switch (view.getId()) {
             case R.id.add_sumggle:
                 createDialog = new Create_Dialog(this);
@@ -91,7 +94,18 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
                 });
                 break;
             case R.id.sumggle_back:
+                startActivity(intent1);
                 finish();
+                overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
+                break;
+            case R.id.sumggle_text_back:
+                startActivity(intent1);
+                finish();
+                overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
+                break;
+            case R.id.sumggle_handle:
+                Intent intent = new Intent(SmuggleActivity.this,HandleActivity.class);
+                startActivity(intent);
                 overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
         }
     }
@@ -102,7 +116,7 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
         if(cursor.moveToLast()) {
             do{
                 String memo = cursor.getString(cursor.getColumnIndex("memo"));
-                Sumggle sumggle = new Sumggle(memo,"0");
+                Sumggle sumggle = new Sumggle(memo,"1");
                 sumggleList.add(sumggle);
             }while (cursor.moveToPrevious());
         }
@@ -128,7 +142,9 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        SmuggleActivity.this.finish();
+        Intent intent = new Intent(SmuggleActivity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
         overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
         return super.onKeyDown(keyCode, event);
     }

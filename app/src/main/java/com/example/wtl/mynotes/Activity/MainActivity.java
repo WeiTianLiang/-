@@ -19,12 +19,17 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.wtl.mynotes.Adapter.Notes2Adapter;
 import com.example.wtl.mynotes.Adapter.NotesAdapter;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
+import com.example.wtl.mynotes.Tool.HideScreenTop;
+import com.example.wtl.mynotes.Tool.IsFirstOpen;
+import com.example.wtl.mynotes.Tool.LoadRecycler;
+import com.example.wtl.mynotes.Tool.ReadCuesor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,52 +52,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private SharedPreferences preferences;//判断程序是否第一次启动
 
-    private long count = 0;
+    private List<Boolean> booleanList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*
-        * 沉浸式状态栏
-        * */
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //让标题栏透明
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //让标题栏处于亮色模式
-            this.getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-
-        }
+        HideScreenTop.HideScreenTop(getWindow());//隐藏状态栏
         notesDB = new NotesDB(this);
         readbase = notesDB.getWritableDatabase();
         Montior();
         preferences = getSharedPreferences("first_act",0);
         Boolean user_first = preferences.getBoolean("FIRST",true);
-        if(user_first){//第一次
-            preferences.edit().putBoolean("FIRST", false).apply();
-            readDbase(0);
-            ContentValues cv = new ContentValues();
-            cv.put(NotesDB.FORMAT,0);
-            readbase.insert(NotesDB.FORMAT_NAME,null,cv);
-        }else {
-            int x = 0;
-            Cursor cursor = readbase.query(NotesDB.FORMAT_NAME,null,null,null,null,null,null);
-            if(cursor.moveToLast()) {
-                x = cursor.getInt(cursor.getColumnIndex("form"));
-            }
-            if(x == 1) {
-                change_list.setImageResource(R.mipmap.cardview);
-            } else {
-                change_list.setImageResource(R.mipmap.listview);
-            }
-            readDbase(x);
-        }
+        IsFirstOpen.IsFirstOpen(change_list,preferences,user_first,this,readbase,notesList,notes_list,change_list_in);
     }
 
     private void Montior() {
         add_my_notes = (FloatingActionButton) findViewById(R.id.add_my_notes);
         change_list = (ImageView) findViewById(R.id.change_list);
         library = (ImageView) findViewById(R.id.library);
+        notes_list = (RecyclerView) findViewById(R.id.notes_list);
 
         add_my_notes.setOnClickListener(this);
         change_list.setOnClickListener(this);
@@ -115,13 +94,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         equals(this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
                     change_list.setImageResource(R.mipmap.cardview);
                     change_list.startAnimation(change_img);
-                    cardlist();
+                    LoadRecycler.cardlist(notes_list,change_list_in,this,notesList);
                     cv.put(NotesDB.FORMAT,1);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 } else {
                     change_list.setImageResource(R.mipmap.listview);
                     change_list.startAnimation(change_img);
-                    loadlist();
+                    LoadRecycler.loadlist(notes_list,change_list_in,this,notesList);
                     cv.put(NotesDB.FORMAT,0);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }
@@ -133,46 +112,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-    /*
-    * 数据库读值
-    * */
-    private void readDbase(int x) {
-        Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
-        if(cursor.moveToLast()) {
-            do {
-                String content = cursor.getString(cursor.getColumnIndex("content"));
-                String time = cursor.getString(cursor.getColumnIndex("time"));
-                Notes notes = new Notes(content,time);
-                notesList.add(notes);
-                count++;
-            } while (cursor.moveToPrevious());
-        }
-        if(x == 0) loadlist();
-        else cardlist();
-    }
-    /*
-    * 加载list布局
-    * */
-    private void loadlist() {
-        change_list_in = AnimationUtils.loadAnimation(this,R.anim.change_list_anim_in);
-        notes_list = (RecyclerView) findViewById(R.id.notes_list);
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        notes_list.setLayoutManager(manager);
-        final NotesAdapter adapter = new NotesAdapter(notesList,this);
-        notes_list.setAdapter(adapter);
-        notes_list.startAnimation(change_list_in);
-    }
-    /*
-    * 加载card布局
-    * */
-    private void cardlist() {
-        change_list_in = AnimationUtils.loadAnimation(this,R.anim.change_list_anim_in);
-        notes_list = (RecyclerView) findViewById(R.id.notes_list);
-        GridLayoutManager manager = new GridLayoutManager(this,2);
-        notes_list.setLayoutManager(manager);
-        Notes2Adapter adapter = new Notes2Adapter(notesList,this);
-        notes_list.setAdapter(adapter);
-        notes_list.startAnimation(change_list_in);
 
-    }
 }

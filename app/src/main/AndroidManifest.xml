@@ -20,8 +20,9 @@
         </activity>
         <activity
             android:name=".Activity.EditNoteActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".Activity.SmuggleActivity"></activity>
+            android:windowSoftInputMode="adjustResize|stateVisible" />
+        <activity android:name=".Activity.SmuggleActivity" />
+        <activity android:name=".Activity.HandleActivity"></activity>
     </application>
 
 </manifest>

@@ -3,12 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.wtl.mynotes.Activity.EditNoteActivity">
-
-    <View
-        android:id="@+id/top_2"
-        android:layout_width="match_parent"
-        android:layout_height="25dp" />
+    tools:context="com.example.wtl.mynotes.Activity.EditNoteActivity"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:id="@+id/edit1"
@@ -16,8 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="10dp"
-        android:background="#fff"
-        android:layout_below="@+id/top_2">
+        android:background="#fff">
 
         <ImageView
             android:id="@+id/edit_back"
@@ -76,8 +71,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:layout_alignParentBottom="true">
 
         <ImageView
             android:id="@+id/editpicture"

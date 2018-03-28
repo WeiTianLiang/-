@@ -1,6 +1,7 @@
 package com.example.wtl.mynotes.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,10 +10,13 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.wtl.mynotes.Activity.MainActivity;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,10 +30,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     private List<Notes> list;
     private Context context;
 
-    private List<String> numlist;
-    private Boolean ishow = false;
-
+    private OnItemLongClickListener onItemClickListener;
     private OnItemClickListener onItemClick;
+    private Boolean longclick = false;
+
+    private List<String> stringList = new ArrayList<>();
 
     public NotesAdapter(List<Notes> list,Context context) {
         this.list = list;
@@ -49,10 +54,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         holder.notes_content_part.setText(notes.getNotes_content_part());
         holder.notes_time.setText(notes.getNotes_time());
         //隐藏最后一个下划线
-        /*if(position == list.size()-1) {
+        /*if(position == list.size()-3) {
             holder.updownline.setVisibility(View.GONE);
         }*/
-        if(ishow) {
+        if(longclick == true) {
             holder.check_box.setVisibility(View.VISIBLE);
         } else {
             holder.check_box.setVisibility(View.GONE);
@@ -78,18 +83,55 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
             updownline = itemView.findViewById(R.id.updownline);
             check_box = itemView.findViewById(R.id.check_box);
             root_view = itemView.findViewById(R.id.root_view);
+
+            root_view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    onItemClickListener.OnItemLongClick();
+                    longclick = true;
+                    return true;
+                }
+            });
+
+            root_view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(longclick == true) {
+                        onItemClick.OnItemClick();
+                        if (check_box.isChecked()) {
+                            check_box.setChecked(false);
+                        } else {
+                            check_box.setChecked(true);
+                        }
+                    } else if (longclick == false) {
+                        Toast.makeText(context,"sdfasd",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
         }
+
     }
 
-    //点击接口
+    //删除Notes
+    private void removeNotes(List<String> stringList) {
+
+    }
+
+    public interface OnItemLongClickListener {
+        void OnItemLongClick();
+    }
+
     public interface OnItemClickListener {
-        void OnItemClick(boolean isCheck,int postion);
-        void OnRadioButtonClick(boolean isCheck,int postion);
-        boolean OnItemLongClick(int poetion);
+        void OnItemClick();
     }
 
-    //点击事件
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.onItemClick = listener;
+    public void setOnItemClickListener(OnItemClickListener onItemClick) {
+        this.onItemClick = onItemClick;
     }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemClickListener){
+        this.onItemClickListener = onItemClickListener;
+    }
+
 }

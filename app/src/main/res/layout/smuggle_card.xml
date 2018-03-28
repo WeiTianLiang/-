@@ -7,7 +7,7 @@
         android:id="@+id/sumggle_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
+        android:background="@drawable/touchhandle"
         android:padding="20dp"
         android:orientation="horizontal">
 
