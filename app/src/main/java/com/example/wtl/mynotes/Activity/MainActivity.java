@@ -19,6 +19,8 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wtl.mynotes.Adapter.Notes2Adapter;
@@ -37,6 +39,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private FloatingActionButton add_my_notes;
+    private LinearLayout item_delet;
 
     private RecyclerView notes_list;
     private List<Notes> notesList = new ArrayList<>();
@@ -52,8 +55,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private SharedPreferences preferences;//判断程序是否第一次启动
 
-    private List<Boolean> booleanList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Montior();
         preferences = getSharedPreferences("first_act",0);
         Boolean user_first = preferences.getBoolean("FIRST",true);
-        IsFirstOpen.IsFirstOpen(change_list,preferences,user_first,this,readbase,notesList,notes_list,change_list_in);
+        IsFirstOpen.IsFirstOpen(add_my_notes,item_delet,change_list,preferences,user_first,this,readbase,notesList,notes_list,change_list_in);
     }
 
     private void Montior() {
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         change_list = (ImageView) findViewById(R.id.change_list);
         library = (ImageView) findViewById(R.id.library);
         notes_list = (RecyclerView) findViewById(R.id.notes_list);
+        item_delet = (LinearLayout) findViewById(R.id.item_delet);
 
         add_my_notes.setOnClickListener(this);
         change_list.setOnClickListener(this);
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     change_list.setImageResource(R.mipmap.listview);
                     change_list.startAnimation(change_img);
-                    LoadRecycler.loadlist(notes_list,change_list_in,this,notesList);
+                    LoadRecycler.loadlist(add_my_notes,item_delet,notes_list,change_list_in,this,notesList);
                     cv.put(NotesDB.FORMAT,0);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }

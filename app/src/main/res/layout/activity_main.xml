@@ -104,4 +104,27 @@
         app:borderWidth="0dp"
         app:fabSize="mini"/>
 
+    <LinearLayout
+        android:id="@+id/item_delet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/touchhandle"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#b4b4b4" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/editdelet"
+            android:layout_margin="10dp" />
+
+    </LinearLayout>
+
 </RelativeLayout>

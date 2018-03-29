@@ -1,18 +1,16 @@
 package com.example.wtl.mynotes.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.wtl.mynotes.Activity.MainActivity;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.R;
 
@@ -34,7 +32,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     private OnItemClickListener onItemClick;
     private Boolean longclick = false;
 
-    private List<String> stringList = new ArrayList<>();
+    private List<Integer> stringList = new ArrayList<>();
 
     public NotesAdapter(List<Notes> list,Context context) {
         this.list = list;
@@ -49,7 +47,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(final NotesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final NotesAdapter.ViewHolder holder, final int position) {
         Notes notes = list.get(position);
         holder.notes_content_part.setText(notes.getNotes_content_part());
         holder.notes_time.setText(notes.getNotes_time());
@@ -62,6 +60,34 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         } else {
             holder.check_box.setVisibility(View.GONE);
         }
+        holder.root_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(longclick == true) {
+                    onItemClick.OnItemClick();
+                    if (holder.check_box.isChecked()) {
+                        holder.check_box.setChecked(false);
+                    } else {
+                        holder.check_box.setChecked(true);
+                        stringList.add(position);
+                    }
+                } else if (longclick == false) {
+                    Toast.makeText(context,"sdfasd",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        holder.check_box.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (holder.check_box.isChecked()) {
+                    holder.check_box.setChecked(false);
+                } else {
+                    holder.check_box.setChecked(true);
+                    stringList.add(position);
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -90,22 +116,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
                     onItemClickListener.OnItemLongClick();
                     longclick = true;
                     return true;
-                }
-            });
-
-            root_view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(longclick == true) {
-                        onItemClick.OnItemClick();
-                        if (check_box.isChecked()) {
-                            check_box.setChecked(false);
-                        } else {
-                            check_box.setChecked(true);
-                        }
-                    } else if (longclick == false) {
-                        Toast.makeText(context,"sdfasd",Toast.LENGTH_SHORT).show();
-                    }
                 }
             });
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.wtl.mynotes.Class.Notes;
@@ -42,6 +44,9 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
 
     private SharedPreferences preferences;
 
+    private FloatingActionButton add_handle;
+    private LinearLayout sum_delet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +57,7 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
         Montior();
         preferences = getSharedPreferences("first_act",0);
         Boolean user_first = preferences.getBoolean("FIRST",true);
-        IsFirstOpen.IsFirstOpen(handle_list,preferences,user_first,this,readbase,notesList,handle_recycler,animation);
+        IsFirstOpen.IsFirstOpen(add_handle,sum_delet,handle_list,preferences,user_first,this,readbase,notesList,handle_recycler,animation);
     }
 
     private void Montior() {
@@ -60,6 +65,8 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
         handle_list = (ImageView) findViewById(R.id.handle_list);
         handle_img_back = (ImageView) findViewById(R.id.handle_img_back);
         handle_text_back = (TextView) findViewById(R.id.handle_text_back);
+        add_handle = (FloatingActionButton) findViewById(R.id.add_handle);
+        sum_delet = (LinearLayout) findViewById(R.id.sum_delet);
 
         handle_list.setOnClickListener(this);
         handle_img_back.setOnClickListener(this);
@@ -90,7 +97,7 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
                 } else {
                     handle_list.setImageResource(R.mipmap.listview);
                     handle_list.startAnimation(change_img);
-                    LoadRecycler.loadlist(handle_recycler,animation,this,notesList);
+                    LoadRecycler.loadlist(add_handle,sum_delet,handle_recycler,animation,this,notesList);
                     cv.put(NotesDB.FORMAT,0);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }

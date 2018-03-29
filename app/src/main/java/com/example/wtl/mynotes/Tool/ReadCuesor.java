@@ -3,8 +3,10 @@ package com.example.wtl.mynotes.Tool;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.animation.Animation;
+import android.widget.LinearLayout;
 
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.Class.Sumggle;
@@ -19,7 +21,7 @@ import java.util.List;
 
 public class ReadCuesor {
 
-    public static void ReadCuesor(Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {
+    public static void ReadCuesor(final FloatingActionButton button, final LinearLayout delete, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {
         Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
         if(cursor.moveToLast()) {
             do {
@@ -29,11 +31,11 @@ public class ReadCuesor {
                 notesList.add(notes);
             } while (cursor.moveToPrevious());
         }
-        if(x == 0) LoadRecycler.loadlist(notes_list,change_list_in,context,notesList);
+        if(x == 0) LoadRecycler.loadlist(button,delete,notes_list,change_list_in,context,notesList);
         else LoadRecycler.cardlist(notes_list,change_list_in,context,notesList);
     }
 
-    public static void ReadCuesorSumggle(List<Sumggle> sumggleList, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {
+    public static void ReadCuesorSumggle(final FloatingActionButton button, final LinearLayout delete,List<Sumggle> sumggleList, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {
         Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
         if(cursor.moveToLast()) {
             do {
@@ -43,7 +45,7 @@ public class ReadCuesor {
                 notesList.add(notes);
             } while (cursor.moveToPrevious());
         }
-        if(x == 0) LoadRecycler.loadlist(notes_list,change_list_in,context,notesList);
+        if(x == 0) LoadRecycler.loadlist(button,delete,notes_list,change_list_in,context,notesList);
         else LoadRecycler.cardlist(notes_list,change_list_in,context,notesList);
     }
 
