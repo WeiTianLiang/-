@@ -8,4 +8,5 @@
     <color name="touch1">#f2f2f2</color>
     <color name="touch2">#bebebe</color>
     <color name="white">#ffffff</color>
+    <color name="longtouch">#e2e2e2</color>
 </resources>

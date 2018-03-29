@@ -3,13 +3,11 @@ package com.example.wtl.mynotes.Adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.R;
@@ -31,6 +29,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     private OnItemLongClickListener onItemClickListener;
     private OnItemClickListener onItemClick;
     private Boolean longclick = false;
+    private Boolean choose = true;
 
     private List<Integer> stringList = new ArrayList<>();
 
@@ -55,7 +54,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         /*if(position == list.size()-3) {
             holder.updownline.setVisibility(View.GONE);
         }*/
-        if(longclick == true) {
+        if(longclick) {
             holder.check_box.setVisibility(View.VISIBLE);
         } else {
             holder.check_box.setVisibility(View.GONE);
@@ -63,29 +62,24 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         holder.root_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(longclick == true) {
-                    onItemClick.OnItemClick();
-                    if (holder.check_box.isChecked()) {
-                        holder.check_box.setChecked(false);
+                /*
+                * 长按状态的逻辑
+                * */
+                if(longclick) {
+                    if (holder.check_box.getDrawable().getCurrent().getConstantState().
+                            equals(context.getResources().getDrawable(R.mipmap.circhosetouch).getConstantState())) {
+                        holder.check_box.setImageResource(R.mipmap.circhose);
+                        holder.root_view.setBackground(context.getDrawable(R.color.white));
+                        choose = false;
                     } else {
-                        holder.check_box.setChecked(true);
-                        stringList.add(position);
+                        holder.check_box.setImageResource(R.mipmap.circhosetouch);
+                        holder.root_view.setBackground(context.getDrawable(R.color.longtouch));
+                        choose = true;
                     }
-                } else if (longclick == false) {
-                    Toast.makeText(context,"sdfasd",Toast.LENGTH_SHORT).show();
+                    onItemClick.OnItemClick(position,choose);
+                } else if (!longclick) {  //正常状态的逻辑
+
                 }
-            }
-        });
-        holder.check_box.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (holder.check_box.isChecked()) {
-                    holder.check_box.setChecked(false);
-                } else {
-                    holder.check_box.setChecked(true);
-                    stringList.add(position);
-                }
-                return true;
             }
         });
     }
@@ -100,7 +94,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         TextView notes_content_part;
         TextView notes_time;
         View updownline;
-        RadioButton check_box;
+        ImageView check_box;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -124,8 +118,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     }
 
     //删除Notes
-    private void removeNotes(List<String> stringList) {
-
+    public void removeNotes(int postion) {
+        list.remove(postion);
+        notifyDataSetChanged();
     }
 
     public interface OnItemLongClickListener {
@@ -133,7 +128,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     }
 
     public interface OnItemClickListener {
-        void OnItemClick();
+        void OnItemClick(int x,boolean adro);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClick) {

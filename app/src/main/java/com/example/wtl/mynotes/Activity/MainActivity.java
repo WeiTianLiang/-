@@ -1,37 +1,29 @@
 package com.example.wtl.mynotes.Activity;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.wtl.mynotes.Adapter.Notes2Adapter;
-import com.example.wtl.mynotes.Adapter.NotesAdapter;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
 import com.example.wtl.mynotes.Tool.HideScreenTop;
 import com.example.wtl.mynotes.Tool.IsFirstOpen;
 import com.example.wtl.mynotes.Tool.LoadRecycler;
-import com.example.wtl.mynotes.Tool.ReadCuesor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +47,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private SharedPreferences preferences;//判断程序是否第一次启动
 
+    /*
+    * 注册广播
+    * */
+    private LocalBroadcastManager localBroadcastManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         HideScreenTop.HideScreenTop(getWindow());//隐藏状态栏
+        localBroadcastManager = LocalBroadcastManager.getInstance(this);//注册广播
         notesDB = new NotesDB(this);
         readbase = notesDB.getWritableDatabase();
         Montior();
@@ -110,8 +108,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.library:
                 Intent intent1 = new Intent(MainActivity.this,SmuggleActivity.class);
                 startActivity(intent1);
+                finish();
                 overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                 break;
+        }
+    }
+
+    class LocalReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
         }
     }
 
