@@ -2,6 +2,7 @@ package com.example.wtl.mynotes.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,8 +106,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
             root_view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    onItemClickListener.OnItemLongClick();
-                    longclick = true;
+                    longclick = onItemClickListener.OnItemLongClick();
                     return true;
                 }
             });
@@ -122,7 +122,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     }
 
     public interface OnItemLongClickListener {
-        void OnItemLongClick();
+        boolean OnItemLongClick();
     }
 
     public interface OnItemClickListener {

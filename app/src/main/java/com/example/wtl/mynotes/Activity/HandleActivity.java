@@ -48,13 +48,10 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
     private FloatingActionButton add_handle;
     private LinearLayout sum_delet;
 
-    private LocalBroadcastManager localBroadcastManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_handle);
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);
         HideScreenTop.HideScreenTop(getWindow());
         notesDB = new NotesDB(this);
         readbase = notesDB.getWritableDatabase();

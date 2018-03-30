@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.wtl.mynotes.Adapter.Notes2Adapter;
@@ -53,24 +54,25 @@ public class LoadRecycler {
         recyclerView.startAnimation(animation);
         adapter.setOnItemLongClickListener(new NotesAdapter.OnItemLongClickListener() {
             @Override
-            public void OnItemLongClick() {
+            public boolean OnItemLongClick() {
                 adapter.notifyDataSetChanged();
                 delete.setVisibility(View.VISIBLE);
                 button.setVisibility(View.GONE);
+                return true;
             }
         });
         adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
             @Override
-            public void OnItemClick(int x, boolean adro,List<Notes> list1) {
-                for(int i = 0 ; i < list1.size() ; i++) {
+            public void OnItemClick(int x, boolean adro, List<Notes> list1) {
+                for (int i = 0; i < list1.size(); i++) {
                     notesList.add(list1.get(i));
                 }
-                if(adro) {
+                if (adro) {
                     stringList.add(x);//如果类型为true，则添加
-                } else  {
+                } else {
                     //否则，删除当前list中的选中值
-                    for(int i = 0 ; i < stringList.size() ; i++) {
-                        if(stringList.get(i) == x) {
+                    for (int i = 0; i < stringList.size(); i++) {
+                        if (stringList.get(i) == x) {
                             stringList.remove(i);
                         }
                     }
@@ -82,13 +84,22 @@ public class LoadRecycler {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for(int i = 0 ; i < stringList.size() ; i++) {
-                    if(i == 0) adapter.removeNotes(stringList.get(i));
-                    else adapter.removeNotes(stringList.get(i)-i);
+                for (int i = 0; i < stringList.size(); i++) {
+                    if (i == 0) adapter.removeNotes(stringList.get(i));
+                    else adapter.removeNotes(stringList.get(i) - i);
                     //根据时间删除表中数据
-                    database.delete(NotesDB.TABLE_NAME,NotesDB.TIME+"= ?",new String[]{notesList.get(stringList.get(i)).getNotes_time()});
+                    database.delete(NotesDB.TABLE_NAME, NotesDB.TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                 }
                 stringList.removeAll(stringList);//清空表
+                adapter.setOnItemLongClickListener(new NotesAdapter.OnItemLongClickListener() {
+                    @Override
+                    public boolean OnItemLongClick() {
+                        adapter.notifyDataSetChanged();
+                        delete.setVisibility(View.GONE);
+                        button.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                });
             }
         });
     }

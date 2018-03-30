@@ -8,6 +8,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.Class.Sumggle;
@@ -36,7 +37,7 @@ public class ReadCuesor {
         else LoadRecycler.cardlist(notes_list,change_list_in,context,notesList);
     }
 
-    public static void ReadCuesorSumggle(final FloatingActionButton button, final LinearLayout delete,List<Sumggle> sumggleList, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {
+    /*public static void ReadCuesorSumggle(final FloatingActionButton button, final LinearLayout delete,List<Sumggle> sumggleList, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {
         Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
         if(cursor.moveToLast()) {
             do {
@@ -48,6 +49,6 @@ public class ReadCuesor {
         }
         if(x == 0) LoadRecycler.loadlist(button,delete,notes_list,change_list_in,context,notesList);
         else LoadRecycler.cardlist(notes_list,change_list_in,context,notesList);
-    }
+    }*/
 
 }
