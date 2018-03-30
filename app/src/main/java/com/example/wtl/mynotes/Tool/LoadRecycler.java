@@ -1,8 +1,10 @@
 package com.example.wtl.mynotes.Tool;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 import com.example.wtl.mynotes.Adapter.Notes2Adapter;
 import com.example.wtl.mynotes.Adapter.NotesAdapter;
 import com.example.wtl.mynotes.Class.Notes;
+import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
 
 import java.util.ArrayList;
@@ -35,8 +38,14 @@ public class LoadRecycler {
     * 加载list布局
     * */
     public static void loadlist(final FloatingActionButton button, final LinearLayout delete, RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
-        final List<Integer> stringList = new ArrayList<>();
-        animation = AnimationUtils.loadAnimation(context, R.anim.change_list_anim_in);
+        final List<Integer> stringList = new ArrayList<>();//定义list存储要删除的数
+        final List<Notes> notesList = new ArrayList<>();//定义list存储适配器传来的值
+        NotesDB notesDB = new NotesDB(context);//初始化数据库
+        final SQLiteDatabase database = notesDB.getWritableDatabase();//初始化数据库操作工具
+        animation = AnimationUtils.loadAnimation(context, R.anim.change_list_anim_in);//初始化动画
+        DefaultItemAnimator ain = new DefaultItemAnimator();
+        ain.setRemoveDuration(300);
+        recyclerView.setItemAnimator(ain);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
         final NotesAdapter adapter = new NotesAdapter(list, context);
@@ -52,29 +61,34 @@ public class LoadRecycler {
         });
         adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
             @Override
-            public void OnItemClick(int x, boolean adro) {
-                if(adro) {
-                    stringList.add(x);
+            public void OnItemClick(int x, boolean adro,List<Notes> list1) {
+                for(int i = 0 ; i < list1.size() ; i++) {
+                    notesList.add(list1.get(i));
                 }
-                if(!adro){
+                if(adro) {
+                    stringList.add(x);//如果类型为true，则添加
+                } else  {
+                    //否则，删除当前list中的选中值
                     for(int i = 0 ; i < stringList.size() ; i++) {
                         if(stringList.get(i) == x) {
                             stringList.remove(i);
                         }
                     }
                 }
-                Collections.sort(stringList);
+                Collections.sort(stringList);//从小到大对list排序
             }
+
         });
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 for(int i = 0 ; i < stringList.size() ; i++) {
                     if(i == 0) adapter.removeNotes(stringList.get(i));
-                    else adapter.removeNotes(stringList.get(i)-1);
-
+                    else adapter.removeNotes(stringList.get(i)-i);
+                    //根据时间删除表中数据
+                    database.delete(NotesDB.TABLE_NAME,NotesDB.TIME+"= ?",new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                 }
-                stringList.removeAll(stringList);
+                stringList.removeAll(stringList);//清空表
             }
         });
     }

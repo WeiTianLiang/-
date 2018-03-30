@@ -22,6 +22,16 @@
             android:src="@mipmap/library"/>
 
         <TextView
+            android:id="@+id/change_all_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            android:background="@drawable/change_all"
+            android:text="取消"
+            android:padding="2dp"
+            android:visibility="gone"/>
+
+        <TextView
             android:id="@+id/notes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,7 +45,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|right"
-            android:src="@mipmap/listview" />
+            android:src="@mipmap/listview"/>
+
+        <TextView
+            android:id="@+id/change_all_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|right"
+            android:background="@drawable/change_all"
+            android:text="全选"
+            android:padding="2dp"
+            android:visibility="gone"/>
 
     </FrameLayout>
 

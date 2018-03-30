@@ -167,7 +167,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     * 获取当前时间
     * */
     private String getTime() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
         Date date = new Date();
         String time = format.format(date);
         return time;

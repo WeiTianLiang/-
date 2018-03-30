@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,8 +30,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     private OnItemClickListener onItemClick;
     private Boolean longclick = false;
     private Boolean choose = true;
-
-    private List<Integer> stringList = new ArrayList<>();
 
     public NotesAdapter(List<Notes> list,Context context) {
         this.list = list;
@@ -76,9 +74,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
                         holder.root_view.setBackground(context.getDrawable(R.color.longtouch));
                         choose = true;
                     }
-                    onItemClick.OnItemClick(position,choose);
+                    onItemClick.OnItemClick(position,choose,list);
                 } else if (!longclick) {  //正常状态的逻辑
-
+                    Toast.makeText(context,"点了一下",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -128,7 +126,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     }
 
     public interface OnItemClickListener {
-        void OnItemClick(int x,boolean adro);
+        void OnItemClick(int x,boolean adro,List<Notes> list);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClick) {

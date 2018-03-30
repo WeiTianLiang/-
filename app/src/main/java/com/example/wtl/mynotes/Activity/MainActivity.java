@@ -47,17 +47,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private SharedPreferences preferences;//判断程序是否第一次启动
 
-    /*
-    * 注册广播
-    * */
-    private LocalBroadcastManager localBroadcastManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         HideScreenTop.HideScreenTop(getWindow());//隐藏状态栏
-        localBroadcastManager = LocalBroadcastManager.getInstance(this);//注册广播
         notesDB = new NotesDB(this);
         readbase = notesDB.getWritableDatabase();
         Montior();
@@ -111,14 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
                 overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                 break;
-        }
-    }
-
-    class LocalReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
         }
     }
 

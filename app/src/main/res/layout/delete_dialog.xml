@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="#f4f4f4">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="删除记录？"
+            android:textColor="#414141"
+            android:textSize="17sp"
+            android:layout_marginTop="40dp"/>
+
+        <TextView
+            android:id="@+id/dialog_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="30dp"
+            android:text="你确定要删除这条记录吗？"
+            android:textColor="#414141"
+            android:textSize="20sp"
+            android:gravity="center"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#b4b4b4"
+            android:layout_marginTop="35dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/dialog_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="取消"
+                android:gravity="center"
+                android:textColor="#414141"
+                android:textSize="17sp"
+                android:padding="15dp"
+                android:background="@drawable/touch"/>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="#b4b4b4"/>
+
+            <TextView
+                android:id="@+id/dialog_sure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="确定"
+                android:gravity="center"
+                android:textColor="#414141"
+                android:textSize="17sp"
+                android:padding="15dp"
+                android:background="@drawable/touch"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
