@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Animation change_img;
 
     private Animation change_list_in;
+    private Animation delete_down;
 
     private SharedPreferences preferences;//判断程序是否第一次启动
 
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Montior();
         preferences = getSharedPreferences("first_act",0);
         Boolean user_first = preferences.getBoolean("FIRST",true);
+        delete_down = AnimationUtils.loadAnimation(this,R.anim.delete_down);
         IsFirstOpen.IsFirstOpen(add_my_notes,item_delet,change_list,preferences,user_first,this,readbase,notesList,notes_list,change_list_in);
     }
 
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 add_my_notes.setVisibility(View.VISIBLE);
                 item_delet.setVisibility(View.GONE);
+                item_delet.startAnimation(delete_down);
                 break;
             case R.id.library:
                 Intent intent1 = new Intent(MainActivity.this,SmuggleActivity.class);

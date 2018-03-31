@@ -37,10 +37,11 @@ public class LoadRecycler {
         final List<Notes> notesList = new ArrayList<>();//定义list存储适配器传来的值
         NotesDB notesDB = new NotesDB(context);//初始化数据库
         final SQLiteDatabase database = notesDB.getWritableDatabase();//初始化数据库操作工具
+
         animation = AnimationUtils.loadAnimation(context, R.anim.change_list_anim_in);//初始化动画
-        DefaultItemAnimator ain = new DefaultItemAnimator();
-        ain.setRemoveDuration(300);
-        recyclerView.setItemAnimator(ain);
+        final Animation animation1 = AnimationUtils.loadAnimation(context,R.anim.delete_floar);
+        final Animation animation2 = AnimationUtils.loadAnimation(context,R.anim.delete_down);
+
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
         final NotesAdapter adapter = new NotesAdapter(list, context);
@@ -51,6 +52,7 @@ public class LoadRecycler {
             public boolean OnItemLongClick() {
                 adapter.notifyDataSetChanged();
                 delete.setVisibility(View.VISIBLE);
+                delete.startAnimation(animation1);
                 button.setVisibility(View.GONE);
 
                 adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
@@ -85,6 +87,7 @@ public class LoadRecycler {
                         }
                         stringList.removeAll(stringList);//清空表
                         delete.setVisibility(View.GONE);
+                        delete.startAnimation(animation2);
                         button.setVisibility(View.VISIBLE);
                         adapter.isLongItem();
                         adapter.notifyDataSetChanged();

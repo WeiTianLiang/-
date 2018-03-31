@@ -1,12 +1,9 @@
 package com.example.wtl.mynotes.Activity;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -24,17 +21,16 @@ import com.example.wtl.mynotes.R;
 import com.example.wtl.mynotes.Tool.HideScreenTop;
 import com.example.wtl.mynotes.Tool.IsFirstOpen;
 import com.example.wtl.mynotes.Tool.LoadRecycler;
-import com.example.wtl.mynotes.Tool.ReadCuesor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.prefs.PreferenceChangeEvent;
 
 public class HandleActivity extends AppCompatActivity implements View.OnClickListener{
 
     private RecyclerView handle_recycler;
     private Animation animation;
     private Animation change_img;
+    private Animation delete_down;
     private List<Notes> notesList = new ArrayList<>();
     private ImageView handle_list;
     private ImageView handle_img_back;
@@ -58,6 +54,7 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
         Montior();
         preferences = getSharedPreferences("first_act",0);
         Boolean user_first = preferences.getBoolean("FIRST",true);
+        delete_down = AnimationUtils.loadAnimation(this,R.anim.delete_down);
         IsFirstOpen.IsFirstOpen(add_handle,sum_delet,handle_list,preferences,user_first,this,readbase,notesList,handle_recycler,animation);
     }
 
@@ -102,6 +99,10 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
                     cv.put(NotesDB.FORMAT,0);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }
+                //修复逻辑（当处于长按状态时改变list布局样式则退出）
+                add_handle.setVisibility(View.VISIBLE);
+                sum_delet.setVisibility(View.GONE);
+                sum_delet.startAnimation(delete_down);
                 break;
         }
     }

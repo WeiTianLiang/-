@@ -1,27 +1,21 @@
 package com.example.wtl.mynotes.Activity;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
-import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
 import com.example.wtl.mynotes.Tool.HideScreenTop;
@@ -68,6 +62,42 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     edit_over.setVisibility(View.VISIBLE);
                     edit_over.setAnimation(animation_show);
                 }
+                /*//字体加粗监听
+                editbold.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(editbold.getDrawable().getCurrent().getConstantState().
+                                equals(getResources().getDrawable(R.mipmap.editbold).getConstantState())) {
+                            editbold.setImageResource(R.mipmap.touchblod);
+                        } else {
+                            editbold.setImageResource(R.mipmap.editbold);
+                        }
+                    }
+                });
+                //字体斜体监听
+                editoblique.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(editoblique.getDrawable().getCurrent().getConstantState().
+                                equals(getResources().getDrawable(R.mipmap.editoblique).getConstantState())) {
+                            editoblique.setImageResource(R.mipmap.touchoblique);
+                        } else {
+                            editoblique.setImageResource(R.mipmap.editoblique);
+                        }
+                    }
+                });
+                //字段居中
+                editcenter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(editcenter.getDrawable().getCurrent().getConstantState().
+                                equals(getResources().getDrawable(R.mipmap.editcenter).getConstantState())) {
+                            editcenter.setImageResource(R.mipmap.touchcenter);
+                        } else {
+                            editcenter.setImageResource(R.mipmap.editcenter);
+                        }
+                    }
+                });*/
             }
 
             @Override

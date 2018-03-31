@@ -2,10 +2,11 @@ package com.example.wtl.mynotes.Adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -32,9 +33,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     private Boolean longclick = false;
     private Boolean choose = true;
 
+    private Animation long_img_come;
+    private Animation long_img_gone;
+
     public NotesAdapter(List<Notes> list,Context context) {
         this.list = list;
         this.context = context;
+        long_img_come = AnimationUtils.loadAnimation(context,R.anim.long_img_come);
+        long_img_gone = AnimationUtils.loadAnimation(context,R.anim.long_img_gone);
     }
 
     @Override
@@ -55,8 +61,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         }*/
         if(longclick) {
             holder.check_box.setVisibility(View.VISIBLE);
+            holder.check_box.startAnimation(long_img_come);
         } else {
             holder.check_box.setVisibility(View.GONE);
+            holder.check_box.startAnimation(long_img_gone);
         }
         holder.root_view.setOnClickListener(new View.OnClickListener() {
             @Override
