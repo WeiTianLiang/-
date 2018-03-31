@@ -81,6 +81,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
                 }
             }
         });
+        holder.root_view.setBackground(context.getDrawable(R.color.white));
     }
 
     @Override
@@ -113,6 +114,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
 
         }
 
+    }
+
+    public void isLongItem(){
+        longclick = false;
     }
 
     //删除Notes
