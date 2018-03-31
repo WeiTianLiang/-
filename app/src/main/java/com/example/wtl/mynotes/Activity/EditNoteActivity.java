@@ -3,6 +3,7 @@ package com.example.wtl.mynotes.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.icu.text.SimpleDateFormat;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import android.text.Editable;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,7 +39,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private ImageView editcolor;//背景颜色
     private ImageView editbold;//加粗
     private ImageView editoblique;//斜体
-    private ImageView editcenter;//居中
+    private ImageView editcenter;//大字
+    private ImageView editpoint;//重点
     private ImageView editpicture;//相册
 
     private NotesDB notesDB;//初始化数据库
@@ -47,7 +51,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
     private boolean isBold = false;
     private boolean isLean = false;
-    private boolean isCenter = false;
+    private boolean isBig = false;
+    private boolean isPoint = false;
     private int start;
     private int count;
 
@@ -101,6 +106,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         editoblique = (ImageView) findViewById(R.id.editoblique);
         editcenter = (ImageView) findViewById(R.id.editcenter);
         editpicture = (ImageView) findViewById(R.id.editpicture);
+        editpoint = (ImageView) findViewById(R.id.editpoint);
 
         edit_back.setOnClickListener(this);
         edit_over.setOnClickListener(this);
@@ -111,6 +117,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         editoblique.setOnClickListener(this);
         editcenter.setOnClickListener(this);
         editpicture.setOnClickListener(this);
+        editpoint.setOnClickListener(this);
     }
 
     @Override
@@ -160,11 +167,22 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.editcenter:
                 if(editcenter.getDrawable().getCurrent().getConstantState().
-                        equals(this.getResources().getDrawable(R.mipmap.editcenter).getConstantState())) {
-                    editcenter.setImageResource(R.mipmap.touchcenter);
-
+                        equals(this.getResources().getDrawable(R.mipmap.editbig).getConstantState())) {
+                    editcenter.setImageResource(R.mipmap.toucheditbig);
+                    isBig = true;
                 } else {
-                    editcenter.setImageResource(R.mipmap.editcenter);
+                    editcenter.setImageResource(R.mipmap.editbig);
+                    isBig = false;
+                }
+                break;
+            case R.id.editpoint:
+                if(editpoint.getDrawable().getCurrent().getConstantState().
+                        equals(this.getResources().getDrawable(R.mipmap.editpoint).getConstantState())) {
+                    editpoint.setImageResource(R.mipmap.toucheditpoint);
+                    isPoint = true;
+                } else {
+                    editpoint.setImageResource(R.mipmap.editpoint);
+                    isPoint = false;
                 }
                 break;
             case R.id.editcolor:
@@ -198,14 +216,16 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     //实现即时文本字体改变
     private void editchange(Editable s) {
         if(isBold) {
-            for(int i = start ; i < start+count ; i++) {
-                s.setSpan(new StyleSpan(Typeface.BOLD),i,i+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
+            s.setSpan(new StyleSpan(Typeface.BOLD),start,start+count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
         if(isLean) {
-            for(int i = start ; i < start+count ; i++) {
-                s.setSpan(new StyleSpan(Typeface.ITALIC),i,i+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
+            s.setSpan(new StyleSpan(Typeface.ITALIC),start,start+count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        if(isBig) {
+            s.setSpan(new RelativeSizeSpan(2.0f),start,start+count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        if(isPoint) {
+            s.setSpan(new ForegroundColorSpan(Color.BLUE),start,start+count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 

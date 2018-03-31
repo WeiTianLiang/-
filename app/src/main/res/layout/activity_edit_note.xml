@@ -107,7 +107,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/editcenter"/>
+            android:src="@mipmap/editbig"/>
+
+        <ImageView
+            android:id="@+id/editpoint"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@mipmap/editpoint"/>
 
     </LinearLayout>
 
