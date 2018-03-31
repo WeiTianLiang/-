@@ -34,7 +34,7 @@ public class ReadCuesor {
             } while (cursor.moveToPrevious());
         }
         if(x == 0) LoadRecycler.loadlist(button,delete,notes_list,change_list_in,context,notesList);
-        else LoadRecycler.cardlist(notes_list,change_list_in,context,notesList);
+        else LoadRecycler.cardlist(button,delete,notes_list,change_list_in,context,notesList);
     }
 
     /*public static void ReadCuesorSumggle(final FloatingActionButton button, final LinearLayout delete,List<Sumggle> sumggleList, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {

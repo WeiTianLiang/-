@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         equals(this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
                     change_list.setImageResource(R.mipmap.cardview);
                     change_list.startAnimation(change_img);
-                    LoadRecycler.cardlist(notes_list,change_list_in,this,notesList);
+                    LoadRecycler.cardlist(add_my_notes,item_delet,notes_list,change_list_in,this,notesList);
                     cv.put(NotesDB.FORMAT,1);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 } else {

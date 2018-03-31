@@ -89,18 +89,16 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         return list.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+     class ViewHolder extends RecyclerView.ViewHolder{
         LinearLayout root_view;
         TextView notes_content_part;
         TextView notes_time;
-        View updownline;
         ImageView check_box;
 
         public ViewHolder(View itemView) {
             super(itemView);
             notes_content_part = itemView.findViewById(R.id.notes_content_part);
             notes_time = itemView.findViewById(R.id.notes_time);
-            updownline = itemView.findViewById(R.id.updownline);
             check_box = itemView.findViewById(R.id.check_box);
             root_view = itemView.findViewById(R.id.root_view);
 

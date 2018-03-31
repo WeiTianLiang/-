@@ -92,7 +92,7 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
                         equals(this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
                     handle_list.setImageResource(R.mipmap.cardview);
                     handle_list.startAnimation(change_img);
-                    LoadRecycler.cardlist(handle_recycler,animation,this,notesList);
+                    LoadRecycler.cardlist(add_handle,sum_delet,handle_recycler,animation,this,notesList);
                     cv.put(NotesDB.FORMAT,1);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 } else {
