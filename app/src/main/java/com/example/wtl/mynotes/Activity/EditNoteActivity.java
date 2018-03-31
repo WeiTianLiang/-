@@ -3,11 +3,15 @@ package com.example.wtl.mynotes.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.icu.text.SimpleDateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.Spanned;
 import android.text.TextWatcher;
+import android.text.style.StyleSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -41,6 +45,12 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private Animation animation_show;//淡出动画
     private Animation animation_hide;//淡入动画
 
+    private boolean isBold = false;
+    private boolean isLean = false;
+    private boolean isCenter = false;
+    private int start;
+    private int count;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,42 +72,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     edit_over.setVisibility(View.VISIBLE);
                     edit_over.setAnimation(animation_show);
                 }
-                /*//字体加粗监听
-                editbold.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(editbold.getDrawable().getCurrent().getConstantState().
-                                equals(getResources().getDrawable(R.mipmap.editbold).getConstantState())) {
-                            editbold.setImageResource(R.mipmap.touchblod);
-                        } else {
-                            editbold.setImageResource(R.mipmap.editbold);
-                        }
-                    }
-                });
-                //字体斜体监听
-                editoblique.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(editoblique.getDrawable().getCurrent().getConstantState().
-                                equals(getResources().getDrawable(R.mipmap.editoblique).getConstantState())) {
-                            editoblique.setImageResource(R.mipmap.touchoblique);
-                        } else {
-                            editoblique.setImageResource(R.mipmap.editoblique);
-                        }
-                    }
-                });
-                //字段居中
-                editcenter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(editcenter.getDrawable().getCurrent().getConstantState().
-                                equals(getResources().getDrawable(R.mipmap.editcenter).getConstantState())) {
-                            editcenter.setImageResource(R.mipmap.touchcenter);
-                        } else {
-                            editcenter.setImageResource(R.mipmap.editcenter);
-                        }
-                    }
-                });*/
+                start = i;
+                count = i2;
             }
 
             @Override
@@ -106,6 +82,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     edit_over.setVisibility(View.GONE);
                     edit_over.setAnimation(animation_hide);
                 }
+                editchange(editable);
             }
         });
         edit_time.setText(getTime());
@@ -165,18 +142,20 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 if(editbold.getDrawable().getCurrent().getConstantState().
                         equals(this.getResources().getDrawable(R.mipmap.editbold).getConstantState())) {
                     editbold.setImageResource(R.mipmap.touchblod);
-
+                    isBold = true;
                 } else {
                     editbold.setImageResource(R.mipmap.editbold);
+                    isBold = false;
                 }
                 break;
             case R.id.editoblique:
                 if(editoblique.getDrawable().getCurrent().getConstantState().
                         equals(this.getResources().getDrawable(R.mipmap.editoblique).getConstantState())) {
                     editoblique.setImageResource(R.mipmap.touchoblique);
-
+                    isLean = true;
                 } else {
                     editoblique.setImageResource(R.mipmap.editoblique);
+                    isLean = false;
                 }
                 break;
             case R.id.editcenter:
@@ -215,4 +194,19 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         }
         return false;
     }
+
+    //实现即时文本字体改变
+    private void editchange(Editable s) {
+        if(isBold) {
+            for(int i = start ; i < start+count ; i++) {
+                s.setSpan(new StyleSpan(Typeface.BOLD),i,i+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        if(isLean) {
+            for(int i = start ; i < start+count ; i++) {
+                s.setSpan(new StyleSpan(Typeface.ITALIC),i,i+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+    }
+
 }
