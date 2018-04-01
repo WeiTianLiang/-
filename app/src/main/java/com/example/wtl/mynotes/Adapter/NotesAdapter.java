@@ -57,16 +57,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         final Notes notes = list.get(position);
         holder.notes_content_part.setText(notes.getNotes_content_part());
         holder.notes_time.setText(notes.getNotes_time());
-        //隐藏最后一个下划线
-        /*if(position == list.size()-3) {
-            holder.updownline.setVisibility(View.GONE);
-        }*/
+
         if(longclick) {
             holder.check_box.setVisibility(View.VISIBLE);
-            holder.check_box.startAnimation(long_img_come);
+            /*holder.check_box.startAnimation(long_img_come);*/
         } else {
             holder.check_box.setVisibility(View.GONE);
-            holder.check_box.startAnimation(long_img_gone);
+            /*holder.check_box.startAnimation(long_img_gone);*/
         }
         holder.root_view.setOnClickListener(new View.OnClickListener() {
             @Override

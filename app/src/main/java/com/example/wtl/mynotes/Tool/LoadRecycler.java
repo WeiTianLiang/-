@@ -112,7 +112,7 @@ public class LoadRecycler {
         recyclerView.setLayoutManager(manager);
         final GridAdapter adapter = new GridAdapter(list, context);
         recyclerView.setAdapter(adapter);
-        runLayoutAnimation(recyclerView,0);
+        runLayoutAnimation(recyclerView,1);
         adapter.setOnItemLongClickListener(new GridAdapter.OnItemLongClickListener() {
             @Override
             public boolean OnItemLongClick() {
