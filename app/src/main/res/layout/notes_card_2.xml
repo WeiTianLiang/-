@@ -22,6 +22,7 @@
             android:paddingTop="25dp"
             android:paddingBottom="25dp"
             android:paddingLeft="25dp"
+            android:paddingRight="25dp"
             android:layout_weight="1">
 
             <TextView

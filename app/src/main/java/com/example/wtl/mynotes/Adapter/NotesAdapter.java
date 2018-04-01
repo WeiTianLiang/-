@@ -91,7 +91,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
                     intent.putExtra("Postion",notes.getNotes_time());
                     intent.putExtra("State","change");
                     context.startActivity(intent);
-                    ((Activity)context).finish();//因为context没有finish操作,将它强转为activity
+                    ((Activity)context).finish();//因为context没有finish操作,将context强转为activity
                 }
             }
         });

@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.GridLayoutAnimationController;
+import android.view.animation.LayoutAnimationController;
 import android.widget.LinearLayout;
 
 import com.example.wtl.mynotes.Adapter.Notes2Adapter;
@@ -38,15 +40,14 @@ public class LoadRecycler {
         NotesDB notesDB = new NotesDB(context);//初始化数据库
         final SQLiteDatabase database = notesDB.getWritableDatabase();//初始化数据库操作工具
 
-        animation = AnimationUtils.loadAnimation(context, R.anim.change_list_anim_in);//初始化动画
-        final Animation animation1 = AnimationUtils.loadAnimation(context,R.anim.delete_floar);
-        final Animation animation2 = AnimationUtils.loadAnimation(context,R.anim.delete_down);
+        final Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.delete_floar);
+        final Animation animation2 = AnimationUtils.loadAnimation(context, R.anim.delete_down);
 
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
         final NotesAdapter adapter = new NotesAdapter(list, context);
         recyclerView.setAdapter(adapter);
-        recyclerView.startAnimation(animation);
+        runLayoutAnimation(recyclerView);
         adapter.setOnItemLongClickListener(new NotesAdapter.OnItemLongClickListener() {
             @Override
             public boolean OnItemLongClick() {
@@ -101,17 +102,16 @@ public class LoadRecycler {
     /*
     * 加载card布局
     * */
-    public static void cardlist(final FloatingActionButton button, final LinearLayout delete,RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
+    public static void cardlist(final FloatingActionButton button, final LinearLayout delete, RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
         final List<Integer> stringList = new ArrayList<>();//定义list存储要删除的数
         final List<Notes> notesList = new ArrayList<>();//定义list存储适配器传来的值
         NotesDB notesDB = new NotesDB(context);//初始化数据库
         final SQLiteDatabase database = notesDB.getWritableDatabase();//初始化数据库操作工具
-        animation = AnimationUtils.loadAnimation(context, R.anim.change_list_anim_in);
         GridLayoutManager manager = new GridLayoutManager(context, 2);
         recyclerView.setLayoutManager(manager);
         final Notes2Adapter adapter = new Notes2Adapter(list, context);
         recyclerView.setAdapter(adapter);
-        recyclerView.startAnimation(animation);
+        runLayoutAnimation(recyclerView);
         adapter.setOnItemLongClickListener(new Notes2Adapter.OnItemLongClickListener() {
             @Override
             public boolean OnItemLongClick() {
@@ -158,6 +158,16 @@ public class LoadRecycler {
                 return true;
             }
         });
+    }
+
+    //运行使用lauoutanimal加载的动画
+    private static void runLayoutAnimation(final RecyclerView recyclerView) {
+        final Context context = recyclerView.getContext();
+        final LayoutAnimationController controller =
+                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_change_list_anim);
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
 }
