@@ -15,6 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.example.wtl.mynotes.Adapter.NotesAdapter;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
@@ -98,9 +99,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     cv.put(NotesDB.FORMAT,0);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }
-                add_my_notes.setVisibility(View.VISIBLE);
-                item_delet.setVisibility(View.GONE);
-                item_delet.startAnimation(delete_down);
+                if(item_delet.getVisibility() == View.VISIBLE) {
+                    add_my_notes.setVisibility(View.VISIBLE);
+                    item_delet.setVisibility(View.GONE);
+                    item_delet.startAnimation(delete_down);
+                }
                 break;
             case R.id.library:
                 Intent intent1 = new Intent(MainActivity.this,SmuggleActivity.class);

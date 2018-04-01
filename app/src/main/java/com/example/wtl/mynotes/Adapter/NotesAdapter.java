@@ -130,6 +130,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
 
     public void isLongItem(){
         longclick = false;
+        notifyDataSetChanged();
     }
 
     //删除Notes

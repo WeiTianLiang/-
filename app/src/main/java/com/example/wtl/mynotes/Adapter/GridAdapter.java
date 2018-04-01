@@ -20,7 +20,7 @@ import java.util.List;
  * Created by WTL on 2018/3/23.
  */
 
-public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder>{
+public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
 
     private List<Notes> list;
     private Context context;
@@ -30,20 +30,20 @@ public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder
     private Boolean longclick = false;
     private Boolean choose = true;
 
-    public Notes2Adapter(List<Notes> list,Context context) {
+    public GridAdapter(List<Notes> list, Context context) {
         this.list = list;
         this.context = context;
     }
 
     @Override
-    public Notes2Adapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public GridAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.notes_card_2,parent,false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(final Notes2Adapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final GridAdapter.ViewHolder holder, final int position) {
         Notes notes = list.get(position);
         holder.notes_content_part_2.setText(notes.getNotes_content_part());
         holder.notes_time_2.setText(notes.getNotes_time());
@@ -63,7 +63,7 @@ public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder
                     if (holder.check_card_box.getDrawable().getCurrent().getConstantState().
                             equals(context.getResources().getDrawable(R.mipmap.circhosetouch).getConstantState())) {
                         holder.check_card_box.setImageResource(R.mipmap.circhose);
-                        holder.check_card_box.setBackground(context.getDrawable(R.color.white));
+                        holder.card_root_view.setBackground(context.getDrawable(R.color.white));
                         choose = false;
                     } else {
                         holder.check_card_box.setImageResource(R.mipmap.circhosetouch);
@@ -110,6 +110,7 @@ public class Notes2Adapter extends RecyclerView.Adapter<Notes2Adapter.ViewHolder
 
     public void isLongItem(){
         longclick = false;
+        notifyDataSetChanged();
     }
 
     //删除Notes

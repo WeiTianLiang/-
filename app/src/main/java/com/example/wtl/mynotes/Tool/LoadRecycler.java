@@ -3,18 +3,16 @@ package com.example.wtl.mynotes.Tool;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.GridLayoutAnimationController;
 import android.view.animation.LayoutAnimationController;
 import android.widget.LinearLayout;
 
-import com.example.wtl.mynotes.Adapter.Notes2Adapter;
+import com.example.wtl.mynotes.Adapter.GridAdapter;
 import com.example.wtl.mynotes.Adapter.NotesAdapter;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
@@ -47,7 +45,7 @@ public class LoadRecycler {
         recyclerView.setLayoutManager(manager);
         final NotesAdapter adapter = new NotesAdapter(list, context);
         recyclerView.setAdapter(adapter);
-        runLayoutAnimation(recyclerView);
+        runLayoutAnimation(recyclerView,0);
         adapter.setOnItemLongClickListener(new NotesAdapter.OnItemLongClickListener() {
             @Override
             public boolean OnItemLongClick() {
@@ -91,7 +89,6 @@ public class LoadRecycler {
                         delete.startAnimation(animation2);
                         button.setVisibility(View.VISIBLE);
                         adapter.isLongItem();
-                        adapter.notifyDataSetChanged();
                     }
                 });
                 return true;
@@ -107,19 +104,24 @@ public class LoadRecycler {
         final List<Notes> notesList = new ArrayList<>();//定义list存储适配器传来的值
         NotesDB notesDB = new NotesDB(context);//初始化数据库
         final SQLiteDatabase database = notesDB.getWritableDatabase();//初始化数据库操作工具
+
+        final Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.delete_floar);
+        final Animation animation2 = AnimationUtils.loadAnimation(context, R.anim.delete_down);
+
         GridLayoutManager manager = new GridLayoutManager(context, 2);
         recyclerView.setLayoutManager(manager);
-        final Notes2Adapter adapter = new Notes2Adapter(list, context);
+        final GridAdapter adapter = new GridAdapter(list, context);
         recyclerView.setAdapter(adapter);
-        runLayoutAnimation(recyclerView);
-        adapter.setOnItemLongClickListener(new Notes2Adapter.OnItemLongClickListener() {
+        runLayoutAnimation(recyclerView,0);
+        adapter.setOnItemLongClickListener(new GridAdapter.OnItemLongClickListener() {
             @Override
             public boolean OnItemLongClick() {
                 adapter.notifyDataSetChanged();
                 delete.setVisibility(View.VISIBLE);
+                delete.setAnimation(animation1);
                 button.setVisibility(View.GONE);
 
-                adapter.setOnItemClickListener(new Notes2Adapter.OnItemClickListener() {
+                adapter.setOnItemClickListener(new GridAdapter.OnItemClickListener() {
                     @Override
                     public void OnItemClick(int x, boolean adro, List<Notes> list) {
                         for (int i = 0; i < list.size(); i++) {
@@ -150,9 +152,9 @@ public class LoadRecycler {
                         }
                         stringList.removeAll(stringList);//清空表
                         delete.setVisibility(View.GONE);
+                        delete.setAnimation(animation2);
                         button.setVisibility(View.VISIBLE);
                         adapter.isLongItem();
-                        adapter.notifyDataSetChanged();
                     }
                 });
                 return true;
@@ -161,13 +163,22 @@ public class LoadRecycler {
     }
 
     //运行使用lauoutanimal加载的动画
-    private static void runLayoutAnimation(final RecyclerView recyclerView) {
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_change_list_anim);
-        recyclerView.setLayoutAnimation(controller);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
+    private static void runLayoutAnimation(final RecyclerView recyclerView,int x) {
+        if(x == 0) {
+            final Context context = recyclerView.getContext();
+            final LayoutAnimationController controller =
+                    AnimationUtils.loadLayoutAnimation(context, R.anim.layout_change_list_anim);
+            recyclerView.setLayoutAnimation(controller);
+            recyclerView.getAdapter().notifyDataSetChanged();
+            recyclerView.scheduleLayoutAnimation();
+        } else {
+            final Context context = recyclerView.getContext();
+            final LayoutAnimationController controller =
+                    AnimationUtils.loadLayoutAnimation(context, R.anim.grid_layout_animal);
+            recyclerView.setLayoutAnimation(controller);
+            recyclerView.getAdapter().notifyDataSetChanged();
+            recyclerView.scheduleLayoutAnimation();
+        }
     }
 
 }
