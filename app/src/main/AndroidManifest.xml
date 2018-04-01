@@ -11,8 +11,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activity.MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"
-            android:launchMode="singleInstance"><!--因为该activity在recyclerview适配器中进行了跳转所以使用了单例启动模式-->
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

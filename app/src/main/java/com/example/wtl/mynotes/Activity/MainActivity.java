@@ -75,9 +75,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.add_my_notes:
                 Intent intent = new Intent(MainActivity.this,EditNoteActivity.class);
+                intent.putExtra("State","add");
                 startActivity(intent);
-                overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
                 finish();
+                overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
                 break;
             case R.id.change_list:
                 ContentValues cv = new ContentValues();

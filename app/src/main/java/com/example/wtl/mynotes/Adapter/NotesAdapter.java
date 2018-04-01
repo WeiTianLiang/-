@@ -1,5 +1,6 @@
 package com.example.wtl.mynotes.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -88,7 +89,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
                 } else if (!longclick) {  //正常状态的逻辑
                     Intent intent = new Intent(context, EditNoteActivity.class);
                     intent.putExtra("Postion",notes.getNotes_time());
+                    intent.putExtra("State","change");
                     context.startActivity(intent);
+                    ((Activity)context).finish();//因为context没有finish操作,将它强转为activity
                 }
             }
         });

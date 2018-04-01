@@ -15,6 +15,7 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -22,6 +23,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
@@ -56,7 +58,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private int start;
     private int count;
 
-    private boolean change_ov = false;//判断是修改还是新建
+    private boolean change_ov = true;//判断是修改还是新建
+    private String change_time;//修改的时间
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +67,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_edit_note);
         HideScreenTop.HideScreenTop(getWindow());
         Montior();
-        animation_show = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.edit_show);
-        animation_hide = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.edit_hide);
+        animation_show = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.edit_show);
+        animation_hide = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.edit_hide);
         //EditText动态监听
         edit_content.addTextChangedListener(new TextWatcher() {
             @Override
@@ -95,7 +98,11 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         edit_time.setText(getTime());
         notesDB = new NotesDB(this);
         writebase = notesDB.getWritableDatabase();
-        showcontent();
+        Intent intent = getIntent();
+        String state = intent.getStringExtra("State");
+        if (state.equals("change")) {
+            showcontent();
+        }
     }
 
     private void Montior() {
@@ -125,36 +132,36 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(EditNoteActivity.this,MainActivity.class);
+        Intent intent = new Intent(EditNoteActivity.this, MainActivity.class);
         switch (view.getId()) {
             case R.id.edit_back:
                 startActivity(intent);
-                overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);//设置activity的平移动画
+                overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);//设置activity的平移动画
                 finish();
                 break;
             case R.id.edit_over:
-                if(!change_ov) {
-                    if (!edit_content.getText().toString().equals("")) {
-                        //写数据库
-                        ContentValues cv = new ContentValues();
-                        cv.put(NotesDB.CONTENT, edit_content.getText().toString());
-                        cv.put(NotesDB.TIME, getTime());
-                        writebase.insert(NotesDB.TABLE_NAME, null, cv);
-                        startActivity(intent);
-                        overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
-                        finish();
-                    } else {
-                        finish();
-                        overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
-                    }
+                if (change_ov) {
+                    //写数据库
+                    ContentValues cv = new ContentValues();
+                    cv.put(NotesDB.CONTENT, edit_content.getText().toString());
+                    cv.put(NotesDB.TIME, getTime());
+                    writebase.insert(NotesDB.TABLE_NAME, null, cv);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
+                    finish();
                 } else {
+                    Log.d("asdasd",edit_content.getText().toString());
+                    ContentValues cv = new ContentValues();
+                    cv.put(NotesDB.TIME, getTime());
+                    cv.put(NotesDB.CONTENT, edit_content.getText().toString());
+                    writebase.update(NotesDB.TABLE_NAME, cv, NotesDB.TIME + "=?", new String[]{change_time});
                     startActivity(intent);
                     overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
                     finish();
                 }
                 break;
             case R.id.editbold:
-                if(editbold.getDrawable().getCurrent().getConstantState().
+                if (editbold.getDrawable().getCurrent().getConstantState().
                         equals(this.getResources().getDrawable(R.mipmap.editbold).getConstantState())) {
                     editbold.setImageResource(R.mipmap.touchblod);
                     isBold = true;
@@ -164,7 +171,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.editoblique:
-                if(editoblique.getDrawable().getCurrent().getConstantState().
+                if (editoblique.getDrawable().getCurrent().getConstantState().
                         equals(this.getResources().getDrawable(R.mipmap.editoblique).getConstantState())) {
                     editoblique.setImageResource(R.mipmap.touchoblique);
                     isLean = true;
@@ -174,7 +181,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.editcenter:
-                if(editcenter.getDrawable().getCurrent().getConstantState().
+                if (editcenter.getDrawable().getCurrent().getConstantState().
                         equals(this.getResources().getDrawable(R.mipmap.editbig).getConstantState())) {
                     editcenter.setImageResource(R.mipmap.toucheditbig);
                     isBig = true;
@@ -184,7 +191,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.editpoint:
-                if(editpoint.getDrawable().getCurrent().getConstantState().
+                if (editpoint.getDrawable().getCurrent().getConstantState().
                         equals(this.getResources().getDrawable(R.mipmap.editpoint).getConstantState())) {
                     editpoint.setImageResource(R.mipmap.toucheditpoint);
                     isPoint = true;
@@ -198,6 +205,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }
+
     /*
     * 获取当前时间
     * */
@@ -207,15 +215,16 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         String time = format.format(date);
         return time;
     }
+
     /*
     * 监听返回键
     * */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Intent intent = new Intent(EditNoteActivity.this,MainActivity.class);
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
+        Intent intent = new Intent(EditNoteActivity.this, MainActivity.class);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             startActivity(intent);
-            overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
+            overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
             finish();
         }
         return false;
@@ -223,35 +232,32 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
     //实现即时文本字体改变
     private void editchange(Editable s) {
-        if(isBold) {
-            s.setSpan(new StyleSpan(Typeface.BOLD),start,start+count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (isBold) {
+            s.setSpan(new StyleSpan(Typeface.BOLD), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        if(isLean) {
-            s.setSpan(new StyleSpan(Typeface.ITALIC),start,start+count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (isLean) {
+            s.setSpan(new StyleSpan(Typeface.ITALIC), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        if(isBig) {
-            s.setSpan(new RelativeSizeSpan(2.0f),start,start+count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (isBig) {
+            s.setSpan(new RelativeSizeSpan(2.0f), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
-        if(isPoint) {
-            s.setSpan(new ForegroundColorSpan(Color.BLUE),start,start+count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (isPoint) {
+            s.setSpan(new ForegroundColorSpan(Color.BLUE), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
     }
 
     //进入该活动应显示的值并修改
     private void showcontent() {
-        change_ov = true;
+        change_ov = false;
         Intent intent = getIntent();
         String postion = intent.getStringExtra("Postion");
-        String sql = "select*from notes where time= '"+postion+"'";
-        Cursor cursor = writebase.rawQuery(sql,null);
-        if(cursor.moveToFirst()) {
+        String sql = "select*from notes where time= '" + postion + "'";
+        Cursor cursor = writebase.rawQuery(sql, null);
+        if (cursor.moveToFirst()) {
             String content = cursor.getString(cursor.getColumnIndex("content"));
             edit_content.setText(content);
         }
-        ContentValues cv = new ContentValues();
-        cv.put(NotesDB.TIME,getTime());
-        cv.put(NotesDB.CONTENT,edit_content.getText().toString());
-        writebase.update(NotesDB.TABLE_NAME,cv,"time=?",new String[]{postion});
+        change_time = postion;
     }
 
 }
