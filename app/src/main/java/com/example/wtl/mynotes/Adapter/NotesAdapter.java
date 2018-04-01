@@ -1,6 +1,7 @@
 package com.example.wtl.mynotes.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +11,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.wtl.mynotes.Activity.EditNoteActivity;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.R;
 
@@ -52,7 +53,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final NotesAdapter.ViewHolder holder, final int position) {
-        Notes notes = list.get(position);
+        final Notes notes = list.get(position);
         holder.notes_content_part.setText(notes.getNotes_content_part());
         holder.notes_time.setText(notes.getNotes_time());
         //隐藏最后一个下划线
@@ -85,7 +86,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
                     }
                     onItemClick.OnItemClick(position,choose,list);
                 } else if (!longclick) {  //正常状态的逻辑
-                    Toast.makeText(context,"点了一下",Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, EditNoteActivity.class);
+                    intent.putExtra("Postion",notes.getNotes_time());
+                    context.startActivity(intent);
                 }
             }
         });

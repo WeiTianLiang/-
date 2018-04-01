@@ -2,6 +2,7 @@ package com.example.wtl.mynotes.Activity;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -9,7 +10,6 @@ import android.icu.text.SimpleDateFormat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
@@ -56,6 +56,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private int start;
     private int count;
 
+    private boolean change_ov = false;//判断是修改还是新建
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +95,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         edit_time.setText(getTime());
         notesDB = new NotesDB(this);
         writebase = notesDB.getWritableDatabase();
+        showcontent();
     }
 
     private void Montior() {
@@ -130,18 +133,23 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 finish();
                 break;
             case R.id.edit_over:
-                if (!edit_content.getText().toString().equals("")) {
-                    //写数据库
-                    ContentValues cv = new ContentValues();
-                    cv.put(NotesDB.CONTENT, edit_content.getText().toString());
-                    cv.put(NotesDB.TIME, getTime());
-                    writebase.insert(NotesDB.TABLE_NAME, null, cv);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
-                    finish();
+                if(!change_ov) {
+                    if (!edit_content.getText().toString().equals("")) {
+                        //写数据库
+                        ContentValues cv = new ContentValues();
+                        cv.put(NotesDB.CONTENT, edit_content.getText().toString());
+                        cv.put(NotesDB.TIME, getTime());
+                        writebase.insert(NotesDB.TABLE_NAME, null, cv);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
+                        finish();
+                    } else {
+                        finish();
+                        overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
+                    }
                 } else {
-                    finish();
-                    overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
                     finish();
                 }
                 break;
@@ -227,6 +235,23 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         if(isPoint) {
             s.setSpan(new ForegroundColorSpan(Color.BLUE),start,start+count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
+    }
+
+    //进入该活动应显示的值并修改
+    private void showcontent() {
+        change_ov = true;
+        Intent intent = getIntent();
+        String postion = intent.getStringExtra("Postion");
+        String sql = "select*from notes where time= '"+postion+"'";
+        Cursor cursor = writebase.rawQuery(sql,null);
+        if(cursor.moveToFirst()) {
+            String content = cursor.getString(cursor.getColumnIndex("content"));
+            edit_content.setText(content);
+        }
+        ContentValues cv = new ContentValues();
+        cv.put(NotesDB.TIME,getTime());
+        cv.put(NotesDB.CONTENT,edit_content.getText().toString());
+        writebase.update(NotesDB.TABLE_NAME,cv,"time=?",new String[]{postion});
     }
 
 }
