@@ -267,7 +267,6 @@ public class LoadRecycler {
                     public void ontureClick() {
                         createDeleteDialog.dismiss();
                         adapter.removeNotes(pos);
-                        adapter.removeNotes(pos);
                         //根据时间从表4中取出数据
                         String sql = "select * from deleted where delete_time='" + notesList.get(pos).getNotes_time() + "'";
                         Cursor cursor = database.rawQuery(sql, null);
