@@ -26,7 +26,7 @@ import java.util.List;
  * Created by WTL on 2018/3/22.
  */
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
+public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
     private List<Notes> list;
     private Context context;
@@ -37,10 +37,10 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     private Boolean longclick = false;//是否为长按
     private Boolean choose = true;//是否选中
 
-   /* private Animation long_img_come;
-    private Animation long_img_gone;
-*/
-    public NotesAdapter(List<Notes> list,Context context) {
+    /* private Animation long_img_come;
+     private Animation long_img_gone;
+ */
+    public NotesAdapter(List<Notes> list, Context context) {
         this.list = list;
         this.context = context;/*
         long_img_come = AnimationUtils.loadAnimation(context,R.anim.long_img_come);
@@ -49,7 +49,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
 
     @Override
     public NotesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.notes_card,null,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.notes_card, null, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -60,12 +60,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         holder.notes_content_part.setText(notes.getNotes_content_part());
         holder.notes_time.setText(notes.getNotes_time());
 
-        if(longclick) {
+        if (longclick) {
             holder.check_box.setVisibility(View.VISIBLE);
             /*holder.check_box.startAnimation(long_img_come);*/
         } else {
             holder.check_box.setVisibility(View.GONE);
             /*holder.check_box.startAnimation(long_img_gone);*/
+        }
+        if (position == list.size() - 1) {
+            holder.updownline.setVisibility(View.VISIBLE);
         }
         holder.root_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +76,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
                 /*
                 * 长按状态的逻辑
                 * */
-                if(longclick) {
+                if (longclick) {
                     if (holder.check_box.getDrawable().getCurrent().getConstantState().
                             equals(context.getResources().getDrawable(R.mipmap.circhosetouch).getConstantState())) {
                         holder.check_box.setImageResource(R.mipmap.circhose);
@@ -84,9 +87,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
                         holder.root_view.setBackground(context.getDrawable(R.color.longtouch));
                         choose = true;
                     }
-                    onItemClick.OnItemClick(position,choose,list);
+                    onItemClick.OnItemClick(position, choose, list);
                 } else if (!longclick) {  //正常状态的逻辑
-                    aloneListener.OnItemAlone(notes,position,list);
+                    aloneListener.OnItemAlone(notes, position, list);
                 }
             }
         });
@@ -98,11 +101,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         return list.size();
     }
 
-     class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout root_view;
         TextView notes_content_part;
         TextView notes_time;
         ImageView check_box;
+        View updownline;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -110,6 +114,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
             notes_time = itemView.findViewById(R.id.notes_time);
             check_box = itemView.findViewById(R.id.check_box);
             root_view = itemView.findViewById(R.id.root_view);
+            updownline = itemView.findViewById(R.id.updownline);
 
             root_view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -123,7 +128,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
 
     }
 
-    public void isLongItem(){
+    public void isLongItem() {
         longclick = false;
         notifyDataSetChanged();
     }
@@ -139,18 +144,18 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     }
 
     public interface OnItemClickListener {
-        void OnItemClick(int x,boolean adro,List<Notes> list);
+        void OnItemClick(int x, boolean adro, List<Notes> list);
     }
 
     public interface OnItemClickAloneListener {
-        void OnItemAlone(Notes notes,int pos,List<Notes> list);
+        void OnItemAlone(Notes notes, int pos, List<Notes> list);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClick) {
         this.onItemClick = onItemClick;
     }
 
-    public void setOnItemLongClickListener(OnItemLongClickListener onItemClickListener){
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 

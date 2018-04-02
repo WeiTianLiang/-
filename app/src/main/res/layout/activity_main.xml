@@ -50,11 +50,6 @@
         android:orientation="vertical"
         android:background="#f9f9f9">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#c1c1c1" />
-
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,17 +74,13 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#c1c1c1" />
-
             <com.example.wtl.mynotes.Tool.GridRecyclerView
                 android:id="@+id/notes_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:overScrollMode="never"
-                android:scrollbars="none"/>
+                android:scrollbars="none"
+                android:layout_marginTop="10dp"/>
 
         </LinearLayout>
 
