@@ -41,7 +41,7 @@ public class LoadRecycler {
     /*
     * 加载list布局
     * */
-    public static void loadlist(final FloatingActionButton button, final LinearLayout delete, RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
+    public static void loadlist(final int state, final FloatingActionButton button, final LinearLayout delete, RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
         final List<Integer> stringList = new ArrayList<>();//定义list存储要删除的数
         final List<Notes> notesList = new ArrayList<>();//定义list存储适配器传来的值
         NotesDB notesDB = new NotesDB(context);//初始化数据库
@@ -62,6 +62,7 @@ public class LoadRecycler {
                 Intent intent = new Intent(context, EditNoteActivity.class);
                 intent.putExtra("Postion", notes.getNotes_time());
                 intent.putExtra("State", "change");
+                intent.putExtra("back",state+"");
                 context.startActivity(intent);
                 ((Activity) context).finish();//因为context没有finish操作,将context强转为activity
             }
@@ -134,7 +135,7 @@ public class LoadRecycler {
     /*
     * 加载card布局
     * */
-    public static void cardlist(final FloatingActionButton button, final LinearLayout delete, RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
+    public static void cardlist(final int state,final FloatingActionButton button, final LinearLayout delete, RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
         final List<Integer> stringList = new ArrayList<>();//定义list存储要删除的数
         final List<Notes> notesList = new ArrayList<>();//定义list存储适配器传来的值
         NotesDB notesDB = new NotesDB(context);//初始化数据库
@@ -155,6 +156,7 @@ public class LoadRecycler {
                 Intent intent = new Intent(context, EditNoteActivity.class);
                 intent.putExtra("Postion", notes.getNotes_time());
                 intent.putExtra("State", "change");
+                intent.putExtra("back",state+"");
                 context.startActivity(intent);
                 ((Activity) context).finish();//因为context没有finish操作,将context强转为activity
             }

@@ -76,7 +76,7 @@ public class AbandonActivity extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.abandon_text_back:
                 finish();
-                overridePendingTransition(R.anim.activity_right_in,R.anim.activity_right_out);
+                overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                 break;
             case R.id.abandon_list:
                 ContentValues cv = new ContentValues();
@@ -107,7 +107,7 @@ public class AbandonActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         finish();
-        overridePendingTransition(R.anim.activity_right_in,R.anim.activity_right_out);
+        overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
         return super.onKeyDown(keyCode, event);
     }
 }

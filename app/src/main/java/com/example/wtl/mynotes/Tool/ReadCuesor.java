@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ReadCuesor {
 
-    public static void ReadCuesor(final FloatingActionButton button, final LinearLayout delete, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {
+    public static void ReadCuesor(int state,final FloatingActionButton button, final LinearLayout delete, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {
         Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
         if(cursor.moveToLast()) {
             do {
@@ -34,8 +34,8 @@ public class ReadCuesor {
                 notesList.add(notes);
             } while (cursor.moveToPrevious());
         }
-        if(x == 0) LoadRecycler.loadlist(button,delete,notes_list,change_list_in,context,notesList);
-        else LoadRecycler.cardlist(button,delete,notes_list,change_list_in,context,notesList);
+        if(x == 0) LoadRecycler.loadlist(state,button,delete,notes_list,change_list_in,context,notesList);
+        else LoadRecycler.cardlist(state,button,delete,notes_list,change_list_in,context,notesList);
     }
 
     public static void ReadCuesor(final LinearLayout delete, final ImageView abandon_dele, final ImageView abandon_move, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {

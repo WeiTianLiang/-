@@ -1,6 +1,7 @@
 package com.example.wtl.mynotes.Activity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
@@ -55,7 +56,7 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
         preferences = getSharedPreferences("first_act",0);
         Boolean user_first = preferences.getBoolean("FIRST",true);
         delete_down = AnimationUtils.loadAnimation(this,R.anim.delete_down);
-        IsFirstOpen.IsFirstOpen(add_handle,sum_delet,handle_list,preferences,user_first,this,readbase,notesList,handle_recycler,animation);
+        IsFirstOpen.IsFirstOpen(1,add_handle,sum_delet,handle_list,preferences,user_first,this,readbase,notesList,handle_recycler,animation);
     }
 
     private void Montior() {
@@ -76,11 +77,11 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
         switch (view.getId()) {
             case R.id.handle_img_back:
                 finish();
-                overridePendingTransition(R.anim.activity_right_in,R.anim.activity_right_out);
+                overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                 break;
             case R.id.handle_text_back:
                 finish();
-                overridePendingTransition(R.anim.activity_right_in,R.anim.activity_right_out);
+                overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                 break;
             case R.id.handle_list:
                 ContentValues cv = new ContentValues();
@@ -89,13 +90,13 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
                         equals(this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
                     handle_list.setImageResource(R.mipmap.cardview);
                     handle_list.startAnimation(change_img);
-                    LoadRecycler.cardlist(add_handle,sum_delet,handle_recycler,animation,this,notesList);
+                    LoadRecycler.cardlist(1,add_handle,sum_delet,handle_recycler,animation,this,notesList);
                     cv.put(NotesDB.FORMAT,1);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 } else {
                     handle_list.setImageResource(R.mipmap.listview);
                     handle_list.startAnimation(change_img);
-                    LoadRecycler.loadlist(add_handle,sum_delet,handle_recycler,animation,this,notesList);
+                    LoadRecycler.loadlist(1,add_handle,sum_delet,handle_recycler,animation,this,notesList);
                     cv.put(NotesDB.FORMAT,0);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }
@@ -112,7 +113,7 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         finish();
-        overridePendingTransition(R.anim.activity_right_in,R.anim.activity_right_out);
+        overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
         return super.onKeyDown(keyCode, event);
     }
 }

@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         preferences = getSharedPreferences("first_act",0);
         Boolean user_first = preferences.getBoolean("FIRST",true);
         delete_down = AnimationUtils.loadAnimation(this,R.anim.delete_down);
-        IsFirstOpen.IsFirstOpen(add_my_notes,item_delet,change_list,preferences,user_first,this,readbase,notesList,notes_list,change_list_in);
+        IsFirstOpen.IsFirstOpen(0,add_my_notes,item_delet,change_list,preferences,user_first,this,readbase,notesList,notes_list,change_list_in);
     }
 
     private void Montior() {
@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.add_my_notes:
                 Intent intent = new Intent(MainActivity.this,EditNoteActivity.class);
                 intent.putExtra("State","add");
+                intent.putExtra("back","0");
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
@@ -89,13 +90,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         equals(this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
                     change_list.setImageResource(R.mipmap.cardview);
                     change_list.startAnimation(change_img);
-                    LoadRecycler.cardlist(add_my_notes,item_delet, notes_list,change_list_in,this,notesList);
+                    LoadRecycler.cardlist(0,add_my_notes,item_delet, notes_list,change_list_in,this,notesList);
                     cv.put(NotesDB.FORMAT,1);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 } else {
                     change_list.setImageResource(R.mipmap.listview);
                     change_list.startAnimation(change_img);
-                    LoadRecycler.loadlist(add_my_notes,item_delet,notes_list,change_list_in,this,notesList);
+                    LoadRecycler.loadlist(0,add_my_notes,item_delet,notes_list,change_list_in,this,notesList);
                     cv.put(NotesDB.FORMAT,0);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }

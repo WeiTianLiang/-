@@ -60,6 +60,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
     private boolean change_ov = true;//判断是修改还是新建
     private String change_time;//修改的时间
+    private String sta = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         if (state.equals("change")) {
             showcontent();
         }
+        Intent intent1 = getIntent();
+        sta = intent1.getStringExtra("back");
     }
 
     private void Montior() {
@@ -133,11 +136,18 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
         Intent intent = new Intent(EditNoteActivity.this, MainActivity.class);
+        Intent intent1 = new Intent(EditNoteActivity.this, HandleActivity.class);
         switch (view.getId()) {
             case R.id.edit_back:
-                startActivity(intent);
-                overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);//设置activity的平移动画
-                finish();
+                if(sta.equals("0")) {
+                    startActivity(intent);
+                    finish();
+                    overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);//设置activity的平移动画
+                } else if(sta.equals("1")) {
+                    startActivity(intent1);
+                    finish();
+                    overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
+                }
                 break;
             case R.id.edit_over:
                 if (change_ov) {
@@ -227,10 +237,17 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Intent intent = new Intent(EditNoteActivity.this, MainActivity.class);
+        Intent intent1 = new Intent(EditNoteActivity.this, HandleActivity.class);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            startActivity(intent);
-            overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
-            finish();
+            if(sta.equals("0")) {
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
+            } else if(sta.equals("1")) {
+                startActivity(intent1);
+                finish();
+                overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
+            }
         }
         return false;
     }
