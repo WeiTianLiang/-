@@ -80,7 +80,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!edit_content.getText().toString().equals("")) {
                     edit_over.setVisibility(View.VISIBLE);
-                    edit_over.setAnimation(animation_show);
+                    edit_over.startAnimation(animation_show);
                 }
                 start = i;
                 count = i2;
@@ -90,7 +90,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
             public void afterTextChanged(Editable editable) {
                 if (edit_content.getText().toString().equals("")) {
                     edit_over.setVisibility(View.GONE);
-                    edit_over.setAnimation(animation_hide);
+                    edit_over.startAnimation(animation_hide);
                 }
                 editchange(editable);
             }
@@ -201,7 +201,12 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case R.id.editcolor:
-
+                if (editcolor.getDrawable().getCurrent().getConstantState().
+                        equals(this.getResources().getDrawable(R.mipmap.editcolor).getConstantState())) {
+                    editcolor.setImageResource(R.mipmap.toucheditcolor);
+                } else {
+                    editcolor.setImageResource(R.mipmap.editcolor);
+                }
                 break;
         }
     }

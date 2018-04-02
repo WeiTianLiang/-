@@ -19,7 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
-            android:src="@mipmap/library"/>
+            android:src="@mipmap/library"
+            android:padding="6dp"/>
 
         <TextView
             android:id="@+id/notes"
@@ -35,7 +36,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|right"
-            android:src="@mipmap/listview"/>
+            android:src="@mipmap/listview"
+            android:padding="6dp"/>
 
     </FrameLayout>
 

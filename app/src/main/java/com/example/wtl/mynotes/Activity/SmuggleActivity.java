@@ -40,6 +40,7 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
     private Create_Dialog createDialog;
 
     private LinearLayout sumggle_handle;//随手记
+    private LinearLayout sumggle_delete;//垃圾
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +59,13 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
         sumggle_back = (ImageView) findViewById(R.id.sumggle_back);
         sumggle_text_back = (TextView) findViewById(R.id.sumggle_text_back);
         sumggle_handle = (LinearLayout) findViewById(R.id.sumggle_handle);
+        sumggle_delete = (LinearLayout) findViewById(R.id.sumggle_delete);
 
         add_sumggle.setOnClickListener(this);
         sumggle_back.setOnClickListener(this);
         sumggle_handle.setOnClickListener(this);
         sumggle_text_back.setOnClickListener(this);
+        sumggle_delete.setOnClickListener(this);
     }
 
     @Override
@@ -102,9 +105,15 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
                 overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
                 break;
             case R.id.sumggle_handle:
-                Intent intent = new Intent(SmuggleActivity.this,HandleActivity.class);
-                startActivity(intent);
+                intent1 = new Intent(SmuggleActivity.this,HandleActivity.class);
+                startActivity(intent1);
                 overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
+                break;
+            case R.id.sumggle_delete:
+                intent1 = new Intent(SmuggleActivity.this, AbandonActivity.class);
+                startActivity(intent1);
+                overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
+                break;
         }
     }
 

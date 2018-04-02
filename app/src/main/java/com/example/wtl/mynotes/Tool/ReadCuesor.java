@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.animation.Animation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -35,6 +36,20 @@ public class ReadCuesor {
         }
         if(x == 0) LoadRecycler.loadlist(button,delete,notes_list,change_list_in,context,notesList);
         else LoadRecycler.cardlist(button,delete,notes_list,change_list_in,context,notesList);
+    }
+
+    public static void ReadCuesor(final LinearLayout delete, final ImageView abandon_dele, final ImageView abandon_move, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {
+        Cursor cursor = readbase.query(NotesDB.DELETE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
+        if(cursor.moveToLast()) {
+            do {
+                String content = cursor.getString(cursor.getColumnIndex("delete_content"));
+                String time = cursor.getString(cursor.getColumnIndex("delete_time"));
+                Notes notes = new Notes(content,time);
+                notesList.add(notes);
+            } while (cursor.moveToPrevious());
+        }
+        if(x == 0) LoadRecycler.loadlist(delete,abandon_dele,abandon_move,notes_list,change_list_in,context,notesList);
+        else LoadRecycler.cardlist(delete,abandon_dele,abandon_move,notes_list,change_list_in,context,notesList);
     }
 
 }

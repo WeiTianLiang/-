@@ -100,9 +100,11 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }
                 //修复逻辑（当处于长按状态时改变list布局样式则退出）
-                add_handle.setVisibility(View.VISIBLE);
-                sum_delet.setVisibility(View.GONE);
-                sum_delet.startAnimation(delete_down);
+                if(sum_delet.getVisibility() == View.VISIBLE) {
+                    add_handle.setVisibility(View.VISIBLE);
+                    sum_delet.setVisibility(View.GONE);
+                    sum_delet.startAnimation(delete_down);
+                }
                 break;
         }
     }

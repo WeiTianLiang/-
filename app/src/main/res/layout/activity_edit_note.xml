@@ -19,7 +19,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/back"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:padding="5dp"/>
 
         <TextView
             android:id="@+id/edit_time"
@@ -71,7 +72,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp"
         android:layout_alignParentBottom="true">
 
         <ImageView
@@ -79,42 +79,54 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/picture"/>
+            android:src="@mipmap/picture"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
 
         <ImageView
             android:id="@+id/editcolor"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/editcolor"/>
+            android:src="@mipmap/editcolor"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
 
         <ImageView
             android:id="@+id/editbold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/editbold"/>
+            android:src="@mipmap/editbold"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
 
         <ImageView
             android:id="@+id/editoblique"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/editoblique"/>
+            android:src="@mipmap/editoblique"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
 
         <ImageView
             android:id="@+id/editcenter"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/editbig"/>
+            android:src="@mipmap/editbig"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
 
         <ImageView
             android:id="@+id/editpoint"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@mipmap/editpoint"/>
+            android:src="@mipmap/editpoint"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
 
     </LinearLayout>
 

@@ -46,5 +46,27 @@ public class IsFirstOpen {
             ReadCuesor.ReadCuesor(button,delete,context,x,readbase,notesList,handle_recycler,animation);
         }
     }
+
+    public static void IsFirstOpen( final LinearLayout delete, final ImageView abandon_dele, final ImageView abandon_move,ImageView handle_list, SharedPreferences preferences, Boolean user_first, Context context, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView handle_recycler, Animation animation) {
+        if(user_first){//第一次
+            preferences.edit().putBoolean("FIRST", false).apply();
+            ReadCuesor.ReadCuesor(delete,abandon_dele,abandon_move,context,0,readbase,notesList,handle_recycler,animation);
+            ContentValues cv = new ContentValues();
+            cv.put(NotesDB.FORMAT,0);
+            readbase.insert(NotesDB.FORMAT_NAME,null,cv);
+        }else {
+            int x = 0;
+            Cursor cursor = readbase.query(NotesDB.FORMAT_NAME,null,null,null,null,null,null);
+            if(cursor.moveToLast()) {
+                x = cursor.getInt(cursor.getColumnIndex("form"));
+            }
+            if(x == 1) {
+                handle_list.setImageResource(R.mipmap.cardview);
+            } else {
+                handle_list.setImageResource(R.mipmap.listview);
+            }
+            ReadCuesor.ReadCuesor(delete,abandon_dele,abandon_move,context,x,readbase,notesList,handle_recycler,animation);
+        }
+    }
     
 }
