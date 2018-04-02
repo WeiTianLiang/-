@@ -1,7 +1,9 @@
 package com.example.wtl.mynotes.Tool;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
@@ -18,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.wtl.mynotes.Activity.EditNoteActivity;
 import com.example.wtl.mynotes.Adapter.GridAdapter;
 import com.example.wtl.mynotes.Adapter.NotesAdapter;
 import com.example.wtl.mynotes.Class.Notes;
@@ -51,7 +54,18 @@ public class LoadRecycler {
         recyclerView.setLayoutManager(manager);
         final NotesAdapter adapter = new NotesAdapter(list, context);
         recyclerView.setAdapter(adapter);
-        runLayoutAnimation(recyclerView,0);
+        runLayoutAnimation(recyclerView, 0);
+
+        adapter.setOnItemClickAloneListener(new NotesAdapter.OnItemClickAloneListener() {
+            @Override
+            public void OnItemAlone(Notes notes, int pos, List<Notes> list1) {
+                Intent intent = new Intent(context, EditNoteActivity.class);
+                intent.putExtra("Postion", notes.getNotes_time());
+                intent.putExtra("State", "change");
+                context.startActivity(intent);
+                ((Activity) context).finish();//因为context没有finish操作,将context强转为activity
+            }
+        });
 
         adapter.setOnItemLongClickListener(new NotesAdapter.OnItemLongClickListener() {
             @Override
@@ -91,9 +105,9 @@ public class LoadRecycler {
                             if (i == 0) adapter.removeNotes(stringList.get(i));
                             else adapter.removeNotes(stringList.get(i) - i);
                             //根据时间从表1中取出数据
-                            String sql = "select * from notes where time='"+notesList.get(stringList.get(i)).getNotes_time()+"'";
-                            Cursor cursor = database.rawQuery(sql,null);
-                            if(cursor.moveToFirst()) {
+                            String sql = "select * from notes where time='" + notesList.get(stringList.get(i)).getNotes_time() + "'";
+                            Cursor cursor = database.rawQuery(sql, null);
+                            if (cursor.moveToFirst()) {
                                 delete_time = cursor.getString(cursor.getColumnIndex("time"));
                                 delete_content = cursor.getString(cursor.getColumnIndex("content"));
                             }
@@ -101,9 +115,9 @@ public class LoadRecycler {
                             database.delete(NotesDB.TABLE_NAME, NotesDB.TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                             //把数据插入表4
                             ContentValues cv = new ContentValues();
-                            cv.put(NotesDB.DELETE_TIME,delete_time);
-                            cv.put(NotesDB.DELETE_CONTENT,delete_content);
-                            database.insert(NotesDB.DELETE_NAME,null,cv);
+                            cv.put(NotesDB.DELETE_TIME, delete_time);
+                            cv.put(NotesDB.DELETE_CONTENT, delete_content);
+                            database.insert(NotesDB.DELETE_NAME, null, cv);
                         }
                         stringList.removeAll(stringList);//清空表
                         delete.setVisibility(View.GONE);
@@ -133,7 +147,19 @@ public class LoadRecycler {
         recyclerView.setLayoutManager(manager);
         final GridAdapter adapter = new GridAdapter(list, context);
         recyclerView.setAdapter(adapter);
-        runLayoutAnimation(recyclerView,1);
+        runLayoutAnimation(recyclerView, 1);
+
+        adapter.setOnItemClickAloneListener(new GridAdapter.OnItemClickAloneListener() {
+            @Override
+            public void OnItemAlone(Notes notes, int pos, List<Notes> list1) {
+                Intent intent = new Intent(context, EditNoteActivity.class);
+                intent.putExtra("Postion", notes.getNotes_time());
+                intent.putExtra("State", "change");
+                context.startActivity(intent);
+                ((Activity) context).finish();//因为context没有finish操作,将context强转为activity
+            }
+        });
+
         adapter.setOnItemLongClickListener(new GridAdapter.OnItemLongClickListener() {
             @Override
             public boolean OnItemLongClick() {
@@ -171,9 +197,9 @@ public class LoadRecycler {
                             if (i == 0) adapter.removeNotes(stringList.get(i));
                             else adapter.removeNotes(stringList.get(i) - i);
                             //根据时间从表1中取出数据
-                            String sql = "select * from notes where time='"+notesList.get(stringList.get(i)).getNotes_time()+"'";
-                            Cursor cursor = database.rawQuery(sql,null);
-                            if(cursor.moveToFirst()) {
+                            String sql = "select * from notes where time='" + notesList.get(stringList.get(i)).getNotes_time() + "'";
+                            Cursor cursor = database.rawQuery(sql, null);
+                            if (cursor.moveToFirst()) {
                                 delete_time = cursor.getString(cursor.getColumnIndex("time"));
                                 delete_content = cursor.getString(cursor.getColumnIndex("content"));
                             }
@@ -181,9 +207,9 @@ public class LoadRecycler {
                             database.delete(NotesDB.TABLE_NAME, NotesDB.TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                             //把数据插入表4
                             ContentValues cv = new ContentValues();
-                            cv.put(NotesDB.DELETE_TIME,delete_time);
-                            cv.put(NotesDB.DELETE_CONTENT,delete_content);
-                            database.insert(NotesDB.DELETE_NAME,null,cv);
+                            cv.put(NotesDB.DELETE_TIME, delete_time);
+                            cv.put(NotesDB.DELETE_CONTENT, delete_content);
+                            database.insert(NotesDB.DELETE_NAME, null, cv);
                         }
                         stringList.removeAll(stringList);//清空表
                         delete.setVisibility(View.GONE);
@@ -213,7 +239,55 @@ public class LoadRecycler {
         recyclerView.setLayoutManager(manager);
         final NotesAdapter adapter = new NotesAdapter(list, context);
         recyclerView.setAdapter(adapter);
-        runLayoutAnimation(recyclerView,0);
+        runLayoutAnimation(recyclerView, 0);
+
+        adapter.setOnItemClickAloneListener(new NotesAdapter.OnItemClickAloneListener() {
+            String recoy_time;
+            String recoy_content;
+
+            @Override
+            public void OnItemAlone(Notes notes, final int pos, List<Notes> list1) {
+                for (int i = 0; i < list1.size(); i++) {
+                    notesList.add(list1.get(i));
+                }
+                final Create_Delete_Dialog createDeleteDialog = new Create_Delete_Dialog(context);
+                createDeleteDialog.setCanceledOnTouchOutside(false);
+                createDeleteDialog.show();
+                createDeleteDialog.changetext("垃圾堆中无法对文本进行操作", "请先恢复该文本", null);
+                createDeleteDialog.setOnCancelClickListener(new Create_Delete_Dialog.OnCancelClickListener() {
+                    @Override
+                    public void oncancelClick() {
+                        createDeleteDialog.dismiss();
+                    }
+                });
+                createDeleteDialog.setOnTureClickListener(new Create_Delete_Dialog.OnTureClickListener() {
+                    @Override
+                    public void ontureClick() {
+                        createDeleteDialog.dismiss();
+                        adapter.removeNotes(pos);
+                        adapter.removeNotes(pos);
+                        //根据时间从表4中取出数据
+                        String sql = "select * from deleted where delete_time='" + notesList.get(pos).getNotes_time() + "'";
+                        Cursor cursor = database.rawQuery(sql, null);
+                        if (cursor.moveToFirst()) {
+                            recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
+                            recoy_content = cursor.getString(cursor.getColumnIndex("delete_content"));
+                        }
+                        //根据时间删除表中数据
+                        database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(pos).getNotes_time()});
+                        Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
+                        //把数据恢复到表1
+                        ContentValues cv = new ContentValues();
+                        cv.put(NotesDB.TIME, recoy_time);
+                        cv.put(NotesDB.CONTENT, recoy_content);
+                        database.insert(NotesDB.TABLE_NAME, null, cv);
+                        delete.setVisibility(View.GONE);
+                        delete.startAnimation(animation2);
+                        adapter.isLongItem();
+                    }
+                });
+            }
+        });
 
         adapter.setOnItemLongClickListener(new NotesAdapter.OnItemLongClickListener() {
             @Override
@@ -246,7 +320,7 @@ public class LoadRecycler {
                 abandon_dele.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(stringList.size() == 0) {
+                        if (stringList.size() == 0) {
                             delete.setVisibility(View.GONE);
                             delete.startAnimation(animation2);
                             adapter.isLongItem();
@@ -285,9 +359,10 @@ public class LoadRecycler {
                 abandon_move.setOnClickListener(new View.OnClickListener() {
                     String recoy_time;
                     String recoy_content;
+
                     @Override
                     public void onClick(View view) {
-                        if(stringList.size() == 0) {
+                        if (stringList.size() == 0) {
                             delete.setVisibility(View.GONE);
                             delete.startAnimation(animation2);
                             adapter.isLongItem();
@@ -295,7 +370,7 @@ public class LoadRecycler {
                             final Create_Delete_Dialog createDeleteDialog = new Create_Delete_Dialog(context);
                             createDeleteDialog.setCanceledOnTouchOutside(false);
                             createDeleteDialog.show();
-                            createDeleteDialog.changetext("此项操作执行后","您的数据将被恢复","Are You Ready?");
+                            createDeleteDialog.changetext("此项操作执行后", "您的数据将被恢复", "Are You Ready?");
                             Window window = createDeleteDialog.getWindow();
                             window.setGravity(Gravity.BOTTOM);
                             createDeleteDialog.setOnCancelClickListener(new Create_Delete_Dialog.OnCancelClickListener() {
@@ -312,20 +387,20 @@ public class LoadRecycler {
                                         if (i == 0) adapter.removeNotes(stringList.get(i));
                                         else adapter.removeNotes(stringList.get(i) - i);
                                         //根据时间从表4中取出数据
-                                        String sql = "select * from deleted where delete_time='"+notesList.get(stringList.get(i)).getNotes_time()+"'";
-                                        Cursor cursor = database.rawQuery(sql,null);
-                                        if(cursor.moveToFirst()) {
+                                        String sql = "select * from deleted where delete_time='" + notesList.get(stringList.get(i)).getNotes_time() + "'";
+                                        Cursor cursor = database.rawQuery(sql, null);
+                                        if (cursor.moveToFirst()) {
                                             recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
                                             recoy_content = cursor.getString(cursor.getColumnIndex("delete_content"));
                                         }
                                         //根据时间删除表中数据
                                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
-                                        Toast.makeText(context,"数据已被恢复!!",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
                                         //把数据恢复到表1
                                         ContentValues cv = new ContentValues();
-                                        cv.put(NotesDB.TIME,recoy_time);
-                                        cv.put(NotesDB.CONTENT,recoy_content);
-                                        database.insert(NotesDB.TABLE_NAME,null,cv);
+                                        cv.put(NotesDB.TIME, recoy_time);
+                                        cv.put(NotesDB.CONTENT, recoy_content);
+                                        database.insert(NotesDB.TABLE_NAME, null, cv);
                                     }
                                     stringList.removeAll(stringList);//清空表
                                     delete.setVisibility(View.GONE);
@@ -357,7 +432,55 @@ public class LoadRecycler {
         recyclerView.setLayoutManager(manager);
         final GridAdapter adapter = new GridAdapter(list, context);
         recyclerView.setAdapter(adapter);
-        runLayoutAnimation(recyclerView,1);
+        runLayoutAnimation(recyclerView, 1);
+
+        adapter.setOnItemClickAloneListener(new GridAdapter.OnItemClickAloneListener() {
+            String recoy_time;
+            String recoy_content;
+
+            @Override
+            public void OnItemAlone(Notes notes, final int pos, List<Notes> list1) {
+                for (int i = 0; i < list1.size(); i++) {
+                    notesList.add(list1.get(i));
+                }
+                final Create_Delete_Dialog createDeleteDialog = new Create_Delete_Dialog(context);
+                createDeleteDialog.setCanceledOnTouchOutside(false);
+                createDeleteDialog.show();
+                createDeleteDialog.changetext("垃圾堆中无法对文本进行操作", "请先恢复该文本", null);
+                createDeleteDialog.setOnCancelClickListener(new Create_Delete_Dialog.OnCancelClickListener() {
+                    @Override
+                    public void oncancelClick() {
+                        createDeleteDialog.dismiss();
+                    }
+                });
+                createDeleteDialog.setOnTureClickListener(new Create_Delete_Dialog.OnTureClickListener() {
+                    @Override
+                    public void ontureClick() {
+                        createDeleteDialog.dismiss();
+                        adapter.removeNotes(pos);
+                        //根据时间从表4中取出数据
+                        String sql = "select * from deleted where delete_time='" + notesList.get(pos).getNotes_time() + "'";
+                        Cursor cursor = database.rawQuery(sql, null);
+                        if (cursor.moveToFirst()) {
+                            recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
+                            recoy_content = cursor.getString(cursor.getColumnIndex("delete_content"));
+                        }
+                        //根据时间删除表中数据
+                        database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(pos).getNotes_time()});
+                        Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
+                        //把数据恢复到表1
+                        ContentValues cv = new ContentValues();
+                        cv.put(NotesDB.TIME, recoy_time);
+                        cv.put(NotesDB.CONTENT, recoy_content);
+                        database.insert(NotesDB.TABLE_NAME, null, cv);
+                        delete.setVisibility(View.GONE);
+                        delete.startAnimation(animation2);
+                        adapter.isLongItem();
+                    }
+                });
+            }
+        });
+
         adapter.setOnItemLongClickListener(new GridAdapter.OnItemLongClickListener() {
             @Override
             public boolean OnItemLongClick() {
@@ -388,7 +511,7 @@ public class LoadRecycler {
                 abandon_dele.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(stringList.size() == 0) {
+                        if (stringList.size() == 0) {
                             delete.setVisibility(View.GONE);
                             delete.setAnimation(animation2);
                             adapter.isLongItem();
@@ -426,9 +549,10 @@ public class LoadRecycler {
                 abandon_move.setOnClickListener(new View.OnClickListener() {
                     String recoy_time;
                     String recoy_content;
+
                     @Override
                     public void onClick(View view) {
-                        if(stringList.size() == 0) {
+                        if (stringList.size() == 0) {
                             delete.setVisibility(View.GONE);
                             delete.startAnimation(animation2);
                             adapter.isLongItem();
@@ -436,7 +560,7 @@ public class LoadRecycler {
                             final Create_Delete_Dialog createDeleteDialog = new Create_Delete_Dialog(context);
                             createDeleteDialog.setCanceledOnTouchOutside(false);
                             createDeleteDialog.show();
-                            createDeleteDialog.changetext("此项操作执行后","您的数据将被恢复","Are You Ready?");
+                            createDeleteDialog.changetext("此项操作执行后", "您的数据将被恢复", "Are You Ready?");
                             Window window = createDeleteDialog.getWindow();
                             window.setGravity(Gravity.BOTTOM);
                             createDeleteDialog.setOnCancelClickListener(new Create_Delete_Dialog.OnCancelClickListener() {
@@ -453,20 +577,20 @@ public class LoadRecycler {
                                         if (i == 0) adapter.removeNotes(stringList.get(i));
                                         else adapter.removeNotes(stringList.get(i) - i);
                                         //根据时间从表4中取出数据
-                                        String sql = "select * from deleted where delete_time='"+notesList.get(stringList.get(i)).getNotes_time()+"'";
-                                        Cursor cursor = database.rawQuery(sql,null);
-                                        if(cursor.moveToFirst()) {
+                                        String sql = "select * from deleted where delete_time='" + notesList.get(stringList.get(i)).getNotes_time() + "'";
+                                        Cursor cursor = database.rawQuery(sql, null);
+                                        if (cursor.moveToFirst()) {
                                             recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
                                             recoy_content = cursor.getString(cursor.getColumnIndex("delete_content"));
                                         }
                                         //根据时间删除表中数据
                                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
-                                        Toast.makeText(context,"数据已被恢复!!",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
                                         //把数据恢复到表1
                                         ContentValues cv = new ContentValues();
-                                        cv.put(NotesDB.TIME,recoy_time);
-                                        cv.put(NotesDB.CONTENT,recoy_content);
-                                        database.insert(NotesDB.TABLE_NAME,null,cv);
+                                        cv.put(NotesDB.TIME, recoy_time);
+                                        cv.put(NotesDB.CONTENT, recoy_content);
+                                        database.insert(NotesDB.TABLE_NAME, null, cv);
                                     }
                                     stringList.removeAll(stringList);//清空表
                                     delete.setVisibility(View.GONE);
@@ -483,8 +607,8 @@ public class LoadRecycler {
     }
 
     //运行使用lauoutanimal加载的动画
-    private static void runLayoutAnimation(final RecyclerView recyclerView,int x) {
-        if(x == 0) {
+    private static void runLayoutAnimation(final RecyclerView recyclerView, int x) {
+        if (x == 0) {
             final Context context = recyclerView.getContext();
             final LayoutAnimationController controller =
                     AnimationUtils.loadLayoutAnimation(context, R.anim.layout_change_list_anim);

@@ -1,15 +1,18 @@
 package com.example.wtl.mynotes.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.wtl.mynotes.Activity.EditNoteActivity;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.R;
 
@@ -27,6 +30,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
 
     private OnItemLongClickListener onItemClickListener;
     private OnItemClickListener onItemClick;
+    private OnItemClickAloneListener aloneListener;
     private Boolean longclick = false;
     private Boolean choose = true;
 
@@ -44,7 +48,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final GridAdapter.ViewHolder holder, final int position) {
-        Notes notes = list.get(position);
+        final Notes notes = list.get(position);
         holder.notes_content_part_2.setText(notes.getNotes_content_part());
         holder.notes_time_2.setText(notes.getNotes_time());
 
@@ -72,7 +76,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
                     }
                     onItemClick.OnItemClick(position,choose,list);
                 } else if (!longclick) {  //正常状态的逻辑
-                    Toast.makeText(context,"点了一下",Toast.LENGTH_SHORT).show();
+                    aloneListener.OnItemAlone(notes,position,list);
                 }
             }
         });
@@ -123,6 +127,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
         boolean OnItemLongClick();
     }
 
+    public interface OnItemClickAloneListener {
+        void OnItemAlone(Notes notes,int pos,List<Notes> list);
+    }
+
     public interface OnItemClickListener {
         void OnItemClick(int x,boolean adro,List<Notes> list);
     }
@@ -133,6 +141,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
 
     public void setOnItemLongClickListener(OnItemLongClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setOnItemClickAloneListener(OnItemClickAloneListener onItemClickAloneListener) {
+        this.aloneListener = onItemClickAloneListener;
     }
 
 }

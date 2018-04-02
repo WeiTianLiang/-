@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,17 +33,18 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
 
     private OnItemLongClickListener onItemClickListener;
     private OnItemClickListener onItemClick;
-    private Boolean longclick = false;
-    private Boolean choose = true;
+    private OnItemClickAloneListener aloneListener;
+    private Boolean longclick = false;//是否为长按
+    private Boolean choose = true;//是否选中
 
-    private Animation long_img_come;
+   /* private Animation long_img_come;
     private Animation long_img_gone;
-
+*/
     public NotesAdapter(List<Notes> list,Context context) {
         this.list = list;
-        this.context = context;
+        this.context = context;/*
         long_img_come = AnimationUtils.loadAnimation(context,R.anim.long_img_come);
-        long_img_gone = AnimationUtils.loadAnimation(context,R.anim.long_img_gone);
+        long_img_gone = AnimationUtils.loadAnimation(context,R.anim.long_img_gone);*/
     }
 
     @Override
@@ -84,11 +86,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
                     }
                     onItemClick.OnItemClick(position,choose,list);
                 } else if (!longclick) {  //正常状态的逻辑
-                    Intent intent = new Intent(context, EditNoteActivity.class);
-                    intent.putExtra("Postion",notes.getNotes_time());
-                    intent.putExtra("State","change");
-                    context.startActivity(intent);
-                    ((Activity)context).finish();//因为context没有finish操作,将context强转为activity
+                    aloneListener.OnItemAlone(notes,position,list);
                 }
             }
         });
@@ -144,12 +142,20 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
         void OnItemClick(int x,boolean adro,List<Notes> list);
     }
 
+    public interface OnItemClickAloneListener {
+        void OnItemAlone(Notes notes,int pos,List<Notes> list);
+    }
+
     public void setOnItemClickListener(OnItemClickListener onItemClick) {
         this.onItemClick = onItemClick;
     }
 
     public void setOnItemLongClickListener(OnItemLongClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
+    }
+
+    public void setOnItemClickAloneListener(OnItemClickAloneListener onItemClickAloneListener) {
+        this.aloneListener = onItemClickAloneListener;
     }
 
 }
