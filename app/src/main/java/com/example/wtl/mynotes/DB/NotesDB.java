@@ -28,7 +28,7 @@ public class NotesDB extends SQLiteOpenHelper{
     //表4 删除的数据
     public static final String DELETE_NAME = "deleted";//表名
     public static final String DELETE_ID = "_id";
-    public static final String DELETE_COLOR = "color";//背景色
+    public static final String DELETE_COLOR = "delete_color";//背景色
     public static final String DELETE_CONTENT = "delete_content";//文字内容
     public static final String DELETE_TIME = "delete_time";//创建时间
 

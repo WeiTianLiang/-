@@ -36,6 +36,7 @@ import com.example.wtl.mynotes.Tool.HideScreenTop;
 import com.example.wtl.mynotes.Tool.StatusBarUtils;
 
 import java.util.Date;
+import java.util.List;
 
 public class EditNoteActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -83,13 +84,14 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private LinearLayout edit1;
     private LinearLayout edit3;
 
-    private String color = null;
+    private String color = "white";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_note);
         HideScreenTop.HideScreenTop(getWindow());
+        StatusBarUtils.setWindowStatusBarColor(this,R.color.white);
         Montior();
         animation_show = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.edit_show);
         animation_hide = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.edit_hide);
@@ -127,8 +129,9 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         if (state.equals("change")) {
             showcontent();
         }
-        Intent intent1 = getIntent();
-        sta = intent1.getStringExtra("back");
+        sta = intent.getStringExtra("back");
+        String back_color = intent.getStringExtra("color");
+        Change_Colors.Change_Colors(this,back_color,alledit,edit_content,edit1,edit_time,edit3);
     }
 
     private void Montior() {
@@ -205,7 +208,6 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
                     finish();
                 } else {
-                    Log.d("asdasd",edit_content.getText().toString());
                     ContentValues cv = new ContentValues();
                     cv.put(NotesDB.TIME, getTime());
                     cv.put(NotesDB.CONTENT, edit_content.getText().toString());
@@ -271,6 +273,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.white:
                 Change_Colors.Change_Colors(this,"white",alledit,edit_content,edit1,edit_time,edit3);
+                color = "white";
                 break;
             case R.id.red:
                 Change_Colors.Change_Colors(this,"red",alledit,edit_content,edit1,edit_time,edit3);

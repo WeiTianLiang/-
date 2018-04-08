@@ -22,6 +22,7 @@ import com.example.wtl.mynotes.R;
 import com.example.wtl.mynotes.Tool.HideScreenTop;
 import com.example.wtl.mynotes.Tool.IsFirstOpen;
 import com.example.wtl.mynotes.Tool.LoadRecycler;
+import com.example.wtl.mynotes.Tool.ReadCuesor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(MainActivity.this,EditNoteActivity.class);
                 intent.putExtra("State","add");
                 intent.putExtra("back","0");
+                intent.putExtra("color","white");
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
@@ -90,13 +92,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         equals(this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
                     change_list.setImageResource(R.mipmap.cardview);
                     change_list.startAnimation(change_img);
-                    LoadRecycler.cardlist(0,add_my_notes,item_delet, notes_list,change_list_in,this,notesList);
+                    LoadRecycler.cardlist(ReadCuesor.ReadColor(readbase),0,add_my_notes,item_delet, notes_list,change_list_in,this,notesList);
                     cv.put(NotesDB.FORMAT,1);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 } else {
                     change_list.setImageResource(R.mipmap.listview);
                     change_list.startAnimation(change_img);
-                    LoadRecycler.loadlist(0,add_my_notes,item_delet,notes_list,change_list_in,this,notesList);
+                    LoadRecycler.loadlist(ReadCuesor.ReadColor(readbase),0,add_my_notes,item_delet,notes_list,change_list_in,this,notesList);
                     cv.put(NotesDB.FORMAT,0);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }

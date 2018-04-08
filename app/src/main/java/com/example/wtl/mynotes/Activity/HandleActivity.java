@@ -22,6 +22,7 @@ import com.example.wtl.mynotes.R;
 import com.example.wtl.mynotes.Tool.HideScreenTop;
 import com.example.wtl.mynotes.Tool.IsFirstOpen;
 import com.example.wtl.mynotes.Tool.LoadRecycler;
+import com.example.wtl.mynotes.Tool.ReadCuesor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,13 +91,13 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
                         equals(this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
                     handle_list.setImageResource(R.mipmap.cardview);
                     handle_list.startAnimation(change_img);
-                    LoadRecycler.cardlist(1,add_handle,sum_delet,handle_recycler,animation,this,notesList);
+                    LoadRecycler.cardlist(ReadCuesor.ReadColor(readbase),1,add_handle,sum_delet,handle_recycler,animation,this,notesList);
                     cv.put(NotesDB.FORMAT,1);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 } else {
                     handle_list.setImageResource(R.mipmap.listview);
                     handle_list.startAnimation(change_img);
-                    LoadRecycler.loadlist(1,add_handle,sum_delet,handle_recycler,animation,this,notesList);
+                    LoadRecycler.loadlist(ReadCuesor.ReadColor(readbase),1,add_handle,sum_delet,handle_recycler,animation,this,notesList);
                     cv.put(NotesDB.FORMAT,0);
                     readbase.insert(NotesDB.FORMAT_NAME,null,cv);
                 }
