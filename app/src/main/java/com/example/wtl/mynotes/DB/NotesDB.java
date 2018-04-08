@@ -14,6 +14,7 @@ public class NotesDB extends SQLiteOpenHelper{
     public static final String TABLE_NAME = "notes";//表名
     public static final String CONTENT = "content";//文字内容
     public static final String ID = "_id";//id
+    public static final String COLOR = "color";//背景色
     public static final String TIME = "time";//创建时间
     //表2 list的显示格式
     public static final String FORMAT_NAME = "format";//表名
@@ -27,6 +28,7 @@ public class NotesDB extends SQLiteOpenHelper{
     //表4 删除的数据
     public static final String DELETE_NAME = "deleted";//表名
     public static final String DELETE_ID = "_id";
+    public static final String DELETE_COLOR = "color";//背景色
     public static final String DELETE_CONTENT = "delete_content";//文字内容
     public static final String DELETE_TIME = "delete_time";//创建时间
 
@@ -39,6 +41,7 @@ public class NotesDB extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + "("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + CONTENT + " TEXT NOT NULL,"
+                + COLOR +" TEXT,"
                 + TIME + " TEXT NOT NULL)");
 
         sqLiteDatabase.execSQL("CREATE TABLE " + FORMAT_NAME + "("
@@ -49,9 +52,11 @@ public class NotesDB extends SQLiteOpenHelper{
                 + NOTECLIP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + NOTECLIP_MEMO + " TEXT NOT NULL,"
                 + NOTECLIP_NUMBER + " TEXT)");
+
         sqLiteDatabase.execSQL("CREATE TABLE " + DELETE_NAME + "( "
                 + DELETE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + DELETE_CONTENT + " TEXT NOT NULL,"
+                + DELETE_COLOR + " TEXT,"
                 + DELETE_TIME + " TEXT NOT NULL)");
     }
 

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="10dp"
-        android:background="#fff">
+        android:background="@color/white">
 
         <ImageView
             android:id="@+id/edit_back"
@@ -28,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="18sp"
-            android:textColor="#000"
             android:layout_marginLeft="10dp"/>
 
         <LinearLayout
@@ -43,27 +42,35 @@
                 android:text="完成"
                 android:textSize="17sp"
                 android:textColor="#fcb53b"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:textStyle="bold"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/alledit"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:background="@color/white"
         android:layout_below="@+id/edit1"
-        android:layout_above="@+id/edit2"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp"
-        android:background="#fff">
+        android:layout_alignParentStart="true">
 
-        <EditText
-            android:id="@+id/edit_content"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/edit_back"
-            android:gravity="top" />
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edit_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:background="@color/white"/>
+
+        </ScrollView>
 
     </LinearLayout>
 
@@ -74,59 +81,122 @@
         android:orientation="horizontal"
         android:layout_alignParentBottom="true">
 
-        <ImageView
-            android:id="@+id/editpicture"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/edit3"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@mipmap/picture"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"/>
+            android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/editcolor"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@mipmap/editcolor"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"/>
+            <ImageView
+                android:id="@+id/editpicture"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/picture"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
 
-        <ImageView
-            android:id="@+id/editbold"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@mipmap/editbold"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"/>
+            <ImageView
+                android:id="@+id/editcolor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/editcolor"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
 
-        <ImageView
-            android:id="@+id/editoblique"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@mipmap/editoblique"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"/>
+            <ImageView
+                android:id="@+id/editbold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/editbold"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
 
-        <ImageView
-            android:id="@+id/editcenter"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@mipmap/editbig"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"/>
+            <ImageView
+                android:id="@+id/editoblique"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/editoblique"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
 
-        <ImageView
-            android:id="@+id/editpoint"
-            android:layout_width="0dp"
+            <ImageView
+                android:id="@+id/editcenter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/editbig"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
+
+            <ImageView
+                android:id="@+id/editpoint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/editpoint"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/change_colors"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@mipmap/editpoint"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"/>
+            android:padding="15dp"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:gravity="center"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/white"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/circlewhite"/>
+
+            <ImageView
+                android:id="@+id/red"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/circlered"/>
+
+            <ImageView
+                android:id="@+id/blue"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/circleblue"/>
+
+            <ImageView
+                android:id="@+id/green"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/circlegreen"/>
+
+            <ImageView
+                android:id="@+id/violet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/circleviolet"/>
+
+            <ImageView
+                android:id="@+id/black"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/circleblack"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

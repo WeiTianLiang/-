@@ -18,16 +18,22 @@ import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
+import com.example.wtl.mynotes.Tool.Change_Colors;
 import com.example.wtl.mynotes.Tool.HideScreenTop;
+import com.example.wtl.mynotes.Tool.StatusBarUtils;
 
 import java.util.Date;
 
@@ -50,6 +56,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
     private Animation animation_show;//淡出动画
     private Animation animation_hide;//淡入动画
+    private Animation animation_floar;//上浮动画
 
     private boolean isBold = false;
     private boolean isLean = false;
@@ -61,6 +68,22 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private boolean change_ov = true;//判断是修改还是新建
     private String change_time;//修改的时间
     private String sta = null;
+
+    private LinearLayout change_bottom;
+    private LinearLayout change_colors;
+    private LinearLayout alledit;
+
+    //更换背景色
+    private ImageView red;
+    private ImageView blue;
+    private ImageView green;
+    private ImageView violet;
+    private ImageView black;
+    private ImageView white;
+    private LinearLayout edit1;
+    private LinearLayout edit3;
+
+    private String color = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +143,18 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         editcenter = (ImageView) findViewById(R.id.editcenter);
         editpicture = (ImageView) findViewById(R.id.editpicture);
         editpoint = (ImageView) findViewById(R.id.editpoint);
+        change_bottom = (LinearLayout) findViewById(R.id.edit3);
+        change_colors = (LinearLayout) findViewById(R.id.change_colors);
+        alledit = (LinearLayout) findViewById(R.id.alledit);
+
+        red = (ImageView) findViewById(R.id.red);
+        green = (ImageView) findViewById(R.id.green);
+        blue = (ImageView) findViewById(R.id.blue);
+        violet = (ImageView) findViewById(R.id.violet);
+        black = (ImageView) findViewById(R.id.black);
+        white = (ImageView) findViewById(R.id.white);
+        edit1 = (LinearLayout) findViewById(R.id.edit1);
+        edit3 = (LinearLayout) findViewById(R.id.edit3);
 
         edit_back.setOnClickListener(this);
         edit_over.setOnClickListener(this);
@@ -131,12 +166,21 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         editcenter.setOnClickListener(this);
         editpicture.setOnClickListener(this);
         editpoint.setOnClickListener(this);
+        alledit.setOnClickListener(this);
+
+        red.setOnClickListener(this);
+        green.setOnClickListener(this);
+        blue.setOnClickListener(this);
+        violet.setOnClickListener(this);
+        black.setOnClickListener(this);
+        white.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         Intent intent = new Intent(EditNoteActivity.this, MainActivity.class);
         Intent intent1 = new Intent(EditNoteActivity.this, HandleActivity.class);
+        animation_floar = AnimationUtils.loadAnimation(this,R.anim.delete_floar);
         switch (view.getId()) {
             case R.id.edit_back:
                 if(sta.equals("0")) {
@@ -155,6 +199,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     ContentValues cv = new ContentValues();
                     cv.put(NotesDB.CONTENT, edit_content.getText().toString());
                     cv.put(NotesDB.TIME, getTime());
+                    cv.put(NotesDB.COLOR,color);
                     writebase.insert(NotesDB.TABLE_NAME, null, cv);
                     startActivity(intent);
                     overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
@@ -164,6 +209,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     ContentValues cv = new ContentValues();
                     cv.put(NotesDB.TIME, getTime());
                     cv.put(NotesDB.CONTENT, edit_content.getText().toString());
+                    cv.put(NotesDB.COLOR,color);
                     writebase.update(NotesDB.TABLE_NAME, cv, NotesDB.TIME + "=?", new String[]{change_time});
                     startActivity(intent);
                     overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
@@ -214,10 +260,39 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 if (editcolor.getDrawable().getCurrent().getConstantState().
                         equals(this.getResources().getDrawable(R.mipmap.editcolor).getConstantState())) {
                     editcolor.setImageResource(R.mipmap.toucheditcolor);
-                } else {
-                    editcolor.setImageResource(R.mipmap.editcolor);
+                    change_bottom.setVisibility(View.GONE);
+                    change_colors.setVisibility(View.VISIBLE);
                 }
                 break;
+            case R.id.alledit:
+                change_bottom.setVisibility(View.VISIBLE);
+                change_colors.setVisibility(View.GONE);
+                editcolor.setImageResource(R.mipmap.editcolor);
+                break;
+            case R.id.white:
+                Change_Colors.Change_Colors(this,"white",alledit,edit_content,edit1,edit_time,edit3);
+                break;
+            case R.id.red:
+                Change_Colors.Change_Colors(this,"red",alledit,edit_content,edit1,edit_time,edit3);
+                color = "red";
+                break;
+            case R.id.green:
+                Change_Colors.Change_Colors(this,"green",alledit,edit_content,edit1,edit_time,edit3);
+                color = "green";
+                break;
+            case R.id.blue:
+                Change_Colors.Change_Colors(this,"blue",alledit,edit_content,edit1,edit_time,edit3);
+                color = "blue";
+                break;
+            case R.id.violet:
+                Change_Colors.Change_Colors(this,"violet",alledit,edit_content,edit1,edit_time,edit3);
+                color = "violet";
+                break;
+            case R.id.black:
+                Change_Colors.Change_Colors(this,"black",alledit,edit_content,edit1,edit_time,edit3);
+                color = "black";
+                break;
+
         }
     }
 

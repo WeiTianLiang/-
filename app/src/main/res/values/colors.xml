@@ -9,4 +9,17 @@
     <color name="touch2">#bebebe</color>
     <color name="white">#ffffff</color>
     <color name="longtouch">#e2e2e2</color>
+
+    <color name="whitetext">#464646</color>
+    <color name="blue">#e7f7ff</color>
+    <color name="bluetext">#5dc8ff</color>
+    <color name="green">#e7ffed</color>
+    <color name="greentext">#5dff82</color>
+    <color name="red">#ffebe7</color>
+    <color name="redtext">#ff785e</color>
+    <color name="violet">#e6ebff</color>
+    <color name="violettext">#5e7cff</color>
+    <color name="black">#2c2c2c</color>
+    <color name="blacktext">#ffffff</color>
+
 </resources>

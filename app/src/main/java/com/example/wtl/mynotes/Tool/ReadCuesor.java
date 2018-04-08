@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +31,7 @@ public class ReadCuesor {
             do {
                 String content = cursor.getString(cursor.getColumnIndex("content"));
                 String time = cursor.getString(cursor.getColumnIndex("time"));
+                String color = cursor.getString(cursor.getColumnIndex("color"));
                 Notes notes = new Notes(content,time);
                 notesList.add(notes);
             } while (cursor.moveToPrevious());
