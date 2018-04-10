@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,9 +30,15 @@ public class IsFirstOpen {
         if(user_first){//第一次
             preferences.edit().putBoolean("FIRST", false).apply();
             ReadCuesor.ReadCuesor(state,button,delete,context,0,readbase,notesList,handle_recycler,animation);
-            ContentValues cv = new ContentValues();
+
+            ContentValues cv = new ContentValues();//第一次加载排列方式
             cv.put(NotesDB.FORMAT,0);
             readbase.insert(NotesDB.FORMAT_NAME,null,cv);
+
+            ContentValues cv1 = new ContentValues();//第一次加载字号
+            cv1.put(NotesDB.WORD_SIZE,"ordinary");
+            readbase.insert(NotesDB.WORD_NAME,null,cv1);
+
         }else {
             int x = 0;
             Cursor cursor = readbase.query(NotesDB.FORMAT_NAME,null,null,null,null,null,null);
@@ -67,6 +74,24 @@ public class IsFirstOpen {
             }
             ReadCuesor.ReadCuesor(delete,abandon_dele,abandon_move,context,x,readbase,notesList,handle_recycler,animation);
         }
+    }
+
+    public static void IsFirstOpenWord(TextView textView,SQLiteDatabase readbase) {
+            String state = "";
+            Cursor cursor = readbase.query(NotesDB.WORD_NAME,null,null,null,null,null,null);
+            if(cursor.moveToLast()) {
+                state = cursor.getString(cursor.getColumnIndex("size"));
+            }
+            if(state.equals("litter")) {
+                textView.setText("小");
+            }
+            if(state.equals("ordinary")) {
+                textView.setText("普通");
+            }
+            if(state.equals("large")) {
+                textView.setText("大");
+            }
+
     }
     
 }

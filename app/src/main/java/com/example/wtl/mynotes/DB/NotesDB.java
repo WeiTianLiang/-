@@ -31,6 +31,10 @@ public class NotesDB extends SQLiteOpenHelper{
     public static final String DELETE_COLOR = "delete_color";//背景色
     public static final String DELETE_CONTENT = "delete_content";//文字内容
     public static final String DELETE_TIME = "delete_time";//创建时间
+    //表5 字体大小
+    public static final String WORD_NAME = "word";//表名
+    public static final String WORD_SIZE = "size";//创建排版格式
+    public static final String WORD_ID = "_id";
 
     public NotesDB(Context context) {
         super(context, "notes", null, 1);
@@ -58,6 +62,10 @@ public class NotesDB extends SQLiteOpenHelper{
                 + DELETE_CONTENT + " TEXT NOT NULL,"
                 + DELETE_COLOR + " TEXT,"
                 + DELETE_TIME + " TEXT NOT NULL)");
+
+        sqLiteDatabase.execSQL("CREATE TABLE " + WORD_NAME + "("
+                + WORD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + WORD_SIZE +" TEXT NOT NULL)");
     }
 
     @Override

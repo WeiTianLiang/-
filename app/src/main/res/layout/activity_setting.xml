@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.wtl.mynotes.Activity.SettingActivity"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/setting_text_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            android:layout_marginLeft="5dp"
+            android:text="设置"
+            android:textColor="#000"
+            android:textSize="16sp"
+            android:drawableLeft="@mipmap/back"
+            android:drawablePadding="5dp"
+            android:gravity="center"/>
+
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/word_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/touchhandle"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            android:text="字体大小"
+            android:textSize="17sp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/word_size_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|right"
+            android:layout_marginRight="30dp"
+            android:text="普通"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/sumggle_right"
+            android:layout_gravity="center|right"/>
+
+    </FrameLayout>
+
+</LinearLayout>

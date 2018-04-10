@@ -33,6 +33,7 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
     private TextView sumggle_text_back;
     private RecyclerView smuggle_list;
     private List<Sumggle> sumggleList = new ArrayList<>();
+    private ImageView set_up;
 
     private NotesDB notesDB;
     private SQLiteDatabase writebase;
@@ -60,12 +61,14 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
         sumggle_text_back = (TextView) findViewById(R.id.sumggle_text_back);
         sumggle_handle = (LinearLayout) findViewById(R.id.sumggle_handle);
         sumggle_delete = (LinearLayout) findViewById(R.id.sumggle_delete);
+        set_up = (ImageView) findViewById(R.id.set_up);
 
         add_sumggle.setOnClickListener(this);
         sumggle_back.setOnClickListener(this);
         sumggle_handle.setOnClickListener(this);
         sumggle_text_back.setOnClickListener(this);
         sumggle_delete.setOnClickListener(this);
+        set_up.setOnClickListener(this);
     }
 
     @Override
@@ -112,6 +115,11 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.sumggle_delete:
                 intent1 = new Intent(SmuggleActivity.this, AbandonActivity.class);
                 startActivity(intent1);
+                overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
+                break;
+            case R.id.set_up:
+                Intent intent = new Intent(SmuggleActivity.this,SettingActivity.class);
+                startActivity(intent);
                 overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
                 break;
         }
