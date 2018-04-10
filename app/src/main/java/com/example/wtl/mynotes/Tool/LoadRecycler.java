@@ -293,7 +293,7 @@ public class LoadRecycler {
                         //把数据恢复到表1
                         ContentValues cv = new ContentValues();
                         cv.put(NotesDB.TIME, recoy_time);
-                        cv.put(NotesDB.CONTENT, recoy_content);
+                        cv. put(NotesDB.CONTENT, recoy_content);
                         cv.put(NotesDB.COLOR,recoy_color);
                         database.insert(NotesDB.TABLE_NAME, null, cv);
                     }
