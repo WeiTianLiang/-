@@ -58,8 +58,8 @@
     </style>
 
     <style name="setting_anim_style">
-        <item name="android:windowEnterAnimation">@anim/search_up</item>
-        <item name="android:windowExitAnimation">@anim/search_down</item>
+        <item name="android:windowEnterAnimation">@anim/setting_down</item>
+        <item name="android:windowExitAnimation">@anim/setting_up</item>
     </style>
 
 </resources>
