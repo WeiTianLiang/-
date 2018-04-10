@@ -52,10 +52,6 @@ public class LoadRecycler {
         final Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.delete_floar);
         final Animation animation2 = AnimationUtils.loadAnimation(context, R.anim.delete_down);
 
-        DefaultItemAnimator deletanmial = new DefaultItemAnimator();
-        deletanmial.setRemoveDuration(200);
-        recyclerView.setItemAnimator(deletanmial);
-
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
         final NotesAdapter adapter = new NotesAdapter(list, context);
@@ -115,6 +111,7 @@ public class LoadRecycler {
                             else adapter.removeNotes(stringList.get(i) - i);
                             //根据时间从表1中取出数据
                             String sql = "select * from notes where time='" + notesList.get(stringList.get(i)).getNotes_time() + "'";
+                            Log.d("asdasd",notesList.get(stringList.get(i)).getNotes_time());
                             Cursor cursor = database.rawQuery(sql, null);
                             if (cursor.moveToFirst()) {
                                 delete_time = cursor.getString(cursor.getColumnIndex("time"));
@@ -130,7 +127,8 @@ public class LoadRecycler {
                             cv.put(NotesDB.DELETE_COLOR, delete_color);
                             database.insert(NotesDB.DELETE_NAME, null, cv);
                         }
-                        stringList.removeAll(stringList);//清空表
+                        stringList.removeAll(stringList);//清空位置表
+                        notesList.removeAll(notesList);//清空数据表
                         delete.setVisibility(View.GONE);
                         delete.startAnimation(animation2);
                         button.setVisibility(View.VISIBLE);
@@ -225,6 +223,7 @@ public class LoadRecycler {
                             database.insert(NotesDB.DELETE_NAME, null, cv);
                         }
                         stringList.removeAll(stringList);//清空表
+                        notesList.removeAll(notesList);//清空数据表
                         delete.setVisibility(View.GONE);
                         delete.setAnimation(animation2);
                         button.setVisibility(View.VISIBLE);

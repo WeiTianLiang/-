@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,10 +52,8 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
         if (longclick) {
             holder.check_box.setVisibility(View.VISIBLE);
-            /*holder.check_box.startAnimation(long_img_come);*/
         } else {
             holder.check_box.setVisibility(View.GONE);
-            /*holder.check_box.startAnimation(long_img_gone);*/
         }
         if (position == list.size() - 1) {
             holder.updownline.setVisibility(View.VISIBLE);
@@ -82,6 +81,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                 }
             }
         });
+        holder.check_box.setImageResource(R.mipmap.circhose);
         holder.root_view.setBackground(context.getDrawable(R.color.white));
     }
 
@@ -125,7 +125,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     //删除Notes
     public void removeNotes(int postion) {
         list.remove(postion);
-        notifyItemRemoved(postion);
+        notifyDataSetChanged();
     }
 
     public interface OnItemLongClickListener {

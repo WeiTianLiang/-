@@ -1,10 +1,7 @@
 package com.example.wtl.mynotes.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.wtl.mynotes.Activity.EditNoteActivity;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.R;
 
@@ -80,6 +76,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
                 }
             }
         });
+        holder.check_card_box.setImageResource(R.mipmap.circhose);
         holder.card_root_view.setBackground(context.getDrawable(R.color.white));
     }
 
