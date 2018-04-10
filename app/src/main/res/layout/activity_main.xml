@@ -51,6 +51,7 @@
         android:background="#f9f9f9">
 
         <EditText
+            android:id="@+id/search_all"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
@@ -59,7 +60,9 @@
             android:layout_marginTop="5dp"
             android:background="@drawable/searchback"
             android:drawableLeft="@mipmap/search"
-            android:padding="3dp"/>
+            android:padding="3dp"
+            android:cursorVisible="false"
+            android:singleLine="true"/>
 
     </LinearLayout>
 

@@ -71,11 +71,21 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
         handle_list.setOnClickListener(this);
         handle_img_back.setOnClickListener(this);
         handle_text_back.setOnClickListener(this);
+        add_handle.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.add_handle:
+                Intent intent = new Intent(HandleActivity.this,EditNoteActivity.class);
+                intent.putExtra("State","add");
+                intent.putExtra("back","1");//记录返回的界面，0代表MainActivity，1代表HandleActivity
+                intent.putExtra("color","white");
+                startActivity(intent);
+                finish();
+                overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
+                break;
             case R.id.handle_img_back:
                 finish();
                 overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
