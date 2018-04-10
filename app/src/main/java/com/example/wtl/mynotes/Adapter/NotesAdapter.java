@@ -1,20 +1,14 @@
 package com.example.wtl.mynotes.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.wtl.mynotes.Activity.EditNoteActivity;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.R;
 
@@ -37,14 +31,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     private Boolean longclick = false;//是否为长按
     private Boolean choose = true;//是否选中
 
-    /* private Animation long_img_come;
-     private Animation long_img_gone;
- */
     public NotesAdapter(List<Notes> list, Context context) {
         this.list = list;
-        this.context = context;/*
-        long_img_come = AnimationUtils.loadAnimation(context,R.anim.long_img_come);
-        long_img_gone = AnimationUtils.loadAnimation(context,R.anim.long_img_gone);*/
+        this.context = context;
     }
 
     @Override
@@ -136,7 +125,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     //删除Notes
     public void removeNotes(int postion) {
         list.remove(postion);
-        notifyDataSetChanged();
+        notifyItemRemoved(postion);
     }
 
     public interface OnItemLongClickListener {

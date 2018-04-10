@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +51,10 @@ public class LoadRecycler {
 
         final Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.delete_floar);
         final Animation animation2 = AnimationUtils.loadAnimation(context, R.anim.delete_down);
+
+        DefaultItemAnimator deletanmial = new DefaultItemAnimator();
+        deletanmial.setRemoveDuration(200);
+        recyclerView.setItemAnimator(deletanmial);
 
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
