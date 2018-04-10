@@ -32,6 +32,7 @@ import com.example.wtl.mynotes.Tool.HideScreenTop;
 import com.example.wtl.mynotes.Tool.IsFirstOpen;
 import com.example.wtl.mynotes.Tool.LoadRecycler;
 import com.example.wtl.mynotes.Tool.ReadCuesor;
+import com.example.wtl.mynotes.Tool.TimerTaskSearch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,25 +80,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         handler = new Handler();
         search_all.setOnTouchListener(new View.OnTouchListener() {
             int flag = 0;
+
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 flag++;
-                if(flag == 2) {
+                if (flag == 2) {
                     flag = 0;
-                    search_all.setVisibility(View.GONE);
-                    search_all.startAnimation(search_gone);
-                    search_dialog = new Creat_Search_Dialog(MainActivity.this,search_all);
+                    TimerTaskSearch.TimerTaskSearch(search_all,search_gone);//延迟搜索框消失
+                    search_dialog = new Creat_Search_Dialog(MainActivity.this, search_all);
                     search_dialog.show();
                     Window window = search_dialog.getWindow();
                     window.setGravity(Gravity.TOP);
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE
-                            |WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                            | WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                     search_dialog.setBackClickListener(new Creat_Search_Dialog.OnBackClickListener() {
                         @Override
                         public void onbackclick() {
                             search_dialog.dismiss();
                             search_all.setVisibility(View.VISIBLE);
-                            search_all.startAnimation(search_visib);
+                            search_all.setAnimation(search_visib);
                         }
                     });
                 }

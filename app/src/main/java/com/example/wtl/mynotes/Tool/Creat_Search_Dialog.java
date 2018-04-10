@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -26,13 +27,14 @@ import com.example.wtl.mynotes.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 /**
  * 搜索dialog
  * Created by WTL on 2018/4/8.
  */
 
-public class Creat_Search_Dialog extends Dialog{
+public class Creat_Search_Dialog extends Dialog {
 
     private ImageView back_dialog;
     private EditText search_dialog;
@@ -47,8 +49,8 @@ public class Creat_Search_Dialog extends Dialog{
     private NotesDB notesDB;
     private SQLiteDatabase database;
 
-    public Creat_Search_Dialog(@NonNull Context context,EditText editText) {
-        super(context, R.style.dialog);
+    public Creat_Search_Dialog(@NonNull Context context, EditText editText) {
+        super(context, R.style.searchdialog);
         this.context = context;
         this.editText = editText;
     }
@@ -57,7 +59,7 @@ public class Creat_Search_Dialog extends Dialog{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_dialog);
-        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         Montior();
         initEven();
         search_visib = AnimationUtils.loadAnimation(context, R.anim.search_visib);
@@ -72,9 +74,9 @@ public class Creat_Search_Dialog extends Dialog{
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 stringList = new ArrayList<>();
-                if(!search_dialog.getText().toString().equals("")) {
+                if (!search_dialog.getText().toString().equals("")) {
                     recycler_dialog.setVisibility(View.VISIBLE);
-                    ReadCuesor.SearchFromSQL(charSequence.toString(),context,database,stringList,recycler_dialog);
+                    ReadCuesor.SearchFromSQL(charSequence.toString(), context, database, stringList, recycler_dialog);
                 } else {
                     recycler_dialog.setVisibility(View.GONE);
                 }
