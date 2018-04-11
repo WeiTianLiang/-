@@ -4,9 +4,15 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -36,10 +42,15 @@ import com.example.wtl.mynotes.Tool.HideScreenTop;
 import com.example.wtl.mynotes.Tool.JudgeWordSize;
 import com.example.wtl.mynotes.Tool.StatusBarUtils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
 public class EditNoteActivity extends AppCompatActivity implements View.OnClickListener {
+
+    public static final int TAKE_PHONE = 1;
 
     private ImageView edit_back;//返回
     private TextView edit_time;//时间
@@ -82,10 +93,13 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private ImageView violet;
     private ImageView black;
     private ImageView white;
+    private ImageView picture;
     private LinearLayout edit1;
     private LinearLayout edit3;
+    private ImageView picture_show;
 
     private String color = "white";
+    private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +174,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         white = (ImageView) findViewById(R.id.white);
         edit1 = (LinearLayout) findViewById(R.id.edit1);
         edit3 = (LinearLayout) findViewById(R.id.edit3);
+        picture = (ImageView) findViewById(R.id.editpicture);
+        picture_show = (ImageView) findViewById(R.id.picture_show);
 
         edit_back.setOnClickListener(this);
         edit_over.setOnClickListener(this);
@@ -179,6 +195,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         violet.setOnClickListener(this);
         black.setOnClickListener(this);
         white.setOnClickListener(this);
+        picture.setOnClickListener(this);
     }
 
     @Override
@@ -297,13 +314,48 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 Change_Colors.Change_Colors(this,"black",alledit,edit_content,edit1,edit_time,edit3);
                 color = "black";
                 break;
+            case R.id.editpicture:
+                File outputimage = new File(getExternalCacheDir(),"out_image.jpg");
+                try {
+                    if(outputimage.exists()) {
+                        outputimage.delete();
+                    }
+                    outputimage.createNewFile();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if(Build.VERSION.SDK_INT >= 24) {
+                    uri = FileProvider.getUriForFile(EditNoteActivity.this,"com.example.cameraalbumtest.fileprovider",outputimage);
+                } else {
+                    uri = Uri.fromFile(outputimage);
+                }
+                Intent intent2 = new Intent("android.media.action.IMAGE_CAPTURE");
+                intent2.putExtra(MediaStore.EXTRA_OUTPUT,uri);
+                startActivityForResult(intent2,TAKE_PHONE);
+                break;
 
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case TAKE_PHONE:
+                if(requestCode == RESULT_OK) {
+                    try{
+                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+                        picture_show.setImageBitmap(bitmap);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+        }
+    }
+
     /*
-    * 获取当前时间
-    * */
+        * 获取当前时间
+        * */
     private String getTime() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
         Date date = new Date();
