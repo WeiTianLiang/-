@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.wtl.mynotes.Activity.FirstStartActivity"
+    android:background="@drawable/share_back"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right">
+
+        <TextView
+            android:id="@+id/jump_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="跳过"
+            android:textSize="18sp"
+            android:textColor="#2f51b9"
+            android:background="#c7fff0"
+            android:padding="20dp"/>
+
+    </LinearLayout>
+
+    <yanzhikai.textpath.SyncTextPathView
+        android:id="@+id/first_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:textInCenter="true"
+        app:text="欢迎使用"
+        app:pathStrokeColor="#ff7373"
+        app:paintStrokeColor="#ff0000"
+        app:pathStrokeWidth="4dp"
+        app:showPainter="true"
+        app:duration="10000"
+        app:textSize="90sp"
+        android:layout_marginTop="100dp"/>
+
+</LinearLayout>
