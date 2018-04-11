@@ -25,26 +25,28 @@ public class FirstStartActivity extends AppCompatActivity {
         HideScreenTop.HideScreenTop(getWindow());
         first_start = (SyncTextPathView) findViewById(R.id.first_start);
         first_start.setPathPainter(new FireworksPainter());
-        first_start.startAnimation(0,1);
+        first_start.startAnimation(0, 1);
         jump_start = (TextView) findViewById(R.id.jump_start);
         jump_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(FirstStartActivity.this,MainActivity.class);
+                Intent intent = new Intent(FirstStartActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-                overridePendingTransition(R.anim.first_start_visil,R.anim.first_start_gone);
+                overridePendingTransition(R.anim.first_start_visil, R.anim.first_start_gone);
+                onStop();
             }
         });
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(FirstStartActivity.this,MainActivity.class);
+                Intent intent = new Intent(FirstStartActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-                overridePendingTransition(R.anim.first_start_visil,R.anim.first_start_gone);
+                overridePendingTransition(R.anim.first_start_visil, R.anim.first_start_gone);
+                onStop();
             }
-        },11000);
+        }, 11000);
     }
 }
