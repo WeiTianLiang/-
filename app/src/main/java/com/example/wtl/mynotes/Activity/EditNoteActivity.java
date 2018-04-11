@@ -33,6 +33,7 @@ import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
 import com.example.wtl.mynotes.Tool.Change_Colors;
 import com.example.wtl.mynotes.Tool.HideScreenTop;
+import com.example.wtl.mynotes.Tool.JudgeWordSize;
 import com.example.wtl.mynotes.Tool.StatusBarUtils;
 
 import java.util.Date;
@@ -132,6 +133,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         sta = intent.getStringExtra("back");
         String back_color = intent.getStringExtra("color");
         Change_Colors.Change_Colors(this,back_color,alledit,edit_content,edit1,edit_time,edit3);
+        WordSize();
     }
 
     private void Montior() {
@@ -358,6 +360,19 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
             edit_content.setText(content);
         }
         change_time = postion;
+    }
+
+    private void WordSize() {
+        String state = JudgeWordSize.JudgeWordSize(writebase);
+        if(state.equals("litter")) {
+            edit_content.setTextSize(10);
+        }
+        if(state.equals("ordinary")) {
+            edit_content.setTextSize(16);
+        }
+        if(state.equals("large")) {
+            edit_content.setTextSize(22);
+        }
     }
 
 }

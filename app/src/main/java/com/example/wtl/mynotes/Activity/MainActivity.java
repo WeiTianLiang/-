@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Animation search_visib;
 
     private SharedPreferences preferences;//判断程序是否第一次启动
-    private Handler handler;
     private Creat_Search_Dialog search_dialog = null;
 
     @Override
@@ -77,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Boolean user_first = preferences.getBoolean("FIRST", true);
         IsFirstOpen.IsFirstOpen(0, add_my_notes, item_delet, change_list, preferences, user_first, this, readbase, notesList, notes_list, change_list_in);
         search_all.setInputType(InputType.TYPE_NULL);//让主页面的edittext无法弹出输入框
-        handler = new Handler();
         search_all.setOnTouchListener(new View.OnTouchListener() {
             int flag = 0;
 
