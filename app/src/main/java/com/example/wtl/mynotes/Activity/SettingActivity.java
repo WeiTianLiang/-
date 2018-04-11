@@ -56,7 +56,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
                 break;
             case R.id.word_size:
-                Create_Setting_Dialog setting_dialog = new Create_Setting_Dialog(SettingActivity.this);
+                final Create_Setting_Dialog setting_dialog = new Create_Setting_Dialog(SettingActivity.this);
                 setting_dialog.show();
                 Window window = setting_dialog.getWindow();
                 window.setGravity(Gravity.BOTTOM);
@@ -64,6 +64,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 setting_dialog.setOnLitterClickListener(new Create_Setting_Dialog.OnLitterClickListener() {
                     @Override
                     public void onLitterClick(String litter) {
+                        setting_dialog.dismiss();
                         word_size_show.setText(litter);
                         cv.put(NotesDB.WORD_SIZE,"litter");
                         database.insert(NotesDB.WORD_NAME,null,cv);
@@ -72,6 +73,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 setting_dialog.setOnOrdinaryClickListener(new Create_Setting_Dialog.OnOrdinaryClickListener() {
                     @Override
                     public void onOrdinaryClick(String ordinary) {
+                        setting_dialog.dismiss();
                         word_size_show.setText(ordinary);
                         cv.put(NotesDB.WORD_SIZE,"ordinary");
                         database.insert(NotesDB.WORD_NAME,null,cv);
@@ -80,6 +82,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 setting_dialog.setOnLargeClickListener(new Create_Setting_Dialog.OnLargeClickListener() {
                     @Override
                     public void onLargeClick(String large) {
+                        setting_dialog.dismiss();
                         word_size_show.setText(large);
                         cv.put(NotesDB.WORD_SIZE,"large");
                         database.insert(NotesDB.WORD_NAME,null,cv);
