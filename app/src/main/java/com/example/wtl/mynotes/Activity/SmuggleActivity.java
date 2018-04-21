@@ -73,7 +73,7 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        Intent intent1 = new Intent(SmuggleActivity.this,MainActivity.class);
+        Intent intent1;
         switch (view.getId()) {
             case R.id.add_sumggle:
                 createDialog = new Create_Dialog(this);
@@ -98,12 +98,10 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
                 });
                 break;
             case R.id.sumggle_back:
-                startActivity(intent1);
                 finish();
                 overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
                 break;
             case R.id.sumggle_text_back:
-                startActivity(intent1);
                 finish();
                 overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
                 break;
@@ -157,8 +155,6 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Intent intent = new Intent(SmuggleActivity.this,MainActivity.class);
-        startActivity(intent);
         finish();
         overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
         return super.onKeyDown(keyCode, event);

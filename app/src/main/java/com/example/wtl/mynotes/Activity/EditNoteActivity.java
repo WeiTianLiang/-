@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -31,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
 import com.example.wtl.mynotes.Tool.Change_Colors;
@@ -201,6 +203,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         * 添加一个基础normal状态
         * */
         textstatelist.add("normal");
+
     }
 
     private void Montior() {
@@ -253,20 +256,11 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(EditNoteActivity.this, MainActivity.class);
-        Intent intent1 = new Intent(EditNoteActivity.this, HandleActivity.class);
         animation_floar = AnimationUtils.loadAnimation(this, R.anim.delete_floar);
         switch (view.getId()) {
             case R.id.edit_back:
-                if (sta.equals("0")) {
-                    startActivity(intent);
-                    finish();
-                    overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);//设置activity的平移动画
-                } else if (sta.equals("1")) {
-                    startActivity(intent1);
-                    finish();
-                    overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
-                }
+                finish();
+                overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);//设置activity的平移动画
                 break;
             case R.id.edit_over:
                 /*
@@ -299,9 +293,13 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     * */
                     cv.put(NotesDB.STATETEXT, listToString(textState));
                     writebase.insert(NotesDB.TABLE_NAME, null, cv);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
+                    Intent intent = new Intent("com.example.wtl.mynotes.action");
+                    intent.putExtra("createNew", "create");
+                    Notes notes = new Notes(edit_content.getText().toString(), getTime());
+                    intent.putExtra("notes", notes);
+                    sendBroadcast(intent);
                     finish();
+                    overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
                 } else {
                     //升级数据库
                     ContentValues cv = new ContentValues();
@@ -311,9 +309,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     cv.put(NotesDB.STATENUM, listToString(textlengh));
                     cv.put(NotesDB.STATETEXT, listToString(textState));
                     writebase.update(NotesDB.TABLE_NAME, cv, NotesDB.TIME + "=?", new String[]{change_time});
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
                     finish();
+                    overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
                 }
                 break;
             case R.id.editbold:
@@ -454,18 +451,9 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     * */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Intent intent = new Intent(EditNoteActivity.this, MainActivity.class);
-        Intent intent1 = new Intent(EditNoteActivity.this, HandleActivity.class);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (sta.equals("0")) {
-                startActivity(intent);
-                finish();
-                overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
-            } else if (sta.equals("1")) {
-                startActivity(intent1);
-                finish();
-                overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
-            }
+            finish();
+            overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
         }
         return false;
     }
@@ -593,7 +581,6 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     * 解析从数据库中传来的当前便签的文字对应的状态数量及状态种类
     * */
     private void AnalysisStringShow(String contentStateNum, String contentStateText, String content) {
-        String Tstate = "";
         /*
         * 将string类型转为edittext
         * */

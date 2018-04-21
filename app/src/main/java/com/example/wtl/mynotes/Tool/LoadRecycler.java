@@ -1,6 +1,5 @@
 package com.example.wtl.mynotes.Tool;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -44,7 +43,7 @@ public class LoadRecycler {
     /*
     * 加载list布局
     * */
-    public static void loadlist(final List<String> color, final int state, final FloatingActionButton button, final LinearLayout delete, RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
+    public static void loadlist(final Notes notes,final List<String> color, final int state, final FloatingActionButton button, final LinearLayout delete, final RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
         final List<Integer> stringList = new ArrayList<>();//定义list存储要删除的数
         final List<Notes> notesList = new ArrayList<>();//定义list存储适配器传来的值
         NotesDB notesDB = new NotesDB(context);//初始化数据库
@@ -55,13 +54,28 @@ public class LoadRecycler {
 
         DefaultItemAnimator animator = new DefaultItemAnimator();
         animator.setRemoveDuration(150);
+        animator.setAddDuration(150);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(animator);
         final NotesAdapter adapter = new NotesAdapter(list, context);
         recyclerView.setAdapter(adapter);
         runLayoutAnimation(recyclerView, 0);
-
+        /*
+        * 添加新数据
+        * */
+        if(notes!=null) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.add(notes);
+                    recyclerView.scrollToPosition(0);
+                }
+            }, 400);
+        }
+        /*
+        * 单项点击事件
+        * */
         adapter.setOnItemClickAloneListener(new NotesAdapter.OnItemClickAloneListener() {
             @Override
             public void OnItemAlone(Notes notes, int pos, List<Notes> list1) {
@@ -83,10 +97,11 @@ public class LoadRecycler {
                 * */
                 intent.putExtra("color", color.get(pos));
                 context.startActivity(intent);
-                ((Activity) context).finish();//因为context没有finish操作,将context强转为activity
             }
         });
-
+        /*
+        * 长按事件
+        * */
         adapter.setOnItemLongClickListener(new NotesAdapter.OnItemLongClickListener() {
             @Override
             public boolean OnItemLongClick() {
@@ -94,7 +109,9 @@ public class LoadRecycler {
                 delete.setVisibility(View.VISIBLE);
                 delete.startAnimation(animation1);
                 button.setVisibility(View.GONE);
-
+                /*
+                * 长按事件中的单选事件
+                * */
                 adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
                     @Override
                     public void OnItemClick(int x, boolean adro, List<Notes> list1) {
@@ -115,7 +132,9 @@ public class LoadRecycler {
                     }
 
                 });
-
+                /*
+                * 删除事件
+                * */
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -201,7 +220,7 @@ public class LoadRecycler {
                 intent.putExtra("back",state+"");
                 intent.putExtra("color",color.get(pos));
                 context.startActivity(intent);
-                ((Activity) context).finish();//因为context没有finish操作,将context强转为activity
+                /*((Activity) context).finish();*///因为context没有finish操作,将context强转为activity
             }
         });
 
@@ -296,7 +315,7 @@ public class LoadRecycler {
         final Animation animation2 = AnimationUtils.loadAnimation(context, R.anim.delete_down);
 
         DefaultItemAnimator animator = new DefaultItemAnimator();
-        animator.setRemoveDuration(200);
+        animator.setRemoveDuration(150);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(animator);
@@ -304,6 +323,9 @@ public class LoadRecycler {
         recyclerView.setAdapter(adapter);
         runLayoutAnimation(recyclerView, 0);
 
+        /*
+        * 单个恢复
+        * */
         adapter.setOnItemClickAloneListener(new NotesAdapter.OnItemClickAloneListener() {
             String recoy_time;
             String recoy_content;
@@ -348,11 +370,14 @@ public class LoadRecycler {
                         //把数据恢复到表1
                         ContentValues cv = new ContentValues();
                         cv.put(NotesDB.TIME, recoy_time);
-                        cv. put(NotesDB.CONTENT, recoy_content);
+                        cv.put(NotesDB.CONTENT, recoy_content);
                         cv.put(NotesDB.COLOR,recoy_color);
                         cv.put(NotesDB.STATENUM,recoy_state_num);
                         cv.put(NotesDB.STATETEXT,recoy_state_text);
                         database.insert(NotesDB.TABLE_NAME, null, cv);
+                        Intent intent = new Intent("com.example.wtl.mynotes.action");
+                        intent.putExtra("recoy","yes");
+                        context.sendBroadcast(intent);
                     }
                 });
             }
@@ -497,6 +522,9 @@ public class LoadRecycler {
                                             adapter.isLongItem();
                                         }
                                     },470);
+                                    Intent intent = new Intent("com.example.wtl.mynotes.action");
+                                    intent.putExtra("recoy","yes");
+                                    context.sendBroadcast(intent);
                                 }
                             });
                         }
@@ -577,6 +605,9 @@ public class LoadRecycler {
                         cv.put(NotesDB.STATENUM,recoy_state_num);
                         cv.put(NotesDB.STATETEXT,recoy_state_text);
                         database.insert(NotesDB.TABLE_NAME, null, cv);
+                        Intent intent = new Intent("com.example.wtl.mynotes.action");
+                        intent.putExtra("recoy","yes");
+                        context.sendBroadcast(intent);
                     }
                 });
             }
@@ -716,6 +747,9 @@ public class LoadRecycler {
                                             adapter.isLongItem();
                                         }
                                     },470);
+                                    Intent intent = new Intent("com.example.wtl.mynotes.action");
+                                    intent.putExtra("recoy","yes");
+                                    context.sendBroadcast(intent);
                                 }
                             });
                         }

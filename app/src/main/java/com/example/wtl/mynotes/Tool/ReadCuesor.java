@@ -26,7 +26,9 @@ import java.util.List;
 
 public class ReadCuesor {
 
-    //从数据库获取颜色并返回
+    /*
+    * 从数据库获取颜色并返回
+    * */
     public static List<String> ReadColor(SQLiteDatabase readbase) {
         Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
         List<String> color = new ArrayList<>();
@@ -37,7 +39,9 @@ public class ReadCuesor {
         }
         return color;
     }
-    //搜索并加载
+    /*
+    * 搜索并加载
+    * */
     public static void SearchFromSQL(String search,Context context,SQLiteDatabase readbase,List<Notes> notesList,RecyclerView notes_list) {
         Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
         List<String> color = new ArrayList<>();
@@ -61,9 +65,11 @@ public class ReadCuesor {
                 }
             }
         }
-        LoadRecycler.loadlist(color,0,null,null,notes_list,null,context,notesList1);
+        LoadRecycler.loadlist(null,color,0,null,null,notes_list,null,context,notesList1);
     }
-    //从数据库获取值并加载到正常的recyclerview上
+    /*
+    * 从数据库获取值并加载到正常的recyclerview上
+    * */
     public static void ReadCuesor(int state,final FloatingActionButton button, final LinearLayout delete, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {
         Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
         List<String> color = new ArrayList<>();
@@ -76,10 +82,12 @@ public class ReadCuesor {
                 notesList.add(notes);
             } while (cursor.moveToPrevious());
         }
-        if(x == 0) LoadRecycler.loadlist(color,state,button,delete,notes_list,change_list_in,context,notesList);
+        if(x == 0) LoadRecycler.loadlist(null,color,state,button,delete,notes_list,change_list_in,context,notesList);
         else LoadRecycler.cardlist(color,state,button,delete,notes_list,change_list_in,context,notesList);
     }
-    //从数据库获取值并加载到垃圾箱的recyclerview上
+    /*
+    * 从数据库获取值并加载到垃圾箱的recyclerview上
+    * */
     public static void ReadCuesor(final LinearLayout delete, final ImageView abandon_dele, final ImageView abandon_move, Context context, int x, SQLiteDatabase readbase, List<Notes> notesList, RecyclerView notes_list, Animation change_list_in) {
         Cursor cursor = readbase.query(NotesDB.DELETE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
         if(cursor.moveToLast()) {

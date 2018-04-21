@@ -1,15 +1,20 @@
 package com.example.wtl.mynotes.Activity;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -23,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.os.Handler;
+import android.widget.Toast;
 
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
@@ -61,7 +67,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Animation search_visib;
 
     private SharedPreferences preferences;//判断程序是否第一次启动
+    /*
+    * 创建搜索弹窗
+    * */
     private Creat_Search_Dialog search_dialog = null;
+
+    private IntentFilter intentFilter;
+    /*
+    * 接收广播传来的数据
+    * */
+    private String str;
+    private String str1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +119,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return true;
             }
         });
+        intentFilter = new IntentFilter("com.example.wtl.mynotes.action");
+        registerReceiver(broadcastReceiver,intentFilter);
     }
 
     private void Montior() {
@@ -128,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra("back", "0");
                 intent.putExtra("color", "white");
                 startActivity(intent);
-                finish();
                 overridePendingTransition(R.anim.activity_left_in, R.anim.activity_left_out);
                 break;
             case R.id.change_list:
@@ -143,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     change_list.setImageResource(R.mipmap.listview);
                     change_list.startAnimation(change_img);
-                    LoadRecycler.loadlist(ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, this, notesList);
+                    LoadRecycler.loadlist(null,ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, this, notesList);
                     cv.put(NotesDB.FORMAT, 0);
                     readbase.insert(NotesDB.FORMAT_NAME, null, cv);
                 }
@@ -156,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.library:
                 Intent intent1 = new Intent(MainActivity.this, SmuggleActivity.class);
                 startActivity(intent1);
-                finish();
                 overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
                 break;
         }
@@ -168,5 +184,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         change_img = AnimationUtils.loadAnimation(this, R.anim.change_list_image_anim);
         search_gone = AnimationUtils.loadAnimation(this, R.anim.search_gone);
         search_visib = AnimationUtils.loadAnimation(this, R.anim.search_visib);
+    }
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            str = intent.getExtras().getString("createNew");
+            str1 = intent.getExtras().getString("recoy");
+            if(str!=null&&str.equals("create")) {
+                Notes notes = intent.getParcelableExtra("notes");
+                LoadRecycler.loadlist(notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+            }
+            if(str1!=null&&str1.equals("yes")) {
+                List<Notes> lists = new ArrayList<>();
+                Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
+                List<String> color = new ArrayList<>();
+                if(cursor.moveToLast()) {
+                    do {
+                        String content = cursor.getString(cursor.getColumnIndex("content"));
+                        String time = cursor.getString(cursor.getColumnIndex("time"));
+                        color.add(cursor.getString(cursor.getColumnIndex("color")));
+                        Notes notes = new Notes(content,time);
+                        lists.add(notes);
+                    } while (cursor.moveToPrevious());
+                }
+                LoadRecycler.loadlist(null, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, lists);
+            }
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
     }
 }

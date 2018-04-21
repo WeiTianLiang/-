@@ -127,6 +127,14 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     }
 
     /*
+    * 添加数据
+    * */
+    public void add(Notes notes) {
+        list.add(0,notes);
+        notifyItemInserted(0);
+    }
+
+    /*
     * 长按跳转接口
     * */
     public interface OnItemLongClickListener {
