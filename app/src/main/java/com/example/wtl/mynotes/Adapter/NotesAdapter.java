@@ -51,12 +51,12 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         holder.notes_time.setText(notes.getNotes_time());
 
         if (longclick) {
-            holder.check_box.setVisibility(View.VISIBLE);
+            holder.check_box.setVisibility(View.VISIBLE);//设置长按后list边的圆为选中状态
         } else {
-            holder.check_box.setVisibility(View.GONE);
+            holder.check_box.setVisibility(View.GONE);//设置长按后list边的圆为未选中状态
         }
         if (position == list.size() - 1) {
-            holder.updownline.setVisibility(View.VISIBLE);
+            holder.updownline.setVisibility(View.VISIBLE);//显示最后一个下划线
         }
         holder.root_view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +77,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                     }
                     onItemClick.OnItemClick(position, choose, list);
                 } else if (!longclick) {  //正常状态的逻辑
-                    aloneListener.OnItemAlone(notes, position, list);
+                    aloneListener.OnItemAlone(notes, position, list);//点击跳转另一个界面
                 }
             }
         });
@@ -117,6 +117,9 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
     }
 
+    /*
+    * 判断当前是否为长按状态
+    * */
     public void isLongItem() {
         longclick = false;
         notifyDataSetChanged();
@@ -128,26 +131,44 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         notifyDataSetChanged();
     }
 
+    /*
+    * 长按跳转接口
+    * */
     public interface OnItemLongClickListener {
         boolean OnItemLongClick();
     }
 
+    /*
+    * 长按后单选接口
+    * */
     public interface OnItemClickListener {
         void OnItemClick(int x, boolean adro, List<Notes> list);
     }
 
+    /*
+    * 单选跳转接口
+    * */
     public interface OnItemClickAloneListener {
         void OnItemAlone(Notes notes, int pos, List<Notes> list);
     }
 
+    /*
+    * 长按后单选外部接口
+    * */
     public void setOnItemClickListener(OnItemClickListener onItemClick) {
         this.onItemClick = onItemClick;
     }
 
+    /*
+    * 长按外部跳转接口
+    * */
     public void setOnItemLongClickListener(OnItemLongClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
+    /*
+    * 单选跳转外部接口
+    * */
     public void setOnItemClickAloneListener(OnItemClickAloneListener onItemClickAloneListener) {
         this.aloneListener = onItemClickAloneListener;
     }

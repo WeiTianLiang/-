@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.List;
+
 /**
  * 记事本数据库
  * Created by WTL on 2018/3/21.
@@ -16,6 +18,8 @@ public class NotesDB extends SQLiteOpenHelper{
     public static final String ID = "_id";//id
     public static final String COLOR = "color";//背景色
     public static final String TIME = "time";//创建时间
+    public static final String STATENUM = "statenum";//文字状态数量
+    public static final String STATETEXT = "statetext";//文字状态文字
     //表2 list的显示格式
     public static final String FORMAT_NAME = "format";//表名
     public static final String FORMAT = "form";//创建排版格式
@@ -31,6 +35,8 @@ public class NotesDB extends SQLiteOpenHelper{
     public static final String DELETE_COLOR = "delete_color";//背景色
     public static final String DELETE_CONTENT = "delete_content";//文字内容
     public static final String DELETE_TIME = "delete_time";//创建时间
+    public static final String DELETE_STATENUM = "delete_statenum";//文字状态数量
+    public static final String DELETE_STATETEXT = "delete_statetext";//文字状态文字
     //表5 字体大小
     public static final String WORD_NAME = "word";//表名
     public static final String WORD_SIZE = "size";//创建排版格式
@@ -45,7 +51,9 @@ public class NotesDB extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + "("
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + CONTENT + " TEXT NOT NULL,"
-                + COLOR +" TEXT,"
+                + COLOR + " TEXT,"
+                + STATENUM + " TEXT,"
+                + STATETEXT + " TEXT,"
                 + TIME + " TEXT NOT NULL)");
 
         sqLiteDatabase.execSQL("CREATE TABLE " + FORMAT_NAME + "("
@@ -61,6 +69,8 @@ public class NotesDB extends SQLiteOpenHelper{
                 + DELETE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + DELETE_CONTENT + " TEXT NOT NULL,"
                 + DELETE_COLOR + " TEXT,"
+                + DELETE_STATENUM + " TEXT,"
+                + DELETE_STATETEXT + " TEXT,"
                 + DELETE_TIME + " TEXT NOT NULL)");
 
         sqLiteDatabase.execSQL("CREATE TABLE " + WORD_NAME + "("

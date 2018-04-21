@@ -30,7 +30,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="#000"/>
+                android:textColor="#000"
+                android:singleLine="true"/>
 
             <TextView
                 android:id="@+id/notes_time_2"
@@ -38,7 +39,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textSize="12sp"
-                android:textColor="#a6a6a6"/>
+                android:textColor="#a6a6a6"
+                android:singleLine="true"/>
 
         </LinearLayout>
 
