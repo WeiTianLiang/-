@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,8 +53,11 @@ public class LoadRecycler {
         final Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.delete_floar);
         final Animation animation2 = AnimationUtils.loadAnimation(context, R.anim.delete_down);
 
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setRemoveDuration(150);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
+        recyclerView.setItemAnimator(animator);
         final NotesAdapter adapter = new NotesAdapter(list, context);
         recyclerView.setAdapter(adapter);
         runLayoutAnimation(recyclerView, 0);
@@ -150,7 +155,15 @@ public class LoadRecycler {
                         delete.setVisibility(View.GONE);
                         delete.startAnimation(animation2);
                         button.setVisibility(View.VISIBLE);
-                        adapter.isLongItem();
+                        /*
+                        * 线程中延迟470执行，否则无法显示动画
+                        * */
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.isLongItem();
+                            }
+                        },470);
                     }
                 });
                 return true;
@@ -170,8 +183,11 @@ public class LoadRecycler {
         final Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.delete_floar);
         final Animation animation2 = AnimationUtils.loadAnimation(context, R.anim.delete_down);
 
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setRemoveDuration(200);
         GridLayoutManager manager = new GridLayoutManager(context, 2);
         recyclerView.setLayoutManager(manager);
+        recyclerView.setItemAnimator(animator);
         final GridAdapter adapter = new GridAdapter(list, context);
         recyclerView.setAdapter(adapter);
         runLayoutAnimation(recyclerView, 1);
@@ -254,7 +270,12 @@ public class LoadRecycler {
                         delete.setVisibility(View.GONE);
                         delete.setAnimation(animation2);
                         button.setVisibility(View.VISIBLE);
-                        adapter.isLongItem();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.isLongItem();
+                            }
+                        },470);
                     }
                 });
                 return true;
@@ -274,8 +295,11 @@ public class LoadRecycler {
         final Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.delete_floar);
         final Animation animation2 = AnimationUtils.loadAnimation(context, R.anim.delete_down);
 
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setRemoveDuration(200);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
+        recyclerView.setItemAnimator(animator);
         final NotesAdapter adapter = new NotesAdapter(list, context);
         recyclerView.setAdapter(adapter);
         runLayoutAnimation(recyclerView, 0);
@@ -368,6 +392,9 @@ public class LoadRecycler {
                         if (stringList.size() == 0) {
                             delete.setVisibility(View.GONE);
                             delete.startAnimation(animation2);
+                            /*
+                            * 如果未选中则直接调用isLongItem不用延迟
+                            * */
                             adapter.isLongItem();
                         } else {
                             final Create_Delete_Dialog createDeleteDialog = new Create_Delete_Dialog(context);
@@ -394,7 +421,12 @@ public class LoadRecycler {
                                     stringList.removeAll(stringList);//清空表
                                     delete.setVisibility(View.GONE);
                                     delete.startAnimation(animation2);
-                                    adapter.isLongItem();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            adapter.isLongItem();
+                                        }
+                                    },470);
                                 }
                             });
                         }
@@ -459,7 +491,12 @@ public class LoadRecycler {
                                     stringList.removeAll(stringList);//清空表
                                     delete.setVisibility(View.GONE);
                                     delete.startAnimation(animation2);
-                                    adapter.isLongItem();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            adapter.isLongItem();
+                                        }
+                                    },470);
                                 }
                             });
                         }
@@ -482,8 +519,11 @@ public class LoadRecycler {
         final Animation animation1 = AnimationUtils.loadAnimation(context, R.anim.delete_floar);
         final Animation animation2 = AnimationUtils.loadAnimation(context, R.anim.delete_down);
 
+        DefaultItemAnimator animator = new DefaultItemAnimator();
+        animator.setRemoveDuration(200);
         GridLayoutManager manager = new GridLayoutManager(context, 2);
         recyclerView.setLayoutManager(manager);
+        recyclerView.setItemAnimator(animator);
         final GridAdapter adapter = new GridAdapter(list, context);
         recyclerView.setAdapter(adapter);
         runLayoutAnimation(recyclerView, 1);
@@ -601,7 +641,12 @@ public class LoadRecycler {
                                     stringList.removeAll(stringList);//清空表
                                     delete.setVisibility(View.GONE);
                                     delete.setAnimation(animation2);
-                                    adapter.isLongItem();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            adapter.isLongItem();
+                                        }
+                                    },470);
                                 }
                             });
                         }
@@ -665,7 +710,12 @@ public class LoadRecycler {
                                     stringList.removeAll(stringList);//清空表
                                     delete.setVisibility(View.GONE);
                                     delete.startAnimation(animation2);
-                                    adapter.isLongItem();
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            adapter.isLongItem();
+                                        }
+                                    },470);
                                 }
                             });
                         }

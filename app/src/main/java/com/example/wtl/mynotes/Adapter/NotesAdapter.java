@@ -55,9 +55,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         } else {
             holder.check_box.setVisibility(View.GONE);//设置长按后list边的圆为未选中状态
         }
-        if (position == list.size() - 1) {
-            holder.updownline.setVisibility(View.VISIBLE);//显示最后一个下划线
-        }
         holder.root_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,7 +92,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         TextView notes_content_part;
         TextView notes_time;
         ImageView check_box;
-        View updownline;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -103,7 +99,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
             notes_time = itemView.findViewById(R.id.notes_time);
             check_box = itemView.findViewById(R.id.check_box);
             root_view = itemView.findViewById(R.id.root_view);
-            updownline = itemView.findViewById(R.id.updownline);
 
             root_view.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -128,7 +123,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     //删除Notes
     public void removeNotes(int postion) {
         list.remove(postion);
-        notifyDataSetChanged();
+        notifyItemRemoved(postion);
     }
 
     /*

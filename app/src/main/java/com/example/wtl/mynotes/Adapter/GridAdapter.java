@@ -117,7 +117,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
     //删除Notes
     public void removeNotes(int postion) {
         list.remove(postion);
-        notifyDataSetChanged();
+        notifyItemRemoved(postion);
     }
 
     public interface OnItemLongClickListener {
