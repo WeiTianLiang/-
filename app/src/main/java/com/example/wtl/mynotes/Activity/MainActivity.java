@@ -154,13 +154,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         equals(this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
                     change_list.setImageResource(R.mipmap.cardview);
                     change_list.startAnimation(change_img);
-                    LoadRecycler.cardlist(ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, this, notesList);
+                    LoadRecycler.cardlist(null,null,null,ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, this, notesList);
                     cv.put(NotesDB.FORMAT, 1);
                     readbase.insert(NotesDB.FORMAT_NAME, null, cv);
                 } else {
                     change_list.setImageResource(R.mipmap.listview);
                     change_list.startAnimation(change_img);
-                    LoadRecycler.loadlist(null,ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, this, notesList);
+                    LoadRecycler.loadlist(null,null,null,ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, this, notesList);
                     cv.put(NotesDB.FORMAT, 0);
                     readbase.insert(NotesDB.FORMAT_NAME, null, cv);
                 }
@@ -186,15 +186,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         search_visib = AnimationUtils.loadAnimation(this, R.anim.search_visib);
     }
 
+    /*
+    * 广播接收器
+    * */
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             str = intent.getExtras().getString("createNew");
             str1 = intent.getExtras().getString("recoy");
+            /*
+            * 添加后更新recyclerview数据
+            * */
             if(str!=null&&str.equals("create")) {
                 Notes notes = intent.getParcelableExtra("notes");
-                LoadRecycler.loadlist(notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+                if(change_list.getDrawable().getCurrent().getConstantState().
+                        equals(MainActivity.this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
+                    LoadRecycler.loadlist(null,"create",notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+                } else {
+                    LoadRecycler.cardlist(null,"create",notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+                }
             }
+            /*
+            * 修改后更新recyclerview数据
+            * */
+            else if(str!=null&&str.equals("update")) {
+                Notes notes = intent.getParcelableExtra("notes");
+                String post = intent.getExtras().getString("point");
+                if(change_list.getDrawable().getCurrent().getConstantState().
+                        equals(MainActivity.this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
+                    LoadRecycler.loadlist(post,"update",notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+                } else {
+                    LoadRecycler.cardlist(post,"update",notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+                }
+            }
+            /*
+            * 从数据库还原后更新recyclerview数据
+            * */
             if(str1!=null&&str1.equals("yes")) {
                 List<Notes> lists = new ArrayList<>();
                 Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
@@ -208,11 +235,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         lists.add(notes);
                     } while (cursor.moveToPrevious());
                 }
-                LoadRecycler.loadlist(null, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, lists);
+                if(change_list.getDrawable().getCurrent().getConstantState().
+                        equals(MainActivity.this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
+                    LoadRecycler.loadlist(null,null,null, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, lists);
+                } else {
+                    LoadRecycler.cardlist(null,null,null, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, lists);
+                }
             }
         }
     };
 
+    /*
+    * 销毁广播
+    * */
     @Override
     protected void onDestroy() {
         unregisterReceiver(broadcastReceiver);

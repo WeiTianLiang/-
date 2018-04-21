@@ -43,7 +43,7 @@ public class LoadRecycler {
     /*
     * 加载list布局
     * */
-    public static void loadlist(final Notes notes,final List<String> color, final int state, final FloatingActionButton button, final LinearLayout delete, final RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
+    public static void loadlist(final String post, String CrUp, final Notes notes, final List<String> color, final int state, final FloatingActionButton button, final LinearLayout delete, final RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
         final List<Integer> stringList = new ArrayList<>();//定义list存储要删除的数
         final List<Notes> notesList = new ArrayList<>();//定义list存储适配器传来的值
         NotesDB notesDB = new NotesDB(context);//初始化数据库
@@ -55,6 +55,7 @@ public class LoadRecycler {
         DefaultItemAnimator animator = new DefaultItemAnimator();
         animator.setRemoveDuration(150);
         animator.setAddDuration(150);
+        animator.setChangeDuration(150);
         LinearLayoutManager manager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(animator);
@@ -64,12 +65,23 @@ public class LoadRecycler {
         /*
         * 添加新数据
         * */
-        if(notes!=null) {
+        if(notes!=null && CrUp.equals("create")) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     adapter.add(notes);
                     recyclerView.scrollToPosition(0);
+                }
+            }, 400);
+        }
+        /*
+        * 更新数据
+        * */
+        if(notes!=null && CrUp.equals("update")) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.update(notes,Integer.parseInt(post));
                 }
             }, 400);
         }
@@ -84,6 +96,10 @@ public class LoadRecycler {
                 * 根据时间传出当前点击的位置
                 * */
                 intent.putExtra("Postion", notes.getNotes_time());
+                /*
+                * 根据list的节点传出当前点击的位置
+                * */
+                intent.putExtra("post",String.valueOf(pos));
                 /*
                 * 传出当前是修改还是新建
                 * */
@@ -193,7 +209,7 @@ public class LoadRecycler {
     /*
     * 加载card布局
     * */
-    public static void cardlist(final List<String> color, final int state, final FloatingActionButton button, final LinearLayout delete, RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
+    public static void cardlist(final String post,String CrUp,final Notes notes, final List<String> color, final int state, final FloatingActionButton button, final LinearLayout delete, final RecyclerView recyclerView, Animation animation, final Context context, List<Notes> list) {
         final List<Integer> stringList = new ArrayList<>();//定义list存储要删除的数
         final List<Notes> notesList = new ArrayList<>();//定义list存储适配器传来的值
         NotesDB notesDB = new NotesDB(context);//初始化数据库
@@ -203,7 +219,9 @@ public class LoadRecycler {
         final Animation animation2 = AnimationUtils.loadAnimation(context, R.anim.delete_down);
 
         DefaultItemAnimator animator = new DefaultItemAnimator();
-        animator.setRemoveDuration(200);
+        animator.setRemoveDuration(150);
+        animator.setChangeDuration(150);
+        animator.setAddDuration(150);
         GridLayoutManager manager = new GridLayoutManager(context, 2);
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(animator);
@@ -211,11 +229,35 @@ public class LoadRecycler {
         recyclerView.setAdapter(adapter);
         runLayoutAnimation(recyclerView, 1);
 
+        /*
+        * 添加新数据
+        * */
+        if(notes!=null && CrUp.equals("create")) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.add(notes);
+                    recyclerView.scrollToPosition(0);
+                }
+            }, 400);
+        }
+        /*
+        * 更新数据
+        * */
+        if(notes!=null && CrUp.equals("update")) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.update(notes,Integer.parseInt(post));
+                }
+            }, 400);
+        }
         adapter.setOnItemClickAloneListener(new GridAdapter.OnItemClickAloneListener() {
             @Override
             public void OnItemAlone(Notes notes, int pos, List<Notes> list1) {
                 Intent intent = new Intent(context, EditNoteActivity.class);
                 intent.putExtra("Postion", notes.getNotes_time());
+                intent.putExtra("post",String.valueOf(pos));
                 intent.putExtra("State", "change");
                 intent.putExtra("back",state+"");
                 intent.putExtra("color",color.get(pos));

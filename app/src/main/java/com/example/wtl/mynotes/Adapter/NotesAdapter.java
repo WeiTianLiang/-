@@ -135,6 +135,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     }
 
     /*
+    * 更新数据
+    * */
+    public void update(Notes notes,int postion) {
+        list.get(postion).setNotes_content_part(notes.getNotes_content_part());
+        list.get(postion).setNotes_time(notes.getNotes_time());
+        notifyItemChanged(postion);
+    }
+
+    /*
     * 长按跳转接口
     * */
     public interface OnItemLongClickListener {

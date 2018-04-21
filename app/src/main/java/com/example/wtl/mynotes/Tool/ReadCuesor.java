@@ -65,7 +65,7 @@ public class ReadCuesor {
                 }
             }
         }
-        LoadRecycler.loadlist(null,color,0,null,null,notes_list,null,context,notesList1);
+        LoadRecycler.loadlist(null,null,null,color,0,null,null,notes_list,null,context,notesList1);
     }
     /*
     * 从数据库获取值并加载到正常的recyclerview上
@@ -82,8 +82,8 @@ public class ReadCuesor {
                 notesList.add(notes);
             } while (cursor.moveToPrevious());
         }
-        if(x == 0) LoadRecycler.loadlist(null,color,state,button,delete,notes_list,change_list_in,context,notesList);
-        else LoadRecycler.cardlist(color,state,button,delete,notes_list,change_list_in,context,notesList);
+        if(x == 0) LoadRecycler.loadlist(null,null,null,color,state,button,delete,notes_list,change_list_in,context,notesList);
+        else LoadRecycler.cardlist(null,null,null,color,state,button,delete,notes_list,change_list_in,context,notesList);
     }
     /*
     * 从数据库获取值并加载到垃圾箱的recyclerview上

@@ -120,6 +120,22 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
         notifyItemRemoved(postion);
     }
 
+    /*
+    * 添加数据
+    * */
+    public void add(Notes notes) {
+        list.add(0,notes);
+        notifyItemInserted(0);
+    }
+    /*
+    * 更新数据
+    * */
+    public void update(Notes notes,int postion) {
+        list.get(postion).setNotes_content_part(notes.getNotes_content_part());
+        list.get(postion).setNotes_time(notes.getNotes_time());
+        notifyItemChanged(postion);
+    }
+
     public interface OnItemLongClickListener {
         boolean OnItemLongClick();
     }

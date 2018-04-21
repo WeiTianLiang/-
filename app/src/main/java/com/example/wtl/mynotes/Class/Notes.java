@@ -57,4 +57,12 @@ public class Notes implements Parcelable{
         parcel.writeString(notes_content_part);
         parcel.writeString(notes_time);
     }
+
+    public void setNotes_content_part(String notes_content_part) {
+        this.notes_content_part = notes_content_part;
+    }
+
+    public void setNotes_time(String notes_time) {
+        this.notes_time = notes_time;
+    }
 }

@@ -128,6 +128,10 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     * 记录所有text的状态
     * */
     private List<String> textState = new ArrayList<>();
+    /*
+    * 记录跳转之前的位置
+    * */
+    private String post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,6 +313,12 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     cv.put(NotesDB.STATENUM, listToString(textlengh));
                     cv.put(NotesDB.STATETEXT, listToString(textState));
                     writebase.update(NotesDB.TABLE_NAME, cv, NotesDB.TIME + "=?", new String[]{change_time});
+                    Intent intent = new Intent("com.example.wtl.mynotes.action");
+                    intent.putExtra("createNew", "update");
+                    intent.putExtra("point",post);
+                    Notes notes = new Notes(edit_content.getText().toString(), getTime());
+                    intent.putExtra("notes", notes);
+                    sendBroadcast(intent);
                     finish();
                     overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);
                 }
@@ -558,6 +568,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         * */
         Intent intent = getIntent();
         String postion = intent.getStringExtra("Postion");
+        post = intent.getStringExtra("post");
         String sql = "select*from notes where time= '" + postion + "'";
         Cursor cursor = writebase.rawQuery(sql, null);
         if (cursor.moveToFirst()) {
