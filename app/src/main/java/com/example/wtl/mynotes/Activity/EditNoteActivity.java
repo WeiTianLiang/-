@@ -516,6 +516,9 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 textState.add("*");
             }
         } else {
+            /*
+            * 删除操作
+            * */
             LinkageDelete(start);
         }
 
@@ -751,9 +754,18 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     * edittext删除每一个字符，对应的textlengh和textState的改变
     * */
     private void LinkageDelete(int changeState) {
+        /*
+        * 将文字的最后一位加入
+        * */
         textlengh.add(String.valueOf(edit_content.getText().length()+1));
+        /*
+        * 定义拷贝list简化循环
+        * */
         List<String> copytextlengh = new ArrayList<>();
         List<String> copytextstate = new ArrayList<>();
+        /*
+        * 对拷贝list赋值
+        * */
         for(int i = 0 ; i < textlengh.size() ; i++) {
             if(!(textlengh.get(i)).equals("*")) {
                 copytextlengh.add(textlengh.get(i));
@@ -764,17 +776,33 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 copytextstate.add(textState.get(i));
             }
         }
+        /*
+        * 循环判断删除的值的位置在哪个区间内，并修改各个字段区间
+        * */
         for(int i = 0 ; i < copytextlengh.size()-1 ; i++) {
 
             if(changeState >= Integer.parseInt(copytextlengh.get(i))
                     && changeState < Integer.parseInt(copytextlengh.get(i+1))) {
+                /*
+                * 如果区间只有一个值，则删除该区间及对应的状态，这里定义k将删除区间从循环中提取出来
+                * 因为删除会改变list的长度，导致循环无法进行到最后
+                * */
                 int k=0;
                 for(int j = i+1 ; j < copytextlengh.size() ; j++) {
+                    /*
+                    * 修改删除位置之后的各个区间的临界值
+                    * */
                     copytextlengh.set(j, String.valueOf(Integer.parseInt(copytextlengh.get(j))-1));
+                    /*
+                    * 如果由两个相等的临界值则删除该区间
+                    * */
                     if((Integer.parseInt(copytextlengh.get(j))) == Integer.parseInt(copytextlengh.get(j-1))) {
                         k = j;
                     }
                 }
+                /*
+                * 对位置区间和状态进行删除
+                * */
                 if(k!=0) {
                     copytextlengh.remove(k);
                     copytextstate.remove(k-1);
@@ -782,11 +810,17 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 break;
             }
         }
+        /*
+        * 清空原始的两个表
+        * */
         textlengh.removeAll(textlengh);
         textState.removeAll(textState);
+        /*
+        * 将两个拷贝表的信息赋值到原表并加入分割字符，
+        * 位置区间最后一个不用加（后面会将最后一个删除，否则会与完成事件时的添加冲突）
+        * */
         for(int i = 0 ; i < copytextlengh.size() ; i++) {
             if(i == copytextlengh.size()-1){
-
                 textlengh.add(copytextlengh.get(i));
             } else {
                 textlengh.add(copytextlengh.get(i));
@@ -797,13 +831,9 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
             textState.add(copytextstate.get(i));
             textState.add("*");
         }
-        for(String s:textlengh) {
-            Log.d("asdda",s);
-        }
-        Log.d("asdda","------------------------");
-        for(String s:textState) {
-            Log.d("asdda",s);
-        }
+        /*
+        * 将位置区间的最后一个值删除
+        * */
         textlengh.remove(textlengh.size()-1);
     }
 }
