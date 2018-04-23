@@ -36,7 +36,6 @@
         <activity android:name=".Activity.HandleActivity" />
         <activity android:name=".Activity.AbandonActivity" />
         <activity android:name=".Activity.SettingActivity" />
-        <activity android:name=".Activity.FirstStartActivity"></activity>
     </application>
 
 </manifest>

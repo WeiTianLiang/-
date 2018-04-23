@@ -165,7 +165,6 @@ public class LoadRecycler {
                             else adapter.removeNotes(stringList.get(i) - i);
                             //根据时间从表1中取出数据
                             String sql = "select * from notes where time='" + notesList.get(stringList.get(i)).getNotes_time() + "'";
-                            Log.d("asdasd",notesList.get(stringList.get(i)).getNotes_time());
                             Cursor cursor = database.rawQuery(sql, null);
                             if (cursor.moveToFirst()) {
                                 delete_time = cursor.getString(cursor.getColumnIndex("time"));

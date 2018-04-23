@@ -11,6 +11,7 @@ import android.graphics.Typeface;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.LocalBroadcastManager;
@@ -23,6 +24,7 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -143,6 +145,24 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         animation_show = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.edit_show);
         animation_hide = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.edit_hide);
         /*
+        * 初始化数据库
+        * */
+        notesDB = new NotesDB(this);
+        /*
+        * 初始化数据库工具
+        * */
+        writebase = notesDB.getWritableDatabase();
+        Intent intent = getIntent();
+        /*
+        * 判断当前是修改状态还是创建状态
+        * 必须在edit_content.addTextChangedListener之前，要先判断修改再进行增加
+        * 因为都要调用状态修饰的editchange，如果新建在前则会二次调用
+        * */
+        String state = intent.getStringExtra("State");
+        if (state.equals("change")) {
+            showcontent();
+        }
+        /*
         * EditText动态监听
         * */
         edit_content.addTextChangedListener(new TextWatcher() {
@@ -182,14 +202,6 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         * 初始化数据库工具
         * */
         writebase = notesDB.getWritableDatabase();
-        Intent intent = getIntent();
-        /*
-        * 判断当前是修改状态还是创建状态
-        * */
-        String state = intent.getStringExtra("State");
-        if (state.equals("change")) {
-            showcontent();
-        }
         /*
         * 获取改activity是从哪个activity跳转而来的
         * */
@@ -207,7 +219,10 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         * 添加一个基础normal状态
         * */
         textstatelist.add("normal");
-
+        /*
+        * 让光标移到最后
+        * */
+        edit_content.setSelection(edit_content.getText().toString().length());
     }
 
     private void Montior() {
@@ -474,19 +489,19 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private void editchange(Editable s) {
         String Tstate = "";
         if (isBold) {
-            s.setSpan(new StyleSpan(Typeface.BOLD), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            s.setSpan(new StyleSpan(Typeface.BOLD), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             Tstate += "blod|";
         }
         if (isLean) {
-            s.setSpan(new StyleSpan(Typeface.ITALIC), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            s.setSpan(new StyleSpan(Typeface.ITALIC), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             Tstate += "lean|";
         }
         if (isBig) {
-            s.setSpan(new RelativeSizeSpan(2.0f), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            s.setSpan(new RelativeSizeSpan(2.0f), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             Tstate += "big|";
         }
         if (isPoint) {
-            s.setSpan(new ForegroundColorSpan(Color.BLUE), start, start + count, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            s.setSpan(new ForegroundColorSpan(Color.BLUE), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             Tstate += "point|";
         }
         if (!isBold && !isPoint && !isBig && !isLean) {
@@ -505,7 +520,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     * */
     private boolean judgeTextStateChange() {
         /*
-        * 判断长度是否相同
+        * 判断长度是否相同,不同的话赋值并返回true
         * */
         if (textstatelistsize != textstatelist.size()) {
             textstatelistsize = textstatelist.size();
@@ -514,7 +529,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
             return true;
         }
         /*
-        * 判断内容是否相同
+        * 判断内容是否相同,不同的话赋值并返回true
         * */
         else if (textstatelistsize == textstatelist.size() && !judgeListEq(textstatelistlast, textstatelist)) {
             textstatelistsize = textstatelist.size();
@@ -591,17 +606,26 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     /*
     * 解析从数据库中传来的当前便签的文字对应的状态数量及状态种类
     * */
-    private void AnalysisStringShow(String contentStateNum, String contentStateText, String content) {
+    private void AnalysisStringShow(String contentStateNum, String contentStateText, final String content) {
         /*
         * 将string类型转为edittext
         * */
         Editable editable = new SpannableStringBuilder(content);
         /*
-        * 将string类型的状态数量和状态种类解析成string数组
+        * 将string类型的状态数量解析成string数组
         * */
-        String[] num = contentStateNum.split("\\*");
-        String[] text = contentStateText.split("\\*");//状态种类第一层解析
-        String[][] textsplit = new String[text.length][];//状态种类第二层解析
+        final String[] num = contentStateNum.split("\\*");
+        /*
+        * 状态种类第一层解析
+        * */
+        String[] text = contentStateText.split("\\*");
+        /*
+        * 状态种类第二层解析
+        * */
+        String[][] textsplit = new String[text.length][];
+        /*
+        * 适配文字状态并显示
+        * */
         for (int i = 0; i < text.length; i++) {
             textsplit[i] = text[i].split("\\|");
             for (String s : textsplit[i]) {
@@ -609,27 +633,59 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 * 加粗
                 * */
                 if (s.equals("blod")) {
-                    editable.setSpan(new StyleSpan(Typeface.BOLD), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    isBold = true;
+                    editable.setSpan(new StyleSpan(Typeface.BOLD), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
                 /*
                 * 斜体
                 * */
                 if (s.equals("lean")) {
-                    editable.setSpan(new StyleSpan(Typeface.ITALIC), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    isLean = true;
+                    editable.setSpan(new StyleSpan(Typeface.ITALIC), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
                 /*
                 * 放大
                 * */
                 if (s.equals("big")) {
-                    editable.setSpan(new RelativeSizeSpan(2.0f), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    isBig = true;
+                    editable.setSpan(new RelativeSizeSpan(2.0f), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
                 /*
                 * 重点色
                 * */
                 if (s.equals("point")) {
-                    editable.setSpan(new ForegroundColorSpan(Color.BLUE), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    isPoint = true;
+                    editable.setSpan(new ForegroundColorSpan(Color.BLUE), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
             }
+            /*
+            * 向状态list中添加状态
+            * */
+            if(isBold) textstatelist.add("blod");
+            if(isLean) textstatelist.add("lean");
+            if(isBig) textstatelist.add("big");
+            if(isPoint) textstatelist.add("point");
+            /*
+            * 给初始start和数量count赋值
+            * */
+            start = Integer.parseInt(num[i]);
+            count = Integer.parseInt(num[i+1])-Integer.parseInt(num[i]);
+            /*
+            * 重载editchange
+            * */
+            editchange(new SpannableStringBuilder(content));
+
+            /*
+            * 移除textstatelist中所有的值避免叠加
+            * */
+            textstatelist.removeAll(textstatelist);
+            /*
+            * 取消四种状态避免叠加
+            * */
+            isBold = false;
+            isLean = false;
+            isBig = false;
+            isPoint = false;
         }
         edit_content.setText(editable);
     }

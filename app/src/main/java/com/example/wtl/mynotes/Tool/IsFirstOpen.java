@@ -9,14 +9,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.wtl.mynotes.Activity.FirstStartActivity;
-import com.example.wtl.mynotes.Activity.MainActivity;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
@@ -42,11 +39,6 @@ public class IsFirstOpen {
             ContentValues cv1 = new ContentValues();//第一次加载字号
             cv1.put(NotesDB.WORD_SIZE,"ordinary");
             readbase.insert(NotesDB.WORD_NAME,null,cv1);
-
-            Intent intent = new Intent(context, FirstStartActivity.class);
-            context.startActivity(intent);
-            ((Activity) context).finish();
-
         }else {
             int x = 0;
             Cursor cursor = readbase.query(NotesDB.FORMAT_NAME,null,null,null,null,null,null);
