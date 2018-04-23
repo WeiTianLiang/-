@@ -65,7 +65,6 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private ImageView editpoint;//重点
     private ImageView editpicture;//相册
 
-    private NotesDB notesDB;//初始化数据库
     private SQLiteDatabase writebase;//写数据库
 
     private Animation animation_show;//淡出动画
@@ -84,6 +83,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     * */
     private int start;
     private int count;
+    private int delete;
 
     private boolean change_ov = true;//判断是修改还是新建,true为插入,false为修改
     private String change_time;//修改的时间
@@ -147,7 +147,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         /*
         * 初始化数据库
         * */
-        notesDB = new NotesDB(this);
+        NotesDB notesDB = new NotesDB(this);
         /*
         * 初始化数据库工具
         * */
@@ -286,6 +286,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 * 将文本的最后一位的位置添加
                 **/
                 textlengh.add(String.valueOf(edit_content.getText().length()));
+
                 if (change_ov) {
                     /*
                     * 写数据库
@@ -330,7 +331,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     writebase.update(NotesDB.TABLE_NAME, cv, NotesDB.TIME + "=?", new String[]{change_time});
                     Intent intent = new Intent("com.example.wtl.mynotes.action");
                     intent.putExtra("createNew", "update");
-                    intent.putExtra("point",post);
+                    intent.putExtra("point", post);
                     Notes notes = new Notes(edit_content.getText().toString(), getTime());
                     intent.putExtra("notes", notes);
                     sendBroadcast(intent);
@@ -488,31 +489,36 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     * */
     private void editchange(Editable s) {
         String Tstate = "";
-        if (isBold) {
-            s.setSpan(new StyleSpan(Typeface.BOLD), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            Tstate += "blod|";
+        if(count!=0) {
+            if (isBold) {
+                s.setSpan(new StyleSpan(Typeface.BOLD), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                Tstate += "blod|";
+            }
+            if (isLean) {
+                s.setSpan(new StyleSpan(Typeface.ITALIC), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                Tstate += "lean|";
+            }
+            if (isBig) {
+                s.setSpan(new RelativeSizeSpan(2.0f), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                Tstate += "big|";
+            }
+            if (isPoint) {
+                s.setSpan(new ForegroundColorSpan(Color.BLUE), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                Tstate += "point|";
+            }
+            if (!isBold && !isPoint && !isBig && !isLean) {
+                Tstate += "normal|";
+            }
+            if (judgeTextStateChange()) {
+                textlengh.add(String.valueOf(start));
+                textlengh.add("*");//加上分割符方便在读取时进行解析
+                textState.add(Tstate);
+                textState.add("*");
+            }
+        } else {
+            LinkageDelete(start);
         }
-        if (isLean) {
-            s.setSpan(new StyleSpan(Typeface.ITALIC), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            Tstate += "lean|";
-        }
-        if (isBig) {
-            s.setSpan(new RelativeSizeSpan(2.0f), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            Tstate += "big|";
-        }
-        if (isPoint) {
-            s.setSpan(new ForegroundColorSpan(Color.BLUE), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            Tstate += "point|";
-        }
-        if (!isBold && !isPoint && !isBig && !isLean) {
-            Tstate += "normal|";
-        }
-        if (judgeTextStateChange()) {
-            textlengh.add(String.valueOf(start));
-            textlengh.add("*");//加上分割符方便在读取时进行解析
-            textState.add(Tstate);
-            textState.add("*");
-        }
+
     }
 
     /*
@@ -661,15 +667,16 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
             /*
             * 向状态list中添加状态
             * */
-            if(isBold) textstatelist.add("blod");
-            if(isLean) textstatelist.add("lean");
-            if(isBig) textstatelist.add("big");
-            if(isPoint) textstatelist.add("point");
+            if(!isBold && !isPoint && !isBig && !isLean) textstatelist.add("normal");
+            if (isBold) textstatelist.add("blod");
+            if (isLean) textstatelist.add("lean");
+            if (isBig) textstatelist.add("big");
+            if (isPoint) textstatelist.add("point");
             /*
             * 给初始start和数量count赋值
             * */
             start = Integer.parseInt(num[i]);
-            count = Integer.parseInt(num[i+1])-Integer.parseInt(num[i]);
+            count = Integer.parseInt(num[i + 1]) - Integer.parseInt(num[i]);
             /*
             * 重载editchange
             * */
@@ -740,4 +747,63 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         list.addAll(copyOnWrite);
     }
 
+    /*
+    * edittext删除每一个字符，对应的textlengh和textState的改变
+    * */
+    private void LinkageDelete(int changeState) {
+        textlengh.add(String.valueOf(edit_content.getText().length()+1));
+        List<String> copytextlengh = new ArrayList<>();
+        List<String> copytextstate = new ArrayList<>();
+        for(int i = 0 ; i < textlengh.size() ; i++) {
+            if(!(textlengh.get(i)).equals("*")) {
+                copytextlengh.add(textlengh.get(i));
+            }
+        }
+        for(int i = 0 ; i < textState.size() ; i++) {
+            if(!(textState.get(i)).equals("*")) {
+                copytextstate.add(textState.get(i));
+            }
+        }
+        for(int i = 0 ; i < copytextlengh.size()-1 ; i++) {
+
+            if(changeState >= Integer.parseInt(copytextlengh.get(i))
+                    && changeState < Integer.parseInt(copytextlengh.get(i+1))) {
+                int k=0;
+                for(int j = i+1 ; j < copytextlengh.size() ; j++) {
+                    copytextlengh.set(j, String.valueOf(Integer.parseInt(copytextlengh.get(j))-1));
+                    if((Integer.parseInt(copytextlengh.get(j))) == Integer.parseInt(copytextlengh.get(j-1))) {
+                        k = j;
+                    }
+                }
+                if(k!=0) {
+                    copytextlengh.remove(k);
+                    copytextstate.remove(k-1);
+                }
+                break;
+            }
+        }
+        textlengh.removeAll(textlengh);
+        textState.removeAll(textState);
+        for(int i = 0 ; i < copytextlengh.size() ; i++) {
+            if(i == copytextlengh.size()-1){
+
+                textlengh.add(copytextlengh.get(i));
+            } else {
+                textlengh.add(copytextlengh.get(i));
+                textlengh.add("*");
+            }
+        }
+        for(int i = 0 ; i < copytextstate.size() ; i++) {
+            textState.add(copytextstate.get(i));
+            textState.add("*");
+        }
+        for(String s:textlengh) {
+            Log.d("asdda",s);
+        }
+        Log.d("asdda","------------------------");
+        for(String s:textState) {
+            Log.d("asdda",s);
+        }
+        textlengh.remove(textlengh.size()-1);
+    }
 }
