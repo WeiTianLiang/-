@@ -1,6 +1,7 @@
 package com.example.wtl.mynotes.Activity;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,6 +30,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -79,10 +81,16 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     private boolean isBig = false;
     private boolean isPoint = false;
     /*
-    * 输入前的位置以及输入的数量
+    * 输入的起始位置
     * */
     private int start;
+    /*
+    * 输入的数量
+    * */
     private int count;
+    /*
+    * 记录删除数量
+    * */
     private int delete;
 
     private boolean change_ov = true;//判断是修改还是新建,true为插入,false为修改
@@ -114,18 +122,6 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     * 记录当前text状态的list
     * */
     private List<String> textstatelist = new ArrayList<>();
-    /*
-    * 记录textstatelist的长度，判断它是否有所改变
-    * */
-    private int textstatelistsize = 0;
-    /*
-    * 记录上一个text状态的list
-    * */
-    private List<String> textstatelistlast = new ArrayList<>();
-    /*
-    * 记录所有的长度
-    * */
-    private List<String> textlengh = new ArrayList<>();
     /*
     * 记录所有text的状态
     * */
@@ -168,7 +164,9 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
         edit_content.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
+                Log.d("asa", String.valueOf(i));
+                Log.d("asa", String.valueOf(i1));
+                Log.d("asa", String.valueOf(i2));
             }
 
             @Override
@@ -179,6 +177,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 }
                 start = i;
                 count = i2;
+                delete = i1;
             }
 
             @Override
@@ -282,11 +281,7 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 overridePendingTransition(R.anim.activity_right_out, R.anim.activity_right_in);//设置activity的平移动画
                 break;
             case R.id.edit_over:
-                /*
-                * 将文本的最后一位的位置添加
-                **/
-                textlengh.add(String.valueOf(edit_content.getText().length()));
-
+                addCritical();
                 if (change_ov) {
                     /*
                     * 写数据库
@@ -305,10 +300,6 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     * */
                     cv.put(NotesDB.COLOR, color);
                     /*
-                    * 写入文本状态的数量
-                    * */
-                    cv.put(NotesDB.STATENUM, listToString(textlengh));
-                    /*
                     * 写入文本的各个分类情况
                     * */
                     cv.put(NotesDB.STATETEXT, listToString(textState));
@@ -326,7 +317,6 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                     cv.put(NotesDB.TIME, getTime());
                     cv.put(NotesDB.CONTENT, edit_content.getText().toString());
                     cv.put(NotesDB.COLOR, color);
-                    cv.put(NotesDB.STATENUM, listToString(textlengh));
                     cv.put(NotesDB.STATETEXT, listToString(textState));
                     writebase.update(NotesDB.TABLE_NAME, cv, NotesDB.TIME + "=?", new String[]{change_time});
                     Intent intent = new Intent("com.example.wtl.mynotes.action");
@@ -488,65 +478,40 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     * 实现文本的即使加粗斜体。。。
     * */
     private void editchange(Editable s) {
-        String Tstate = "";
-        if(count!=0) {
-            if (isBold) {
-                s.setSpan(new StyleSpan(Typeface.BOLD), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                Tstate += "blod|";
-            }
-            if (isLean) {
-                s.setSpan(new StyleSpan(Typeface.ITALIC), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                Tstate += "lean|";
-            }
-            if (isBig) {
-                s.setSpan(new RelativeSizeSpan(2.0f), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                Tstate += "big|";
-            }
-            if (isPoint) {
-                s.setSpan(new ForegroundColorSpan(Color.BLUE), start, start + count, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                Tstate += "point|";
-            }
-            if (!isBold && !isPoint && !isBig && !isLean) {
-                Tstate += "normal|";
-            }
-            if (judgeTextStateChange()) {
-                textlengh.add(String.valueOf(start));
-                textlengh.add("*");//加上分割符方便在读取时进行解析
-                textState.add(Tstate);
-                textState.add("*");
+        if (count != 0) {
+            for (int i = start; i < start + count; i++) {
+                String Tstate = "";
+                if (isBold) {
+                    s.setSpan(new StyleSpan(Typeface.BOLD), i, i + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Tstate += "blod|";
+                }
+                if (isLean) {
+                    s.setSpan(new StyleSpan(Typeface.ITALIC), i, i + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Tstate += "lean|";
+                }
+                if (isBig) {
+                    s.setSpan(new RelativeSizeSpan(2.0f), i, i + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Tstate += "big|";
+                }
+                if (isPoint) {
+                    s.setSpan(new ForegroundColorSpan(Color.BLUE), i, i + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    Tstate += "point|";
+                }
+                if (!isBold && !isPoint && !isBig && !isLean) {
+                    Tstate += "normal|";
+                }
+                textState.add(i, Tstate);
             }
         } else {
             /*
-            * 删除操作
+            * 根据删除的个数删除相应数量的状态
             * */
-            LinkageDelete(start);
-        }
-
-    }
-
-    /*
-    * 判断textstatelist是否改变
-    * */
-    private boolean judgeTextStateChange() {
-        /*
-        * 判断长度是否相同,不同的话赋值并返回true
-        * */
-        if (textstatelistsize != textstatelist.size()) {
-            textstatelistsize = textstatelist.size();
-            textstatelistlast.removeAll(textstatelistlast);
-            textstatelistlast.addAll(textstatelist);
-            return true;
-        }
-        /*
-        * 判断内容是否相同,不同的话赋值并返回true
-        * */
-        else if (textstatelistsize == textstatelist.size() && !judgeListEq(textstatelistlast, textstatelist)) {
-            textstatelistsize = textstatelist.size();
-            textstatelistlast.removeAll(textstatelistlast);
-            textstatelistlast.addAll(textstatelist);
-            return true;
-        } else {
-            return false;
+            for (int i = 0 ; i < delete ;i++) {
+                /*
+                * 删除时list总数量会减少，所以恒删除一个位置就是挨个删除
+                * */
+                textState.remove(start);
+            }
         }
     }
 
@@ -562,27 +527,14 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     }
 
     /*
-    * 判断当前状态值是否相等
-    * 如果相等返回true表示不用变更状态
-    * 否则返回false
-    * */
-    private boolean judgeListEq(List<String> list, List<String> list1) {
-        /*
-        * 对两个数组排序防止因顺序不同而返回false
-        * */
-        Collections.sort(list);
-        Collections.sort(list1);
-        for (int i = 0; i < list.size(); i++) {
-            if (!list.get(i).equals(list1.get(i)))
-                return false;
-        }
-        return true;
-    }
-
-    /*
     * 进入该活动应显示的值并修改
     * */
     private void showcontent() {
+        /*
+        * 观察模式，edittext不会自动获取焦点
+        * */
+        alledit.setFocusable(true);
+        alledit.setFocusableInTouchMode(true);
         /*
         * 将状态改为修改状态
         * */
@@ -605,9 +557,8 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
             * contentStateNum:数量
             * contentStateText:对应的状态
             * */
-            String contentStateNum = cursor.getString(cursor.getColumnIndex("statenum"));
             String contentStateText = cursor.getString(cursor.getColumnIndex("statetext"));
-            AnalysisStringShow(contentStateNum, contentStateText, content);
+            AnalysisStringShow(contentStateText, content);
         }
         change_time = postion;
     }
@@ -615,15 +566,11 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     /*
     * 解析从数据库中传来的当前便签的文字对应的状态数量及状态种类
     * */
-    private void AnalysisStringShow(String contentStateNum, String contentStateText, final String content) {
+    private void AnalysisStringShow(String contentStateText, final String content) {
         /*
         * 将string类型转为edittext
         * */
         Editable editable = new SpannableStringBuilder(content);
-        /*
-        * 将string类型的状态数量解析成string数组
-        * */
-        final String[] num = contentStateNum.split("\\*");
         /*
         * 状态种类第一层解析
         * */
@@ -639,56 +586,30 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
             textsplit[i] = text[i].split("\\|");
             for (String s : textsplit[i]) {
                 /*
-                * 加粗
+                * 根据读取到的状态信息改变状态
                 * */
                 if (s.equals("blod")) {
                     isBold = true;
-                    editable.setSpan(new StyleSpan(Typeface.BOLD), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
-                /*
-                * 斜体
-                * */
                 if (s.equals("lean")) {
                     isLean = true;
-                    editable.setSpan(new StyleSpan(Typeface.ITALIC), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
-                /*
-                * 放大
-                * */
                 if (s.equals("big")) {
                     isBig = true;
-                    editable.setSpan(new RelativeSizeSpan(2.0f), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
-                /*
-                * 重点色
-                * */
                 if (s.equals("point")) {
                     isPoint = true;
-                    editable.setSpan(new ForegroundColorSpan(Color.BLUE), Integer.parseInt(num[i]), Integer.parseInt(num[i + 1]), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                 }
             }
             /*
-            * 向状态list中添加状态
-            * */
-            if(!isBold && !isPoint && !isBig && !isLean) textstatelist.add("normal");
-            if (isBold) textstatelist.add("blod");
-            if (isLean) textstatelist.add("lean");
-            if (isBig) textstatelist.add("big");
-            if (isPoint) textstatelist.add("point");
-            /*
             * 给初始start和数量count赋值
             * */
-            start = Integer.parseInt(num[i]);
-            count = Integer.parseInt(num[i + 1]) - Integer.parseInt(num[i]);
+            start = i;
+            count = 1;
             /*
             * 重载editchange
             * */
-            editchange(new SpannableStringBuilder(content));
-
-            /*
-            * 移除textstatelist中所有的值避免叠加
-            * */
-            textstatelist.removeAll(textstatelist);
+            editchange(editable);
             /*
             * 取消四种状态避免叠加
             * */
@@ -751,89 +672,18 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
     }
 
     /*
-    * edittext删除每一个字符，对应的textlengh和textState的改变
+    * 向状态list添加分界字符
     * */
-    private void LinkageDelete(int changeState) {
-        /*
-        * 将文字的最后一位加入
-        * */
-        textlengh.add(String.valueOf(edit_content.getText().length()+1));
-        /*
-        * 定义拷贝list简化循环
-        * */
-        List<String> copytextlengh = new ArrayList<>();
-        List<String> copytextstate = new ArrayList<>();
-        /*
-        * 对拷贝list赋值
-        * */
-        for(int i = 0 ; i < textlengh.size() ; i++) {
-            if(!(textlengh.get(i)).equals("*")) {
-                copytextlengh.add(textlengh.get(i));
-            }
+    private void addCritical() {
+        List<String> listcopy = new ArrayList<>();
+        for (String s : textState) {
+            listcopy.add(s);
         }
-        for(int i = 0 ; i < textState.size() ; i++) {
-            if(!(textState.get(i)).equals("*")) {
-                copytextstate.add(textState.get(i));
-            }
-        }
-        /*
-        * 循环判断删除的值的位置在哪个区间内，并修改各个字段区间
-        * */
-        for(int i = 0 ; i < copytextlengh.size()-1 ; i++) {
-
-            if(changeState >= Integer.parseInt(copytextlengh.get(i))
-                    && changeState < Integer.parseInt(copytextlengh.get(i+1))) {
-                /*
-                * 如果区间只有一个值，则删除该区间及对应的状态，这里定义k将删除区间从循环中提取出来
-                * 因为删除会改变list的长度，导致循环无法进行到最后
-                * */
-                int k=0;
-                for(int j = i+1 ; j < copytextlengh.size() ; j++) {
-                    /*
-                    * 修改删除位置之后的各个区间的临界值
-                    * */
-                    copytextlengh.set(j, String.valueOf(Integer.parseInt(copytextlengh.get(j))-1));
-                    /*
-                    * 如果由两个相等的临界值则删除该区间
-                    * */
-                    if((Integer.parseInt(copytextlengh.get(j))) == Integer.parseInt(copytextlengh.get(j-1))) {
-                        k = j;
-                    }
-                }
-                /*
-                * 对位置区间和状态进行删除
-                * */
-                if(k!=0) {
-                    copytextlengh.remove(k);
-                    copytextstate.remove(k-1);
-                }
-                break;
-            }
-        }
-        /*
-        * 清空原始的两个表
-        * */
-        textlengh.removeAll(textlengh);
         textState.removeAll(textState);
-        /*
-        * 将两个拷贝表的信息赋值到原表并加入分割字符，
-        * 位置区间最后一个不用加（后面会将最后一个删除，否则会与完成事件时的添加冲突）
-        * */
-        for(int i = 0 ; i < copytextlengh.size() ; i++) {
-            if(i == copytextlengh.size()-1){
-                textlengh.add(copytextlengh.get(i));
-            } else {
-                textlengh.add(copytextlengh.get(i));
-                textlengh.add("*");
-            }
-        }
-        for(int i = 0 ; i < copytextstate.size() ; i++) {
-            textState.add(copytextstate.get(i));
+        for (int i = 0; i < listcopy.size(); i++) {
+            textState.add(listcopy.get(i));
             textState.add("*");
         }
-        /*
-        * 将位置区间的最后一个值删除
-        * */
-        textlengh.remove(textlengh.size()-1);
     }
+
 }

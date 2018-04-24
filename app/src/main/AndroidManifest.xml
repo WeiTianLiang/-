@@ -30,8 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity.EditNoteActivity"
-            android:windowSoftInputMode="adjustResize|stateVisible" />
+            android:name=".Activity.EditNoteActivity" />
         <activity android:name=".Activity.SmuggleActivity" />
         <activity android:name=".Activity.HandleActivity" />
         <activity android:name=".Activity.AbandonActivity" />

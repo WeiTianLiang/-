@@ -18,7 +18,6 @@ public class NotesDB extends SQLiteOpenHelper{
     public static final String ID = "_id";//id
     public static final String COLOR = "color";//背景色
     public static final String TIME = "time";//创建时间
-    public static final String STATENUM = "statenum";//文字状态数量
     public static final String STATETEXT = "statetext";//文字状态文字
     //表2 list的显示格式
     public static final String FORMAT_NAME = "format";//表名
@@ -52,7 +51,6 @@ public class NotesDB extends SQLiteOpenHelper{
                 + ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + CONTENT + " TEXT NOT NULL,"
                 + COLOR + " TEXT,"
-                + STATENUM + " TEXT,"
                 + STATETEXT + " TEXT,"
                 + TIME + " TEXT NOT NULL)");
 
