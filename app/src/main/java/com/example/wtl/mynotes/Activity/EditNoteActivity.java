@@ -159,6 +159,17 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
             showcontent();
         }
         /*
+        * 取消背景栏
+        * */
+        edit_content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                change_bottom.setVisibility(View.VISIBLE);
+                change_colors.setVisibility(View.GONE);
+                editcolor.setImageResource(R.mipmap.editcolor);
+            }
+        });
+        /*
         * EditText动态监听
         * */
         edit_content.addTextChangedListener(new TextWatcher() {
