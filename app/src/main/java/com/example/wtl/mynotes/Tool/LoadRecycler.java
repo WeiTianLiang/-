@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.SimpleDateFormat;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -31,6 +32,7 @@ import com.example.wtl.mynotes.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -154,7 +156,6 @@ public class LoadRecycler {
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String delete_time = null;
                         String delete_content = null;
                         String delete_color = null;
                         String delete_state_text = null;
@@ -166,7 +167,6 @@ public class LoadRecycler {
                             String sql = "select * from notes where time='" + notesList.get(stringList.get(i)).getNotes_time() + "'";
                             Cursor cursor = database.rawQuery(sql, null);
                             if (cursor.moveToFirst()) {
-                                delete_time = cursor.getString(cursor.getColumnIndex("time"));
                                 delete_content = cursor.getString(cursor.getColumnIndex("content"));
                                 delete_color = cursor.getString(cursor.getColumnIndex("color"));
                                 delete_state_text = cursor.getString(cursor.getColumnIndex("statetext"));
@@ -175,7 +175,7 @@ public class LoadRecycler {
                             database.delete(NotesDB.TABLE_NAME, NotesDB.TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                             //把数据插入表4
                             ContentValues cv = new ContentValues();
-                            cv.put(NotesDB.DELETE_TIME, delete_time);
+                            cv.put(NotesDB.DELETE_TIME, getTime());
                             cv.put(NotesDB.DELETE_CONTENT, delete_content);
                             cv.put(NotesDB.DELETE_COLOR, delete_color);
                             cv.put(NotesDB.DELETE_STATETEXT, delete_state_text);
@@ -258,7 +258,6 @@ public class LoadRecycler {
                 intent.putExtra("back",state+"");
                 intent.putExtra("color",color.get(pos));
                 context.startActivity(intent);
-                /*((Activity) context).finish();*///因为context没有finish操作,将context强转为activity
             }
         });
 
@@ -293,7 +292,6 @@ public class LoadRecycler {
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        String delete_time = null;
                         String delete_content = null;
                         String delete_color = null;
                         String delete_state_text = null;
@@ -305,7 +303,6 @@ public class LoadRecycler {
                             String sql = "select * from notes where time='" + notesList.get(stringList.get(i)).getNotes_time() + "'";
                             Cursor cursor = database.rawQuery(sql, null);
                             if (cursor.moveToFirst()) {
-                                delete_time = cursor.getString(cursor.getColumnIndex("time"));
                                 delete_content = cursor.getString(cursor.getColumnIndex("content"));
                                 delete_color = cursor.getString(cursor.getColumnIndex("color"));
                                 delete_state_text = cursor.getString(cursor.getColumnIndex("statetext"));
@@ -314,7 +311,7 @@ public class LoadRecycler {
                             database.delete(NotesDB.TABLE_NAME, NotesDB.TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                             //把数据插入表4
                             ContentValues cv = new ContentValues();
-                            cv.put(NotesDB.DELETE_TIME, delete_time);
+                            cv.put(NotesDB.DELETE_TIME, getTime());
                             cv.put(NotesDB.DELETE_CONTENT, delete_content);
                             cv.put(NotesDB.DELETE_COLOR, delete_color);
                             cv.put(NotesDB.DELETE_STATETEXT, delete_state_text);
@@ -363,7 +360,6 @@ public class LoadRecycler {
         * 单个恢复
         * */
         adapter.setOnItemClickAloneListener(new NotesAdapter.OnItemClickAloneListener() {
-            String recoy_time;
             String recoy_content;
             String recoy_color;
             String recoy_state_num;
@@ -394,7 +390,6 @@ public class LoadRecycler {
                         String sql = "select * from deleted where delete_time='" + notelist.get(pos).getNotes_time() + "'";
                         Cursor cursor = database.rawQuery(sql, null);
                         if (cursor.moveToFirst()) {
-                            recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
                             recoy_content = cursor.getString(cursor.getColumnIndex("delete_content"));
                             recoy_color = cursor.getString(cursor.getColumnIndex("delete_color"));
                             recoy_state_num = cursor.getString(cursor.getColumnIndex("delete_statenum"));
@@ -405,7 +400,7 @@ public class LoadRecycler {
                         Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
                         //把数据恢复到表1
                         ContentValues cv = new ContentValues();
-                        cv.put(NotesDB.TIME, recoy_time);
+                        cv.put(NotesDB.TIME, getTime());
                         cv.put(NotesDB.CONTENT, recoy_content);
                         cv.put(NotesDB.COLOR,recoy_color);
                         cv.put(NotesDB.STATETEXT,recoy_state_text);
@@ -494,7 +489,6 @@ public class LoadRecycler {
                 });
                 //监听恢复
                 abandon_move.setOnClickListener(new View.OnClickListener() {
-                    String recoy_time;
                     String recoy_content;
                     String recoy_color;
                     String recoy_state_text;
@@ -529,7 +523,6 @@ public class LoadRecycler {
                                         String sql = "select * from deleted where delete_time='" + notesList.get(stringList.get(i)).getNotes_time() + "'";
                                         Cursor cursor = database.rawQuery(sql, null);
                                         if (cursor.moveToFirst()) {
-                                            recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
                                             recoy_content = cursor.getString(cursor.getColumnIndex("delete_content"));
                                             recoy_color = cursor.getString(cursor.getColumnIndex("delete_color"));
                                             recoy_state_text = cursor.getString(cursor.getColumnIndex("delete_statetext"));
@@ -538,7 +531,7 @@ public class LoadRecycler {
                                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                                         //把数据恢复到表1
                                         ContentValues cv = new ContentValues();
-                                        cv.put(NotesDB.TIME, recoy_time);
+                                        cv.put(NotesDB.TIME, getTime());
                                         cv.put(NotesDB.CONTENT, recoy_content);
                                         cv.put(NotesDB.COLOR, recoy_color);
                                         cv.put(NotesDB.STATETEXT,recoy_state_text);
@@ -589,7 +582,6 @@ public class LoadRecycler {
         runLayoutAnimation(recyclerView, 1);
 
         adapter.setOnItemClickAloneListener(new GridAdapter.OnItemClickAloneListener() {
-            String recoy_time;
             String recoy_content;
             String recoy_color;
             String recoy_state_text;
@@ -619,7 +611,6 @@ public class LoadRecycler {
                         String sql = "select * from deleted where delete_time='" + notelist.get(pos).getNotes_time() + "'";
                         Cursor cursor = database.rawQuery(sql, null);
                         if (cursor.moveToFirst()) {
-                            recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
                             recoy_content = cursor.getString(cursor.getColumnIndex("delete_content"));
                             recoy_color = cursor.getString(cursor.getColumnIndex("delete_color"));
                             recoy_state_text = cursor.getString(cursor.getColumnIndex("delete_statetext"));
@@ -629,7 +620,7 @@ public class LoadRecycler {
                         Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
                         //把数据恢复到表1
                         ContentValues cv = new ContentValues();
-                        cv.put(NotesDB.TIME, recoy_time);
+                        cv.put(NotesDB.TIME, getTime());
                         cv.put(NotesDB.CONTENT, recoy_content);
                         cv.put(NotesDB.COLOR, recoy_color);
                         cv.put(NotesDB.STATETEXT,recoy_state_text);
@@ -713,7 +704,6 @@ public class LoadRecycler {
                     }
                 });
                 abandon_move.setOnClickListener(new View.OnClickListener() {
-                    String recoy_time;
                     String recoy_content;
                     String recoy_color;
                     String recoy_state_text;
@@ -748,7 +738,6 @@ public class LoadRecycler {
                                         String sql = "select * from deleted where delete_time='" + notesList.get(stringList.get(i)).getNotes_time() + "'";
                                         Cursor cursor = database.rawQuery(sql, null);
                                         if (cursor.moveToFirst()) {
-                                            recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
                                             recoy_content = cursor.getString(cursor.getColumnIndex("delete_content"));
                                             recoy_color = cursor.getString(cursor.getColumnIndex("delete_color"));
                                             recoy_state_text = cursor.getString(cursor.getColumnIndex("delete_statetext"));
@@ -758,7 +747,7 @@ public class LoadRecycler {
                                         Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
                                         //把数据恢复到表1
                                         ContentValues cv = new ContentValues();
-                                        cv.put(NotesDB.TIME, recoy_time);
+                                        cv.put(NotesDB.TIME, getTime());
                                         cv.put(NotesDB.CONTENT, recoy_content);
                                         cv.put(NotesDB.COLOR, recoy_color);
                                         cv.put(NotesDB.STATETEXT,recoy_state_text);
@@ -805,6 +794,16 @@ public class LoadRecycler {
             recyclerView.getAdapter().notifyDataSetChanged();
             recyclerView.scheduleLayoutAnimation();
         }
+    }
+
+    /*
+    * 获取当前时间
+    * */
+    private static String getTime() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        Date date = new Date();
+        String time = format.format(date);
+        return time;
     }
 
 }
