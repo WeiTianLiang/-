@@ -71,6 +71,9 @@ public class TimeDeleteService extends Service {
         * 发送广播
         * */
         Intent i = new Intent(this, TimeDeleteService.class);
+        /*
+        * 打开服务组件
+        * */
         PendingIntent pi = PendingIntent.getService(this, 0, i, 0);
         mamager.cancel(pi);
         /*
