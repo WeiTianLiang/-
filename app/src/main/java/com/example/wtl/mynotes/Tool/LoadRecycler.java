@@ -12,7 +12,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -29,6 +28,7 @@ import com.example.wtl.mynotes.Adapter.NotesAdapter;
 import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
+import com.example.wtl.mynotes.Service.TimeDeleteService;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -160,6 +160,9 @@ public class LoadRecycler {
                         String delete_color = null;
                         String delete_state_text = null;
 
+                        Intent intent = new Intent(context, TimeDeleteService.class);
+                        context.startService(intent);
+
                         for (int i = 0; i < stringList.size(); i++) {
                             if (i == 0) adapter.removeNotes(stringList.get(i));
                             else adapter.removeNotes(stringList.get(i) - i);
@@ -268,7 +271,9 @@ public class LoadRecycler {
                 delete.setVisibility(View.VISIBLE);
                 delete.setAnimation(animation1);
                 button.setVisibility(View.GONE);
-
+                /*
+                * 相应长按单机操作
+                * */
                 adapter.setOnItemClickListener(new GridAdapter.OnItemClickListener() {
                     @Override
                     public void OnItemClick(int x, boolean adro, List<Notes> list) {
@@ -288,13 +293,18 @@ public class LoadRecycler {
                         Collections.sort(stringList);//从小到大对list排序
                     }
                 });
-
+                /*
+                * 相应删除操作
+                * */
                 delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         String delete_content = null;
                         String delete_color = null;
                         String delete_state_text = null;
+
+                        Intent intent = new Intent(context, TimeDeleteService.class);
+                        context.startService(intent);
 
                         for (int i = 0; i < stringList.size(); i++) {
                             if (i == 0) adapter.removeNotes(stringList.get(i));

@@ -35,6 +35,7 @@
         <activity android:name=".Activity.HandleActivity" />
         <activity android:name=".Activity.AbandonActivity" />
         <activity android:name=".Activity.SettingActivity" />
+        <service android:enabled="true" android:name=".Service.TimeDeleteService" android:process="system"/>
     </application>
 
 </manifest>

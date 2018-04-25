@@ -53,7 +53,6 @@ public class AbandonActivity extends AppCompatActivity implements View.OnClickLi
         Boolean user_first = preferences.getBoolean("FIRST",true);
         delete_down = AnimationUtils.loadAnimation(this,R.anim.delete_down);
         IsFirstOpen.IsFirstOpen(abandon_sum_delet,abandon_delete,abandon_recovey,abandon_list,preferences,user_first,this,readbase,Lists,abandon_recycler,animation);
-
     }
 
     private void Montior() {

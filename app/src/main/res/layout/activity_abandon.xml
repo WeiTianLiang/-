@@ -51,7 +51,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="废纸篓内的便签30天内会被彻底删除哦"
+            android:text="废纸篓内的便签7天后会被彻底删除哦"
             android:textColor="#fa9f30"
             android:textSize="12sp"
             android:layout_margin="12dp"/>
