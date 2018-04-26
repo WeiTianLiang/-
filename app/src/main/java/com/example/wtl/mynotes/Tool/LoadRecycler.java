@@ -408,6 +408,8 @@ public class LoadRecycler {
                         //根据时间删除表中数据
                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notelist.get(pos).getNotes_time()});
                         Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
+                        Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                        context.sendBroadcast(intent1);
                         //把数据恢复到表1
                         ContentValues cv = new ContentValues();
                         cv.put(NotesDB.TIME, getTime());
@@ -483,6 +485,8 @@ public class LoadRecycler {
                                         //根据时间删除表中数据
                                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                                     }
+                                    Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                                    context.sendBroadcast(intent1);
                                     stringList.removeAll(stringList);//清空表
                                     delete.setVisibility(View.GONE);
                                     delete.startAnimation(animation2);
@@ -539,6 +543,8 @@ public class LoadRecycler {
                                         }
                                         //根据时间删除表中数据
                                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
+                                        Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                                        context.sendBroadcast(intent1);
                                         //把数据恢复到表1
                                         ContentValues cv = new ContentValues();
                                         cv.put(NotesDB.TIME, getTime());
@@ -628,6 +634,8 @@ public class LoadRecycler {
                         //根据时间删除表中数据
                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notelist.get(pos).getNotes_time()});
                         Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
+                        Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                        context.sendBroadcast(intent1);
                         //把数据恢复到表1
                         ContentValues cv = new ContentValues();
                         cv.put(NotesDB.TIME, getTime());
@@ -699,6 +707,8 @@ public class LoadRecycler {
                                         //根据时间从表1中删除数据
                                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                                     }
+                                    Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                                    context.sendBroadcast(intent1);
                                     stringList.removeAll(stringList);//清空表
                                     delete.setVisibility(View.GONE);
                                     delete.setAnimation(animation2);
@@ -755,6 +765,8 @@ public class LoadRecycler {
                                         //根据时间删除表中数据
                                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                                         Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
+                                        Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                                        context.sendBroadcast(intent1);
                                         //把数据恢复到表1
                                         ContentValues cv = new ContentValues();
                                         cv.put(NotesDB.TIME, getTime());

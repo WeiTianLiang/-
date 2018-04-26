@@ -22,4 +22,17 @@
     <color name="black">#2c2c2c</color>
     <color name="blacktext">#ffffff</color>
 
+    <color name="random0">#ffabab</color>
+    <color name="random1">#fcdeb1</color>
+    <color name="random3">#aee0fc</color>
+    <color name="random4">#b6b1ff</color>
+    <color name="random5">#fcb3e4</color>
+    <color name="random6">#dda7fc</color>
+    <color name="random7">#afdfff</color>
+    <color name="random8">#ffccb3</color>
+    <color name="random9">#99facb</color>
+    <color name="random10">#e1e685</color>
+    <color name="random11">#d19466</color>
+    <color name="random12">#fcb1fa</color>
+
 </resources>

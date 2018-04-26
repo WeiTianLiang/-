@@ -95,13 +95,13 @@ public class Create_Dialog extends Dialog {
             @Override
             public void onClick(View view) {
                 write_sumggle();
-                onTureClickListener.ontureClick();
+                onTureClickListener.ontureClick(dialog_edittext.getText().toString());
             }
         });
     }
 
     public interface OnTureClickListener {
-        void ontureClick();
+        void ontureClick(String s);
     }
 
     public interface OnCancelClickListener {

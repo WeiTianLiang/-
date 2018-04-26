@@ -1,9 +1,14 @@
 package com.example.wtl.mynotes.Activity;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,6 +51,11 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
     private FloatingActionButton add_handle;
     private LinearLayout sum_delet;
 
+    private String str;
+    private String str1;
+
+    private IntentFilter intentFilter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +68,8 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
         Boolean user_first = preferences.getBoolean("FIRST",true);
         delete_down = AnimationUtils.loadAnimation(this,R.anim.delete_down);
         IsFirstOpen.IsFirstOpen(1,add_handle,sum_delet,handle_list,preferences,user_first,this,readbase,notesList,handle_recycler,animation);
+        intentFilter = new IntentFilter("com.example.wtl.mynotes.action");
+        registerReceiver(broadcastReceiver,intentFilter);
     }
 
     private void Montior() {
@@ -83,7 +95,6 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
                 intent.putExtra("back","1");//记录返回的界面，0代表MainActivity，1代表HandleActivity
                 intent.putExtra("color","white");
                 startActivity(intent);
-                finish();
                 overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
                 break;
             case R.id.handle_img_back:
@@ -126,5 +137,73 @@ public class HandleActivity extends AppCompatActivity implements View.OnClickLis
         finish();
         overridePendingTransition(R.anim.activity_right_out,R.anim.activity_right_in);
         return super.onKeyDown(keyCode, event);
+    }
+
+    /*
+    * 广播接收器
+    * */
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            str = intent.getExtras().getString("createNew");
+            str1 = intent.getExtras().getString("recoy");
+            /*
+            * 添加后更新recyclerview数据
+            * */
+            if(str!=null&&str.equals("create")) {
+                Notes notes = intent.getParcelableExtra("notes");
+                if(handle_list.getDrawable().getCurrent().getConstantState().
+                        equals(HandleActivity.this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
+                    LoadRecycler.loadlist(null,"create",notes, ReadCuesor.ReadColor(readbase), 1, add_handle, sum_delet, handle_recycler, animation, HandleActivity.this, notesList);
+                } else {
+                    LoadRecycler.cardlist(null,"create",notes, ReadCuesor.ReadColor(readbase), 1, add_handle, sum_delet, handle_recycler, animation, HandleActivity.this, notesList);
+                }
+            }
+            /*
+            * 修改后更新recyclerview数据
+            * */
+            else if(str!=null&&str.equals("update")) {
+                Notes notes = intent.getParcelableExtra("notes");
+                String post = intent.getExtras().getString("point");
+                if(handle_list.getDrawable().getCurrent().getConstantState().
+                        equals(HandleActivity.this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
+                    LoadRecycler.loadlist(post,"update",notes, ReadCuesor.ReadColor(readbase), 1, add_handle, sum_delet, handle_recycler, animation, HandleActivity.this, notesList);
+                } else {
+                    LoadRecycler.cardlist(post,"update",notes, ReadCuesor.ReadColor(readbase), 1, add_handle, sum_delet, handle_recycler, animation, HandleActivity.this, notesList);
+                }
+            }
+            /*
+            * 从数据库还原后更新recyclerview数据
+            * */
+            if(str1!=null&&str1.equals("yes")) {
+                List<Notes> lists = new ArrayList<>();
+                Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
+                List<String> color = new ArrayList<>();
+                if(cursor.moveToLast()) {
+                    do {
+                        String content = cursor.getString(cursor.getColumnIndex("content"));
+                        String time = cursor.getString(cursor.getColumnIndex("time"));
+                        color.add(cursor.getString(cursor.getColumnIndex("color")));
+                        Notes notes = new Notes(content,time);
+                        lists.add(notes);
+                    } while (cursor.moveToPrevious());
+                }
+                if(handle_list.getDrawable().getCurrent().getConstantState().
+                        equals(HandleActivity.this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
+                    LoadRecycler.loadlist(null,null,null, ReadCuesor.ReadColor(readbase), 1, add_handle, sum_delet, handle_recycler, animation, HandleActivity.this, lists);
+                } else {
+                    LoadRecycler.cardlist(null,null,null, ReadCuesor.ReadColor(readbase), 1, add_handle, sum_delet, handle_recycler, animation, HandleActivity.this, lists);
+                }
+            }
+        }
+    };
+
+    /*
+    * 销毁广播
+    * */
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
     }
 }

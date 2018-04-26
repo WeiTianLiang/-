@@ -1,11 +1,16 @@
 package com.example.wtl.mynotes.Activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -17,11 +22,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.wtl.mynotes.Adapter.SumggleAdapter;
+import com.example.wtl.mynotes.Class.Notes;
 import com.example.wtl.mynotes.Class.Sumggle;
 import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
 import com.example.wtl.mynotes.Tool.Create_Dialog;
 import com.example.wtl.mynotes.Tool.HideScreenTop;
+import com.example.wtl.mynotes.Tool.LoadRecycler;
+import com.example.wtl.mynotes.Tool.LoadSmuggle;
+import com.example.wtl.mynotes.Tool.ReadCuesor;
+import com.example.wtl.mynotes.Tool.ReadSmuggle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,24 +44,33 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
     private RecyclerView smuggle_list;
     private List<Sumggle> sumggleList = new ArrayList<>();
     private ImageView set_up;
-
-    private NotesDB notesDB;
-    private SQLiteDatabase writebase;
+    /*
+    * 删除的数量
+    * */
+    private TextView delete_number;
 
     private Create_Dialog createDialog;
 
     private LinearLayout sumggle_handle;//随手记
     private LinearLayout sumggle_delete;//垃圾
 
+    private NotesDB notesDB;
+    private SQLiteDatabase database;
+
+    private IntentFilter intentFilter;
+    private TextView handle_number;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_smuggle);
         Montior();
-        notesDB = new NotesDB(this);
-        writebase = notesDB.getWritableDatabase();
         HideScreenTop.HideScreenTop(getWindow());
-        addAllSumggle();
+        ReadSmuggle.ReadSmuggle(this,sumggleList,smuggle_list);
+        deleteNum();
+        intentFilter = new IntentFilter("com.example.wtl.mynotes.action");
+        registerReceiver(broadcastReceiver,intentFilter);
+        handleNum();
     }
 
     private void Montior() {
@@ -62,6 +81,8 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
         sumggle_handle = (LinearLayout) findViewById(R.id.sumggle_handle);
         sumggle_delete = (LinearLayout) findViewById(R.id.sumggle_delete);
         set_up = (ImageView) findViewById(R.id.set_up);
+        delete_number = (TextView) findViewById(R.id.delete_number);
+        handle_number = (TextView) findViewById(R.id.handle_number);
 
         add_sumggle.setOnClickListener(this);
         sumggle_back.setOnClickListener(this);
@@ -89,10 +110,11 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
                 });
                 createDialog.setOnTureClickListener(new Create_Dialog.OnTureClickListener() {
                     @Override
-                    public void ontureClick() {
+                    public void ontureClick(String s) {
                         if(Create_Dialog.flag == 0) {
                             createDialog.dismiss();
-                            addSumggle();
+                            Sumggle sumggle = new Sumggle(s,"0");
+                            LoadSmuggle.loadSmuggle("create",sumggle,smuggle_list,SmuggleActivity.this,sumggleList);
                         }
                     }
                 });
@@ -123,40 +145,49 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    //全局加载自定义文件夹
-    private void addAllSumggle() {
-        Cursor cursor = writebase.query(NotesDB.NOTECLIP_NAME,null,null,null,null,null,null);
-        if(cursor.moveToLast()) {
-            do{
-                String memo = cursor.getString(cursor.getColumnIndex("memo"));
-                Sumggle sumggle = new Sumggle(memo,"1");
-                sumggleList.add(sumggle);
-            }while (cursor.moveToPrevious());
-        }
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        smuggle_list.setLayoutManager(manager);
-        SumggleAdapter adapter = new SumggleAdapter(sumggleList,this);
-        smuggle_list.setAdapter(adapter);
-    }
-
-    //添加自定义文件夹
-    private void addSumggle() {
-        Cursor cursor = writebase.query(NotesDB.NOTECLIP_NAME,null,null,null,null,null,null);
-        if(cursor.moveToLast()) {
-                String memo = cursor.getString(cursor.getColumnIndex("memo"));
-                Sumggle sumggle = new Sumggle(memo,"0");
-                sumggleList.add(sumggle);
-        }
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        smuggle_list.setLayoutManager(manager);
-        SumggleAdapter adapter = new SumggleAdapter(sumggleList,this);
-        smuggle_list.setAdapter(adapter);
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         finish();
         overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
         return super.onKeyDown(keyCode, event);
     }
+
+    /*
+    * 删除的数目
+    * */
+    private void deleteNum() {
+        notesDB = new NotesDB(this);
+        database = notesDB.getWritableDatabase();
+        String sql = "Select count(*) from deleted";
+        SQLiteStatement statement = database.compileStatement(sql);
+        String count = statement.simpleQueryForString();
+        delete_number.setText(count);
+    }
+
+    /*
+    * 展示的数目
+    * */
+    private void handleNum() {
+        notesDB = new NotesDB(this);
+        database = notesDB.getWritableDatabase();
+        String sql = "Select count(*) from notes";
+        SQLiteStatement statement = database.compileStatement(sql);
+        String count = statement.simpleQueryForString();
+        handle_number.setText(count);
+    }
+
+    /*
+    * 广播接收器
+    * */
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            notesDB = new NotesDB(context);
+            database = notesDB.getWritableDatabase();
+            String sql = "Select count(*) from deleted";
+            SQLiteStatement statement = database.compileStatement(sql);
+            String count = statement.simpleQueryForString();
+            delete_number.setText(count);
+        }
+    };
 }

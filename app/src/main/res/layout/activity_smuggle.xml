@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.example.wtl.mynotes.Activity.SmuggleActivity"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    tools:context="com.example.wtl.mynotes.Activity.SmuggleActivity">
 
     <LinearLayout
         android:id="@+id/sumggle1"
@@ -19,8 +19,8 @@
             android:id="@+id/sumggle_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/back"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:src="@mipmap/back" />
 
         <TextView
             android:id="@+id/sumggle_text_back"
@@ -41,10 +41,10 @@
                 android:id="@+id/set_up"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:src="@mipmap/set_up"
                 android:layout_gravity="center"
+                android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:paddingLeft="5dp"/>
+                android:src="@mipmap/set_up" />
 
         </LinearLayout>
 
@@ -54,111 +54,126 @@
         android:id="@+id/top_5"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#e1e1e1"
-        android:layout_below="@+id/sumggle1"/>
+        android:layout_below="@+id/sumggle1"
+        android:background="#e1e1e1" />
 
-    <LinearLayout
-        android:id="@+id/sumggle_handle"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/touchhandle"
-        android:padding="20dp"
-        android:orientation="horizontal"
-        android:layout_below="@+id/top_5">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/sumggle_men"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="15dp"
-            android:text="随手记"
-            android:textColor="#000"
-            android:textSize="15sp" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_5"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/handle_number"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/sumggle_handle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:layout_below="@+id/top_5"
+                android:background="@drawable/touchhandle"
+                android:orientation="horizontal"
+                android:padding="20dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/sumggle_men" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:text="随手记"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right">
+
+                    <TextView
+                        android:id="@+id/handle_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/sumggle_right" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/smuggle_list"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/sumggle_right"
-                android:layout_gravity="center" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/sumggle_handle"
+                android:layout_marginTop="10dp"
+                android:overScrollMode="never"
+                android:scrollbars="none" />
+
+            <LinearLayout
+                android:id="@+id/sumggle_delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/smuggle_list"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/touchhandle"
+                android:orientation="horizontal"
+                android:padding="20dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/sumggle_delete" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:text="废纸篓"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right">
+
+                    <TextView
+                        android:id="@+id/delete_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/sumggle_right" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/smuggle_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sumggle_handle"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:overScrollMode="never"
-        android:scrollbars="none"
-        android:layout_marginTop="10dp"/>
-
-    <LinearLayout
-        android:id="@+id/sumggle_delete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/touchhandle"
-        android:padding="20dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/smuggle_list">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/sumggle_delete"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="废纸篓"
-            android:layout_gravity="center"
-            android:layout_marginLeft="15dp"
-            android:textColor="#000"
-            android:textSize="15sp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right">
-
-            <TextView
-                android:id="@+id/delete_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/sumggle_right"
-                android:layout_gravity="center" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </ScrollView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/add_sumggle"

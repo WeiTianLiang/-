@@ -40,6 +40,11 @@ public class NotesDB extends SQLiteOpenHelper{
     public static final String WORD_NAME = "word";//表名
     public static final String WORD_SIZE = "size";//创建排版格式
     public static final String WORD_ID = "_id";
+    //表6 背景色
+    public static final String COLOR_NAME = "thecolor";//表名
+    public static final String COLOR_STYLE = "colorstyle";//创建排版格式
+    public static final String COLOR_ID = "_id";
+    public static final String COLOR_MEMO = "memo";//文件夹名称
 
     public NotesDB(Context context) {
         super(context, "notes", null, 1);
@@ -74,6 +79,11 @@ public class NotesDB extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL("CREATE TABLE " + WORD_NAME + "("
                 + WORD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + WORD_SIZE +" TEXT NOT NULL)");
+
+        sqLiteDatabase.execSQL("CREATE TABLE " + COLOR_NAME + "("
+                + COLOR_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + COLOR_MEMO + " TEXT NOT NULL,"
+                + COLOR_STYLE +" INTEGER NOT NULL)");
     }
 
     @Override

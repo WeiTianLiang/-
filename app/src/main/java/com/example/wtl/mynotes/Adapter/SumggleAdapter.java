@@ -1,6 +1,8 @@
 package com.example.wtl.mynotes.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.wtl.mynotes.Activity.CstomSumActivity;
 import com.example.wtl.mynotes.Class.Sumggle;
 import com.example.wtl.mynotes.R;
 
@@ -36,14 +39,19 @@ public class SumggleAdapter extends RecyclerView.Adapter<SumggleAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(SumggleAdapter.ViewHolder holder, int position) {
-        Sumggle sumggle = sumggleList.get(position);
+    public void onBindViewHolder(SumggleAdapter.ViewHolder holder, final int position) {
+        final Sumggle sumggle = sumggleList.get(position);
         holder.sumggle_create.setText(sumggle.getSumggle_create());
         holder.delete_number.setText(sumggle.getDelete_number());
         holder.sumggle_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(context, CstomSumActivity.class);
+                intent.putExtra("cstomName",sumggle.getSumggle_create());
+                intent.putExtra("cstomNum",sumggle.getDelete_number());
+                intent.putExtra("cstomSize",sumggleList.size()+"");
+                context.startActivity(intent);
+                ((Activity) context).overridePendingTransition(R.anim.activity_left_in,R.anim.activity_left_out);
             }
         });
     }
@@ -67,5 +75,27 @@ public class SumggleAdapter extends RecyclerView.Adapter<SumggleAdapter.ViewHold
             sumggle_delete = itemView.findViewById(R.id.sumggle_delete);
             sumggle_line = itemView.findViewById(R.id.sumggle_line);
         }
+    }
+
+    //删除Notes
+    public void removeNotes(int postion) {
+        sumggleList.remove(postion);
+        notifyItemRemoved(postion);
+    }
+
+    /*
+    * 更新数据
+    * */
+    public void update(Sumggle sumggle, int postion) {
+
+        notifyItemChanged(postion);
+    }
+
+    /*
+    * 添加数据
+    * */
+    public void add(Sumggle sumggle) {
+        sumggleList.add(0,sumggle);
+        notifyItemInserted(0);
     }
 }

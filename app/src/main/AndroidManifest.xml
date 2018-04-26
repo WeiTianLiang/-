@@ -10,16 +10,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <provider
-            android:authorities="com.example.cameraalbumtest.fileprovider"
             android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.cameraalbumtest.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
-
+                android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".Activity.MainActivity"
             android:windowSoftInputMode="adjustResize">
@@ -29,13 +28,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activity.EditNoteActivity" />
+        <activity android:name=".Activity.EditNoteActivity" />
         <activity android:name=".Activity.SmuggleActivity" />
         <activity android:name=".Activity.HandleActivity" />
         <activity android:name=".Activity.AbandonActivity" />
         <activity android:name=".Activity.SettingActivity" />
-        <service android:enabled="true" android:name=".Service.TimeDeleteService" android:process="system"/>
+
+        <service
+            android:name=".Service.TimeDeleteService"
+            android:enabled="true"
+            android:process="system" />
+
+        <activity android:name=".Activity.CstomSumActivity"></activity>
     </application>
 
 </manifest>
