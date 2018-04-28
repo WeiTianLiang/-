@@ -7,11 +7,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -30,6 +32,7 @@ import com.example.wtl.mynotes.DB.NotesDB;
 import com.example.wtl.mynotes.R;
 import com.example.wtl.mynotes.Service.TimeDeleteService;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -159,6 +162,7 @@ public class LoadRecycler {
                         String delete_content = null;
                         String delete_color = null;
                         String delete_state_text = null;
+                        String delete_time = null;
 
                         Intent intent = new Intent(context, TimeDeleteService.class);
                         context.startService(intent);
@@ -173,12 +177,13 @@ public class LoadRecycler {
                                 delete_content = cursor.getString(cursor.getColumnIndex("content"));
                                 delete_color = cursor.getString(cursor.getColumnIndex("color"));
                                 delete_state_text = cursor.getString(cursor.getColumnIndex("statetext"));
+                                delete_time = cursor.getString(cursor.getColumnIndex("time"));
                             }
                             //根据时间删除表中数据
                             database.delete(NotesDB.TABLE_NAME, NotesDB.TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                             //把数据插入表4
                             ContentValues cv = new ContentValues();
-                            cv.put(NotesDB.DELETE_TIME, getTime());
+                            cv.put(NotesDB.DELETE_TIME, delete_time);
                             cv.put(NotesDB.DELETE_CONTENT, delete_content);
                             cv.put(NotesDB.DELETE_COLOR, delete_color);
                             cv.put(NotesDB.DELETE_STATETEXT, delete_state_text);
@@ -302,6 +307,7 @@ public class LoadRecycler {
                         String delete_content = null;
                         String delete_color = null;
                         String delete_state_text = null;
+                        String delete_time = null;
 
                         Intent intent = new Intent(context, TimeDeleteService.class);
                         context.startService(intent);
@@ -316,12 +322,13 @@ public class LoadRecycler {
                                 delete_content = cursor.getString(cursor.getColumnIndex("content"));
                                 delete_color = cursor.getString(cursor.getColumnIndex("color"));
                                 delete_state_text = cursor.getString(cursor.getColumnIndex("statetext"));
+                                delete_time = cursor.getString(cursor.getColumnIndex("time"));
                             }
                             //根据时间从表1中删除数据
                             database.delete(NotesDB.TABLE_NAME, NotesDB.TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                             //把数据插入表4
                             ContentValues cv = new ContentValues();
-                            cv.put(NotesDB.DELETE_TIME, getTime());
+                            cv.put(NotesDB.DELETE_TIME, delete_time);
                             cv.put(NotesDB.DELETE_CONTENT, delete_content);
                             cv.put(NotesDB.DELETE_COLOR, delete_color);
                             cv.put(NotesDB.DELETE_STATETEXT, delete_state_text);
@@ -374,10 +381,14 @@ public class LoadRecycler {
             String recoy_color;
             String recoy_state_num;
             String recoy_state_text;
+            String recoy_time;
 
             @Override
             public void OnItemAlone(Notes notes, final int pos, final List<Notes> list1) {
                 final List<Notes> notelist = new ArrayList<>();
+                /*
+                * 遍历获取list1中的值
+                * */
                 for(int i = 0 ; i < list1.size() ; i++) {
                     notelist.add(list1.get(i));
                 }
@@ -404,21 +415,31 @@ public class LoadRecycler {
                             recoy_color = cursor.getString(cursor.getColumnIndex("delete_color"));
                             recoy_state_num = cursor.getString(cursor.getColumnIndex("delete_statenum"));
                             recoy_state_text = cursor.getString(cursor.getColumnIndex("delete_statetext"));
+                            recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
                         }
+                        List<Notes> notes2 = new ArrayList<>();
+                        Notes notes1 = new Notes(recoy_content,recoy_time);
+                        notes2.add(notes1);
                         //根据时间删除表中数据
                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notelist.get(pos).getNotes_time()});
                         Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
                         Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                        intent1.putExtra("drState","recoy");
                         context.sendBroadcast(intent1);
                         //把数据恢复到表1
                         ContentValues cv = new ContentValues();
-                        cv.put(NotesDB.TIME, getTime());
+                        cv.put(NotesDB.TIME, recoy_time);
                         cv.put(NotesDB.CONTENT, recoy_content);
                         cv.put(NotesDB.COLOR,recoy_color);
                         cv.put(NotesDB.STATETEXT,recoy_state_text);
                         database.insert(NotesDB.TABLE_NAME, null, cv);
+                        adapter.notifyDataSetChanged();
+                        /*
+                        * 发送广播通知Main更新
+                        * */
                         Intent intent = new Intent("com.example.wtl.mynotes.action");
                         intent.putExtra("recoy","yes");
+                        intent.putExtra("recoynote", (Serializable) notes2);
                         context.sendBroadcast(intent);
                     }
                 });
@@ -431,7 +452,9 @@ public class LoadRecycler {
                 adapter.notifyDataSetChanged();
                 delete.setVisibility(View.VISIBLE);
                 delete.startAnimation(animation1);
-
+                /*
+                * 获取要删除的对象
+                * */
                 adapter.setOnItemClickListener(new NotesAdapter.OnItemClickListener() {
                     @Override
                     public void OnItemClick(int x, boolean adro, List<Notes> list1) {
@@ -464,6 +487,9 @@ public class LoadRecycler {
                             * */
                             adapter.isLongItem();
                         } else {
+                            /*
+                            * 创建自定义删除弹窗
+                            * */
                             final Create_Delete_Dialog createDeleteDialog = new Create_Delete_Dialog(context);
                             createDeleteDialog.setCanceledOnTouchOutside(false);
                             createDeleteDialog.show();
@@ -483,13 +509,18 @@ public class LoadRecycler {
                                         if (i == 0) adapter.removeNotes(stringList.get(i));
                                         else adapter.removeNotes(stringList.get(i) - i);
                                         //根据时间删除表中数据
-                                        database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
+                                        database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "=?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
+                                        Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                                        context.sendBroadcast(intent1);
                                     }
-                                    Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
-                                    context.sendBroadcast(intent1);
+                                    notesList.removeAll(notesList);
                                     stringList.removeAll(stringList);//清空表
                                     delete.setVisibility(View.GONE);
                                     delete.startAnimation(animation2);
+                                    adapter.notifyDataSetChanged();
+                                    /*
+                                    * 延迟取消长按状态为动画留出时间
+                                    * */
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
@@ -506,6 +537,7 @@ public class LoadRecycler {
                     String recoy_content;
                     String recoy_color;
                     String recoy_state_text;
+                    String recoy_time;
 
                     @Override
                     public void onClick(View view) {
@@ -530,6 +562,7 @@ public class LoadRecycler {
                                 @Override
                                 public void ontureClick() {
                                     createDeleteDialog.dismiss();
+                                    List<Notes> notes2 = new ArrayList<>();
                                     for (int i = 0; i < stringList.size(); i++) {
                                         if (i == 0) adapter.removeNotes(stringList.get(i));
                                         else adapter.removeNotes(stringList.get(i) - i);
@@ -540,21 +573,26 @@ public class LoadRecycler {
                                             recoy_content = cursor.getString(cursor.getColumnIndex("delete_content"));
                                             recoy_color = cursor.getString(cursor.getColumnIndex("delete_color"));
                                             recoy_state_text = cursor.getString(cursor.getColumnIndex("delete_statetext"));
+                                            recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
                                         }
                                         //根据时间删除表中数据
                                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                                         Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                                        intent1.putExtra("drState","recoy");
                                         context.sendBroadcast(intent1);
                                         //把数据恢复到表1
                                         ContentValues cv = new ContentValues();
-                                        cv.put(NotesDB.TIME, getTime());
+                                        cv.put(NotesDB.TIME, recoy_time);
                                         cv.put(NotesDB.CONTENT, recoy_content);
                                         cv.put(NotesDB.COLOR, recoy_color);
                                         cv.put(NotesDB.STATETEXT,recoy_state_text);
                                         database.insert(NotesDB.TABLE_NAME, null, cv);
+                                        Notes notes1 = new Notes(recoy_content,recoy_time);
+                                        notes2.add(notes1);
                                     }
                                     Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
                                     stringList.removeAll(stringList);//清空表
+                                    notesList.removeAll(notesList);
                                     delete.setVisibility(View.GONE);
                                     delete.startAnimation(animation2);
                                     new Handler().postDelayed(new Runnable() {
@@ -563,7 +601,12 @@ public class LoadRecycler {
                                             adapter.isLongItem();
                                         }
                                     },470);
+                                    adapter.notifyDataSetChanged();
+                                    /*
+                                    * 发送广播通知Main更新
+                                    * */
                                     Intent intent = new Intent("com.example.wtl.mynotes.action");
+                                    intent.putExtra("recoynote", (Serializable) notes2);
                                     intent.putExtra("recoy","yes");
                                     context.sendBroadcast(intent);
                                 }
@@ -596,11 +639,14 @@ public class LoadRecycler {
         final GridAdapter adapter = new GridAdapter(list, context);
         recyclerView.setAdapter(adapter);
         runLayoutAnimation(recyclerView, 1);
-
+        /*
+        * 单个恢复
+        * */
         adapter.setOnItemClickAloneListener(new GridAdapter.OnItemClickAloneListener() {
             String recoy_content;
             String recoy_color;
             String recoy_state_text;
+            String recoy_time;
 
             @Override
             public void OnItemAlone(Notes notes, final int pos, List<Notes> list1) {
@@ -630,21 +676,28 @@ public class LoadRecycler {
                             recoy_content = cursor.getString(cursor.getColumnIndex("delete_content"));
                             recoy_color = cursor.getString(cursor.getColumnIndex("delete_color"));
                             recoy_state_text = cursor.getString(cursor.getColumnIndex("delete_statetext"));
+                            recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
                         }
+                        List<Notes> notes2 = new ArrayList<>();
+                        Notes notes1 = new Notes(recoy_content,recoy_time);
+                        notes2.add(notes1);
                         //根据时间删除表中数据
                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notelist.get(pos).getNotes_time()});
                         Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
                         Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                        intent1.putExtra("drState","recoy");
                         context.sendBroadcast(intent1);
                         //把数据恢复到表1
                         ContentValues cv = new ContentValues();
-                        cv.put(NotesDB.TIME, getTime());
+                        cv.put(NotesDB.TIME, recoy_time);
                         cv.put(NotesDB.CONTENT, recoy_content);
                         cv.put(NotesDB.COLOR, recoy_color);
                         cv.put(NotesDB.STATETEXT,recoy_state_text);
                         database.insert(NotesDB.TABLE_NAME, null, cv);
+                        adapter.notifyDataSetChanged();
                         Intent intent = new Intent("com.example.wtl.mynotes.action");
                         intent.putExtra("recoy","yes");
+                        intent.putExtra("recoynote", (Serializable) notes2);
                         context.sendBroadcast(intent);
                     }
                 });
@@ -708,10 +761,13 @@ public class LoadRecycler {
                                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
                                     }
                                     Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                                    intent1.putExtra("drState","delete");
                                     context.sendBroadcast(intent1);
                                     stringList.removeAll(stringList);//清空表
                                     delete.setVisibility(View.GONE);
                                     delete.setAnimation(animation2);
+                                    notesList.removeAll(notesList);
+                                    adapter.notifyDataSetChanged();
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
@@ -727,6 +783,7 @@ public class LoadRecycler {
                     String recoy_content;
                     String recoy_color;
                     String recoy_state_text;
+                    String recoy_time;
 
                     @Override
                     public void onClick(View view) {
@@ -751,6 +808,7 @@ public class LoadRecycler {
                                 @Override
                                 public void ontureClick() {
                                     createDeleteDialog.dismiss();
+                                    List<Notes> notes2 = new ArrayList<>();
                                     for (int i = 0; i < stringList.size(); i++) {
                                         if (i == 0) adapter.removeNotes(stringList.get(i));
                                         else adapter.removeNotes(stringList.get(i) - i);
@@ -761,21 +819,27 @@ public class LoadRecycler {
                                             recoy_content = cursor.getString(cursor.getColumnIndex("delete_content"));
                                             recoy_color = cursor.getString(cursor.getColumnIndex("delete_color"));
                                             recoy_state_text = cursor.getString(cursor.getColumnIndex("delete_statetext"));
+                                            recoy_time = cursor.getString(cursor.getColumnIndex("delete_time"));
                                         }
                                         //根据时间删除表中数据
                                         database.delete(NotesDB.DELETE_NAME, NotesDB.DELETE_TIME + "= ?", new String[]{notesList.get(stringList.get(i)).getNotes_time()});
-                                        Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
                                         Intent intent1 = new Intent("com.example.wtl.mynotes.delete");
+                                        intent1.putExtra("drState","recoy");
                                         context.sendBroadcast(intent1);
+                                        Notes notes = new Notes(recoy_content,recoy_time);
+                                        notes2.add(notes);
                                         //把数据恢复到表1
                                         ContentValues cv = new ContentValues();
-                                        cv.put(NotesDB.TIME, getTime());
+                                        cv.put(NotesDB.TIME, recoy_time);
                                         cv.put(NotesDB.CONTENT, recoy_content);
                                         cv.put(NotesDB.COLOR, recoy_color);
                                         cv.put(NotesDB.STATETEXT,recoy_state_text);
                                         database.insert(NotesDB.TABLE_NAME, null, cv);
                                     }
+                                    Toast.makeText(context, "数据已被恢复!!", Toast.LENGTH_SHORT).show();
                                     stringList.removeAll(stringList);//清空表
+                                    notesList.removeAll(notesList);
+                                    adapter.notifyDataSetChanged();
                                     delete.setVisibility(View.GONE);
                                     delete.startAnimation(animation2);
                                     new Handler().postDelayed(new Runnable() {
@@ -786,6 +850,7 @@ public class LoadRecycler {
                                     },470);
                                     Intent intent = new Intent("com.example.wtl.mynotes.action");
                                     intent.putExtra("recoy","yes");
+                                    intent.putExtra("recoynote", (Serializable) notes2);
                                     context.sendBroadcast(intent);
                                 }
                             });
@@ -816,16 +881,6 @@ public class LoadRecycler {
             recyclerView.getAdapter().notifyDataSetChanged();
             recyclerView.scheduleLayoutAnimation();
         }
-    }
-
-    /*
-    * 获取当前时间
-    * */
-    private static String getTime() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
-        Date date = new Date();
-        String time = format.format(date);
-        return time;
     }
 
 }

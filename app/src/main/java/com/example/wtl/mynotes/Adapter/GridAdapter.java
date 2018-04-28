@@ -126,6 +126,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder>{
     public void add(Notes notes) {
         list.add(0,notes);
         notifyItemInserted(0);
+        notifyItemRangeChanged(0,list.size());
     }
     /*
     * 更新数据

@@ -11,7 +11,7 @@ import java.io.Serializable;
  * Created by WTL on 2018/3/22.
  */
 
-public class Notes implements Parcelable{
+public class Notes implements Serializable{
 
     private String notes_content_part;
     private String notes_time;
@@ -26,7 +26,7 @@ public class Notes implements Parcelable{
         notes_time = in.readString();
     }
 
-    public static final Creator<Notes> CREATOR = new Creator<Notes>() {
+   /* public static final Creator<Notes> CREATOR = new Creator<Notes>() {
         @Override
         public Notes createFromParcel(Parcel in) {
             return new Notes(in);
@@ -36,7 +36,7 @@ public class Notes implements Parcelable{
         public Notes[] newArray(int size) {
             return new Notes[size];
         }
-    };
+    };*/
 
     public String getNotes_time() {
         return notes_time;
@@ -46,17 +46,17 @@ public class Notes implements Parcelable{
         return notes_content_part;
     }
 
-    @Override
+    /*@Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
+    public void writeToParcel(Parcel parcel, int i) {*/
 
-        parcel.writeString(notes_content_part);
+    /*    parcel.writeString(notes_content_part);
         parcel.writeString(notes_time);
-    }
+    }*/
 
     public void setNotes_content_part(String notes_content_part) {
         this.notes_content_part = notes_content_part;

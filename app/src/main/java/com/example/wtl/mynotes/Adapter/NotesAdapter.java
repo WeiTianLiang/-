@@ -1,6 +1,9 @@
 package com.example.wtl.mynotes.Adapter;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +52,6 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         final Notes notes = list.get(position);
         holder.notes_content_part.setText(notes.getNotes_content_part());
         holder.notes_time.setText(notes.getNotes_time());
-
         if (longclick) {
             holder.check_box.setVisibility(View.VISIBLE);//设置长按后list边的圆为选中状态
         } else {
@@ -132,6 +134,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     public void add(Notes notes) {
         list.add(0,notes);
         notifyItemInserted(0);
+        notifyItemRangeChanged(0,list.size());
     }
 
     /*

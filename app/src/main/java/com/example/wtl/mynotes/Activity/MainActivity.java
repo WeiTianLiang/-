@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 flag++;
                 if (flag == 2) {
                     flag = 0;
-                    TimerTaskSearch.TimerTaskSearch(search_all,search_gone);//延迟搜索框消失
+                    TimerTaskSearch.TimerTaskSearch(search_all, search_gone);//延迟搜索框消失
                     search_dialog = new Creat_Search_Dialog(MainActivity.this, search_all);
                     search_dialog.show();
                     Window window = search_dialog.getWindow();
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         intentFilter = new IntentFilter("com.example.wtl.mynotes.action");
-        registerReceiver(broadcastReceiver,intentFilter);
+        registerReceiver(broadcastReceiver, intentFilter);
     }
 
     private void Montior() {
@@ -148,13 +148,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         equals(this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
                     change_list.setImageResource(R.mipmap.cardview);
                     change_list.startAnimation(change_img);
-                    LoadRecycler.cardlist(null,null,null,ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, this, notesList);
+                    LoadRecycler.cardlist(null, null, null, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, this, notesList);
                     cv.put(NotesDB.FORMAT, 1);
                     readbase.insert(NotesDB.FORMAT_NAME, null, cv);
                 } else {
                     change_list.setImageResource(R.mipmap.listview);
                     change_list.startAnimation(change_img);
-                    LoadRecycler.loadlist(null,null,null,ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, this, notesList);
+                    LoadRecycler.loadlist(null, null, null, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, this, notesList);
                     cv.put(NotesDB.FORMAT, 0);
                     readbase.insert(NotesDB.FORMAT_NAME, null, cv);
                 }
@@ -191,49 +191,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             /*
             * 添加后更新recyclerview数据
             * */
-            if(str!=null&&str.equals("create")) {
-                Notes notes = intent.getParcelableExtra("notes");
-                if(change_list.getDrawable().getCurrent().getConstantState().
+            if (str != null && str.equals("create")) {
+                Notes notes = (Notes) intent.getSerializableExtra("notes");
+                if (change_list.getDrawable().getCurrent().getConstantState().
                         equals(MainActivity.this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
-                    LoadRecycler.loadlist(null,"create",notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+                    LoadRecycler.loadlist(null, "create", notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
                 } else {
-                    LoadRecycler.cardlist(null,"create",notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+                    LoadRecycler.cardlist(null, "create", notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
                 }
             }
             /*
             * 修改后更新recyclerview数据
             * */
-            else if(str!=null&&str.equals("update")) {
-                Notes notes = intent.getParcelableExtra("notes");
+            else if (str != null && str.equals("update")) {
+                Notes notes = (Notes) intent.getSerializableExtra("notes");
                 String post = intent.getExtras().getString("point");
-                if(change_list.getDrawable().getCurrent().getConstantState().
+                Log.d("asd", post);
+                if (change_list.getDrawable().getCurrent().getConstantState().
                         equals(MainActivity.this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
-                    LoadRecycler.loadlist(post,"update",notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+                    LoadRecycler.loadlist(post, "update", notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
                 } else {
-                    LoadRecycler.cardlist(post,"update",notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+                    LoadRecycler.cardlist(post, "update", notes, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
                 }
             }
             /*
             * 从数据库还原后更新recyclerview数据
             * */
-            if(str1!=null&&str1.equals("yes")) {
-                List<Notes> lists = new ArrayList<>();
-                Cursor cursor = readbase.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);//查找数据到cursor对象
-                List<String> color = new ArrayList<>();
-                if(cursor.moveToLast()) {
-                    do {
-                        String content = cursor.getString(cursor.getColumnIndex("content"));
-                        String time = cursor.getString(cursor.getColumnIndex("time"));
-                        color.add(cursor.getString(cursor.getColumnIndex("color")));
-                        Notes notes = new Notes(content,time);
-                        lists.add(notes);
-                    } while (cursor.moveToPrevious());
-                }
-                if(change_list.getDrawable().getCurrent().getConstantState().
-                        equals(MainActivity.this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
-                    LoadRecycler.loadlist(null,null,null, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, lists);
-                } else {
-                    LoadRecycler.cardlist(null,null,null, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, lists);
+            if (str1 != null && str1.equals("yes")) {
+
+                List<Notes> notes = (List<Notes>) intent.getSerializableExtra("recoynote");
+                for(Notes n:notes) {
+                    if (change_list.getDrawable().getCurrent().getConstantState().
+                            equals(MainActivity.this.getResources().getDrawable(R.mipmap.listview).getConstantState())) {
+                        LoadRecycler.loadlist(null, "create", n, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+                    } else {
+                        LoadRecycler.cardlist(null, "create", n, ReadCuesor.ReadColor(readbase), 0, add_my_notes, item_delet, notes_list, change_list_in, MainActivity.this, notesList);
+                    }
                 }
             }
         }

@@ -182,12 +182,17 @@ public class SmuggleActivity extends AppCompatActivity implements View.OnClickLi
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            notesDB = new NotesDB(context);
-            database = notesDB.getWritableDatabase();
-            String sql = "Select count(*) from deleted";
-            SQLiteStatement statement = database.compileStatement(sql);
-            String count = statement.simpleQueryForString();
-            delete_number.setText(count);
+            String x = intent.getExtras().getString("drState");
+            deleteNum();
+            if(x!=null && x.equals("recoy")) {
+                handleNum();
+            }
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(broadcastReceiver);
+        super.onDestroy();
+    }
 }

@@ -394,26 +394,50 @@ public class EditNoteActivity extends AppCompatActivity implements View.OnClickL
                 editcolor.setImageResource(R.mipmap.editcolor);
                 break;
             case R.id.white:
+                if(edit_over.getVisibility() == View.GONE) {
+                    edit_over.setVisibility(View.VISIBLE);
+                    edit_over.setAnimation(animation_show);
+                }
                 Change_Colors.Change_Colors(this, "white", alledit, edit_content, edit1, edit_time, edit3);
                 color = "white";
                 break;
             case R.id.red:
+                if(edit_over.getVisibility() == View.GONE) {
+                    edit_over.setVisibility(View.VISIBLE);
+                    edit_over.setAnimation(animation_show);
+                }
                 Change_Colors.Change_Colors(this, "red", alledit, edit_content, edit1, edit_time, edit3);
                 color = "red";
                 break;
             case R.id.green:
+                if(edit_over.getVisibility() == View.GONE) {
+                    edit_over.setVisibility(View.VISIBLE);
+                    edit_over.setAnimation(animation_show);
+                }
                 Change_Colors.Change_Colors(this, "green", alledit, edit_content, edit1, edit_time, edit3);
                 color = "green";
                 break;
             case R.id.blue:
+                if(edit_over.getVisibility() == View.GONE) {
+                    edit_over.setVisibility(View.VISIBLE);
+                    edit_over.setAnimation(animation_show);
+                }
                 Change_Colors.Change_Colors(this, "blue", alledit, edit_content, edit1, edit_time, edit3);
                 color = "blue";
                 break;
             case R.id.violet:
+                if(edit_over.getVisibility() == View.GONE) {
+                    edit_over.setVisibility(View.VISIBLE);
+                    edit_over.setAnimation(animation_show);
+                }
                 Change_Colors.Change_Colors(this, "violet", alledit, edit_content, edit1, edit_time, edit3);
                 color = "violet";
                 break;
             case R.id.black:
+                if(edit_over.getVisibility() == View.GONE) {
+                    edit_over.setVisibility(View.VISIBLE);
+                    edit_over.setAnimation(animation_show);
+                }
                 Change_Colors.Change_Colors(this, "black", alledit, edit_content, edit1, edit_time, edit3);
                 color = "black";
                 break;
